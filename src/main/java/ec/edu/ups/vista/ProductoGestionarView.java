@@ -6,14 +6,14 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
-public class ProductoGestionar extends JFrame {
+public class ProductoGestionarView extends JFrame {
 
     private JPanel panelPrincipal;
 
     // Eliminar
     private JTextField textField1;
     private JButton buscarButton;
-    private JTable table1;
+    private JTable tablaProductos;
     private JButton eliminarButton;
     private JLabel textoPrincipal;
 
@@ -27,20 +27,19 @@ public class ProductoGestionar extends JFrame {
 
     private DefaultTableModel modelo;
 
-    public ProductoGestionar() {
+    public ProductoGestionarView() {
 
         setContentPane(panelPrincipal);
         setTitle("Gestionar Productos");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(730, 500);
+        setSize(500, 500);
         setLocationRelativeTo(null);
         setVisible(true);
 
-        // Inicializar modelo de tabla
         modelo = new DefaultTableModel();
         Object[] columnas = {"Codigo", "Nombre", "Precio"};
         modelo.setColumnIdentifiers(columnas);
-        table1.setModel(modelo);
+        tablaProductos.setModel(modelo);
     }
 
 
@@ -57,7 +56,7 @@ public class ProductoGestionar extends JFrame {
     }
 
     public JTable getTablaProductos() {
-        return table1;
+        return tablaProductos;
     }
 
     public DefaultTableModel getModelo() {

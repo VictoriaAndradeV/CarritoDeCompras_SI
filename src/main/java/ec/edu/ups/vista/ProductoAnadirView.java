@@ -10,11 +10,14 @@ import java.util.List;
 public class ProductoAnadirView extends JFrame {
 
     private JPanel panelPrincipal;
-    private JTextField txtPrecio;
-    private JTextField txtNombre;
-    private JTextField txtCodigo;
+    private JTextField campoPrecio;
+    private JTextField campoNombre;
+    private JTextField campoCodigo;
     private JButton btnAceptar;
     private JButton btnLimpiar;
+    private JLabel textoPrecio;
+    private JLabel textoNombre;
+    private JLabel textoCodigo;
 
     public ProductoAnadirView() {
 
@@ -44,27 +47,27 @@ public class ProductoAnadirView extends JFrame {
     }
 
     public JTextField getTxtPrecio() {
-        return txtPrecio;
+        return campoPrecio;
     }
 
     public void setTxtPrecio(JTextField txtPrecio) {
-        this.txtPrecio = txtPrecio;
+        this.campoPrecio = txtPrecio;
     }
 
     public JTextField getTxtNombre() {
-        return txtNombre;
+        return campoNombre;
     }
 
     public void setTxtNombre(JTextField txtNombre) {
-        this.txtNombre = txtNombre;
+        this.campoNombre = txtNombre;
     }
 
     public JTextField getTxtCodigo() {
-        return txtCodigo;
+        return campoCodigo;
     }
 
     public void setTxtCodigo(JTextField txtCodigo) {
-        this.txtCodigo = txtCodigo;
+        this.campoCodigo = txtCodigo;
     }
 
     public JButton getBtnAceptar() {
@@ -88,9 +91,9 @@ public class ProductoAnadirView extends JFrame {
     }
 
     public void limpiarCampos() {
-        txtCodigo.setText("");
-        txtNombre.setText("");
-        txtPrecio.setText("");
+        campoCodigo.setText("");
+        campoNombre.setText("");
+        campoPrecio.setText("");
     }
 
     public void mostrarProductos(List<Producto> productos) {
