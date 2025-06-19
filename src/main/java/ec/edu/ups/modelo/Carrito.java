@@ -1,35 +1,42 @@
-package ec.edu.ups.servicio;
-
-import ec.edu.ups.modelo.ItemCarrito;
-import ec.edu.ups.modelo.Producto;
+package ec.edu.ups.modelo;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
-public class CarritoServiceImpl implements CarritoService {
+public class Carrito {
+    private int codigo;
 
-    private final List<ItemCarrito> items;
+    private GregorianCalendar fechaCreacion;
 
-    public CarritoServiceImpl() {
+    private List<ItemCarrito> items;
+
+    public Carrito() {
         items = new ArrayList<>();
+        fechaCreacion = new GregorianCalendar();
     }
 
-    @Override
+    public int getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
+    }
+
+    public GregorianCalendar getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(GregorianCalendar fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
     public void agregarProducto(Producto producto, int cantidad) {
-        // Buscar si el producto ya está en el carrito
-        for (ItemCarrito item : items) {
-            if (item.getProducto().getCodigo() == producto.getCodigo()) {
-                // Si existe, sumar la cantidad
-                item.setCantidad(item.getCantidad() + cantidad);
-                return; // Salir del método después de actualizar
-            }
-        }
-        // Si no existe, agregar nuevo ítem
         items.add(new ItemCarrito(producto, cantidad));
     }
 
-    @Override
     public void eliminarProducto(int codigoProducto) {
         Iterator<ItemCarrito> it = items.iterator();
         while (it.hasNext()) {
@@ -40,12 +47,10 @@ public class CarritoServiceImpl implements CarritoService {
         }
     }
 
-    @Override
     public void vaciarCarrito() {
         items.clear();
     }
 
-    @Override
     public double calcularTotal() {
         double total = 0;
         for (ItemCarrito item : items) {
@@ -54,14 +59,11 @@ public class CarritoServiceImpl implements CarritoService {
         return total;
     }
 
-    @Override
     public List<ItemCarrito> obtenerItems() {
         return items;
     }
 
-    @Override
     public boolean estaVacio() {
         return items.isEmpty();
     }
 }
-

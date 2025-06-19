@@ -3,11 +3,9 @@ package ec.edu.ups.vista;
 import ec.edu.ups.modelo.Producto;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
-public class ProductoAnadirView extends JFrame {
+public class ProductoAnadirView extends JInternalFrame {
 
     private JPanel panelPrincipal;
     private JTextField campoPrecio;
@@ -23,19 +21,29 @@ public class ProductoAnadirView extends JFrame {
 
         setContentPane(panelPrincipal);
         setTitle("Datos del Producto");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 500);
-        //setResizable(false);
-        setLocationRelativeTo(null);
-        setVisible(true);
-        //pack();
+        setDefaultCloseOperation(HIDE_ON_CLOSE);
+        setSize(400, 400);
+        setClosable(true);
+        setIconifiable(true);
+        setResizable(true);
+        //setVisible(true);
 
-        btnLimpiar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                limpiarCampos();
-            }
-        });
+    }
+
+    public void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje);
+    }
+
+    public void limpiarCampos() {
+        campoCodigo.setText("");
+        campoNombre.setText("");
+        campoPrecio.setText("");
+    }
+
+    public void mostrarProductos(List<Producto> productos) {
+        for (Producto producto : productos) {
+            System.out.println(producto);
+        }
     }
 
     public JPanel getPanelPrincipal() {
@@ -46,28 +54,28 @@ public class ProductoAnadirView extends JFrame {
         this.panelPrincipal = panelPrincipal;
     }
 
-    public JTextField getTxtPrecio() {
+    public JTextField getCampoPrecio() {
         return campoPrecio;
     }
 
-    public void setTxtPrecio(JTextField txtPrecio) {
-        this.campoPrecio = txtPrecio;
+    public void setCampoPrecio(JTextField campoPrecio) {
+        this.campoPrecio = campoPrecio;
     }
 
-    public JTextField getTxtNombre() {
+    public JTextField getCampoNombre() {
         return campoNombre;
     }
 
-    public void setTxtNombre(JTextField txtNombre) {
-        this.campoNombre = txtNombre;
+    public void setCampoNombre(JTextField campoNombre) {
+        this.campoNombre = campoNombre;
     }
 
-    public JTextField getTxtCodigo() {
+    public JTextField getCampoCodigo() {
         return campoCodigo;
     }
 
-    public void setTxtCodigo(JTextField txtCodigo) {
-        this.campoCodigo = txtCodigo;
+    public void setCampoCodigo(JTextField campoCodigo) {
+        this.campoCodigo = campoCodigo;
     }
 
     public JButton getBtnAceptar() {
@@ -86,19 +94,28 @@ public class ProductoAnadirView extends JFrame {
         this.btnLimpiar = btnLimpiar;
     }
 
-    public void mostrarMensaje(String mensaje) {
-        JOptionPane.showMessageDialog(this, mensaje);
+    public JLabel getTextoPrecio() {
+        return textoPrecio;
     }
 
-    public void limpiarCampos() {
-        campoCodigo.setText("");
-        campoNombre.setText("");
-        campoPrecio.setText("");
+    public void setTextoPrecio(JLabel textoPrecio) {
+        this.textoPrecio = textoPrecio;
     }
 
-    public void mostrarProductos(List<Producto> productos) {
-        for (Producto producto : productos) {
-            System.out.println(producto);
-        }
+    public JLabel getTextoNombre() {
+        return textoNombre;
     }
+
+    public void setTextoNombre(JLabel textoNombre) {
+        this.textoNombre = textoNombre;
+    }
+
+    public JLabel getTextoCodigo() {
+        return textoCodigo;
+    }
+
+    public void setTextoCodigo(JLabel textoCodigo) {
+        this.textoCodigo = textoCodigo;
+    }
+
 }

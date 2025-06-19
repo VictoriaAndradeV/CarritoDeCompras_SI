@@ -2,18 +2,12 @@ package ec.edu.ups.dao.impl;
 
 import ec.edu.ups.dao.ProductoDAO;
 import ec.edu.ups.modelo.Producto;
-
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProductoDAOMemoria implements ProductoDAO {
-
-    private List<Producto> productos;
-
-    public ProductoDAOMemoria() {
-        productos = new ArrayList<Producto>();
-    }
+    private final List<Producto> productos = new ArrayList<>();
 
     @Override
     public void crear(Producto producto) {
@@ -22,23 +16,17 @@ public class ProductoDAOMemoria implements ProductoDAO {
 
     @Override
     public Producto buscarPorCodigo(int codigo) {
-        for (Producto producto : productos) {
-            if (producto.getCodigo() == codigo) {
-                return producto;
-            }
-        }
-        return null;
+        return productos.stream()
+                .filter(p -> p.getCodigo() == codigo)
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
     public List<Producto> buscarPorNombre(String nombre) {
-        List<Producto> productosEncontrados = new ArrayList<>();
-        for (Producto producto : productos) {
-            if (producto.getNombre().equalsIgnoreCase(nombre)) {
-                productosEncontrados.add(producto);
-            }
-        }
-        return productosEncontrados;
+        return productos.stream()
+                .filter(p -> p.getNombre().equalsIgnoreCase(nombre))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -46,23 +34,18 @@ public class ProductoDAOMemoria implements ProductoDAO {
         for (int i = 0; i < productos.size(); i++) {
             if (productos.get(i).getCodigo() == producto.getCodigo()) {
                 productos.set(i, producto);
+                break;
             }
         }
     }
 
     @Override
     public void eliminar(int codigo) {
-        Iterator<Producto> iterator = productos.iterator();
-        while (iterator.hasNext()) {
-            Producto producto = iterator.next();
-            if (producto.getCodigo() == codigo) {
-                iterator.remove();
-            }
-        }
+        productos.removeIf(p -> p.getCodigo() == codigo);
     }
 
     @Override
     public List<Producto> listarTodos() {
-        return productos;
+        return new ArrayList<>(productos);
     }
 }
