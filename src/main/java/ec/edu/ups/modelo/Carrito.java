@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
-
+//buscar carrito y listar carrito, eliminar carrito
 public class Carrito {
+    private final double IVA = 0.12;
+    private static int contador = 1;// compartido entre todas las instancias, objetos
+    //si no ponemos statico, siempre va a valer 1, pertenece a la clase no a la instancia
+    //cuando creo un nuevo producto, un nuevo codigo se genera para el mismo.
     private int codigo;
 
     private GregorianCalendar fechaCreacion;
@@ -13,6 +17,7 @@ public class Carrito {
     private List<ItemCarrito> items;
 
     public Carrito() {
+        codigo = contador++;
         items = new ArrayList<>();
         fechaCreacion = new GregorianCalendar();
     }
@@ -37,6 +42,18 @@ public class Carrito {
         items.add(new ItemCarrito(producto, cantidad));
     }
 
+    public void vaciarCarrito() {
+        items.clear();
+    }
+
+    public List<ItemCarrito> obtenerItems() {
+        return items;
+    }
+
+    public boolean estaVacio() {
+        return items.isEmpty();
+    }
+
     public void eliminarProducto(int codigoProducto) {
         Iterator<ItemCarrito> it = items.iterator();
         while (it.hasNext()) {
@@ -47,23 +64,30 @@ public class Carrito {
         }
     }
 
-    public void vaciarCarrito() {
-        items.clear();
+    public double calcularSubtotal() {
+        double subtotal = 0;
+        for (ItemCarrito item : items) {
+            subtotal += item.getProducto().getPrecio() * item.getCantidad();
+        }
+        return subtotal;
+    }
+
+    public double calcularIVA() {
+        double subtotal = calcularSubtotal();
+        return subtotal * IVA;
     }
 
     public double calcularTotal() {
-        double total = 0;
-        for (ItemCarrito item : items) {
-            total += item.getProducto().getPrecio() * item.getCantidad();
-        }
-        return total;
+        return calcularSubtotal() + calcularIVA();
     }
 
-    public List<ItemCarrito> obtenerItems() {
-        return items;
-    }
-
-    public boolean estaVacio() {
-        return items.isEmpty();
+    @Override
+    public String toString() {
+        return "Carrito{" +
+                "IVA=" + IVA +
+                ", codigo=" + codigo +
+                ", fechaCreacion=" + fechaCreacion +
+                ", items=" + items +
+                '}';
     }
 }

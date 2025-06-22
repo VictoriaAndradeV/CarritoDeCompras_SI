@@ -14,10 +14,10 @@ public class EliminarProductoView extends JInternalFrame {
     private JButton eliminarButton;
     private JButton buscarButton;
     private DefaultTableModel modelo;
-    private final ProductoController productoC;
     private JLabel textoPrincipal;
     private JTextField campoNombre;
 
+    private final ProductoController productoC;
 
     public EliminarProductoView(ProductoController productoC) {
         this.productoC = productoC;
@@ -35,6 +35,30 @@ public class EliminarProductoView extends JInternalFrame {
         modelo.setColumnIdentifiers(columnas);
         tblProductos.setModel(modelo);
 
+    }
+
+    public void cargarTabla(List<Producto> lista) {
+        modelo.setRowCount(0);
+        for (Producto p : lista) {
+            modelo.addRow(new Object[]{p.getCodigo(), p.getNombre(), p.getPrecio()});
+        }
+    }
+
+    public void removerFila(int codigo) {
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            if (modelo.getValueAt(i, 0).toString().equals(String.valueOf(codigo))) {
+                modelo.removeRow(i);
+                break;
+            }
+        }
+    }
+
+    public void mostrarMensaje(String msg) {
+        JOptionPane.showMessageDialog(this, msg);
+    }
+
+    public JTextField getCampoNombre() {
+        return campoNombre;
     }
 
     public JPanel getPanelPrincipal() {
@@ -84,31 +108,6 @@ public class EliminarProductoView extends JInternalFrame {
     public void setTextoPrincipal(JLabel textoPrincipal) {
         this.textoPrincipal = textoPrincipal;
     }
-
-    public void cargarTabla(List<Producto> lista) {
-        modelo.setRowCount(0);
-        for (Producto p : lista) {
-            modelo.addRow(new Object[]{p.getCodigo(), p.getNombre(), p.getPrecio()});
-        }
-    }
-
-    public void removerFila(int codigo) {
-        for (int i = 0; i < modelo.getRowCount(); i++) {
-            if (modelo.getValueAt(i, 0).toString().equals(String.valueOf(codigo))) {
-                modelo.removeRow(i);
-                break;
-            }
-        }
-    }
-
-    public void mostrarMensaje(String msg) {
-        JOptionPane.showMessageDialog(this, msg);
-    }
-
-    public JTextField getCampoNombre() {
-        return campoNombre;
-    }
-
 
 
 }
