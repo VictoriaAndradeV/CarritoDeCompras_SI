@@ -3,11 +3,15 @@ package ec.edu.ups.dao.impl;
 import ec.edu.ups.dao.ProductoDAO;
 import ec.edu.ups.modelo.Producto;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ProductoDAOMemoria implements ProductoDAO {
-    private final List<Producto> productos = new ArrayList<>();
+    private List<Producto> productos;
+
+    public ProductoDAOMemoria() {
+        productos = new ArrayList<Producto>();
+    }
 
     @Override
     public void crear(Producto producto) {
@@ -16,17 +20,23 @@ public class ProductoDAOMemoria implements ProductoDAO {
 
     @Override
     public Producto buscarPorCodigo(int codigo) {
-        return productos.stream()
-                .filter(p -> p.getCodigo() == codigo)
-                .findFirst()
-                .orElse(null);
+        for (Producto producto : productos) {
+            if (producto.getCodigo() == codigo) {
+                return producto;
+            }
+        }
+        return null;
     }
 
     @Override
     public List<Producto> buscarPorNombre(String nombre) {
-        return productos.stream()
-                .filter(p -> p.getNombre().equalsIgnoreCase(nombre))
-                .collect(Collectors.toList());
+        List<Producto> productosEncontrados = new ArrayList<>();
+        for (Producto producto : productos) {
+            if (producto.getNombre().startsWith(nombre)) {
+                productosEncontrados.add(producto);
+            }
+        }
+        return productosEncontrados;
     }
 
     @Override
@@ -41,7 +51,13 @@ public class ProductoDAOMemoria implements ProductoDAO {
 
     @Override
     public void eliminar(int codigo) {
-        productos.removeIf(p -> p.getCodigo() == codigo);
+        Iterator<Producto> iterator = productos.iterator();
+        while (iterator.hasNext()) {
+            Producto producto = iterator.next();
+            if (producto.getCodigo() == codigo) {
+                iterator.remove();
+            }
+        }
     }
 
     @Override
