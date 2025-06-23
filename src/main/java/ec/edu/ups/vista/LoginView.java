@@ -1,33 +1,21 @@
 package ec.edu.ups.vista;
 
-import ec.edu.ups.modelo.Rol;
-
 import javax.swing.*;
 
-public class LoginView extends JInternalFrame {
+public class LoginView extends JFrame {
 
     private JPanel panelPrincipal;
     private JTextField txtUsuario;
     private JButton btnIniciarSesion;
     private JButton btnRegistrarse;
     private JPasswordField txtContrasenia;
-    private JComboBox<Rol> comboBoxRol;
 
     public LoginView() {
         setContentPane(panelPrincipal);
         setTitle("Iniciar Sesión");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
         setSize(400, 300);
-
-
-        comboBoxRol.removeAllItems(); // ← Limpia por si acaso
-        for (Rol rol : Rol.values()) {
-            comboBoxRol.addItem(rol);
-        }
-    }
-
-    public Rol getRolSeleccionado() {
-        return (Rol) comboBoxRol.getSelectedItem();
     }
 
     public void mostrarMensaje(String mensaje) {
@@ -74,11 +62,4 @@ public class LoginView extends JInternalFrame {
         this.txtContrasenia = txtContrasenia;
     }
 
-    public JComboBox getComboBoxRol() {
-        return comboBoxRol;
-    }
-
-    public void setComboBoxRol(JComboBox comboBoxRol) {
-        this.comboBoxRol = comboBoxRol;
-    }
 }

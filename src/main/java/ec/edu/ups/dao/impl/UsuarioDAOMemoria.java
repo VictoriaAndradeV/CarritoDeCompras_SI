@@ -20,7 +20,7 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
     @Override
     public Usuario autenticar(String username, String contrasenia) {
         for (Usuario usuario : usuarios) {
-            if(usuario.getUsername().equals(username) && usuario.getContrasenia().equals(contrasenia)){
+            if(usuario.getUsuario().equals(username) && usuario.getContrasenia().equals(contrasenia)){
                 return usuario;
             }
         }
@@ -35,7 +35,7 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
     @Override
     public Usuario buscarPorUsername(String username) {
         for (Usuario usuario : usuarios) {
-            if (usuario.getUsername().equals(username)) {
+            if (usuario.getUsuario().equals(username)) {
                 return usuario;
             }
         }
@@ -47,7 +47,7 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
         Iterator<Usuario> iterator = usuarios.iterator();
         while (iterator.hasNext()) {
             Usuario usuario = iterator.next();
-            if (usuario.getUsername().equals(username)) {
+            if (usuario.getUsuario().equals(username)) {
                 iterator.remove();
                 break;
             }
@@ -58,7 +58,7 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
     public void actualizar(Usuario usuario) {
         for(int i = 0; i < usuarios.size(); i++){
             Usuario usuarioAux = usuarios.get(i);
-            if(usuarioAux.getUsername().equals(usuario.getUsername())){
+            if(usuarioAux.getUsuario().equals(usuario.getUsuario())){
                 usuarios.set(i, usuario);
                 break;
             }
