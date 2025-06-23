@@ -11,6 +11,7 @@ public class Carrito {
     //si no ponemos statico, siempre va a valer 1, pertenece a la clase no a la instancia
     //cuando creo un nuevo producto, un nuevo codigo se genera para el mismo.
     private int codigo;
+    private Usuario usuario;
 
     private GregorianCalendar fechaCreacion;
 
@@ -20,22 +21,6 @@ public class Carrito {
         codigo = contador++;
         items = new ArrayList<>();
         fechaCreacion = new GregorianCalendar();
-    }
-
-    public int getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(int codigo) {
-        this.codigo = codigo;
-    }
-
-    public GregorianCalendar getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    public void setFechaCreacion(GregorianCalendar fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
     }
 
     public void agregarProducto(Producto producto, int cantidad) {
@@ -80,6 +65,40 @@ public class Carrito {
     public double calcularTotal() {
         return calcularSubtotal() + calcularIVA();
     }
+
+    public GregorianCalendar getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(GregorianCalendar fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public static int getContador() {
+        return contador;
+    }
+
+    public static void setContador(int contador) {
+        Carrito.contador = contador;
+    }
+
+    public int getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+
 
     @Override
     public String toString() {

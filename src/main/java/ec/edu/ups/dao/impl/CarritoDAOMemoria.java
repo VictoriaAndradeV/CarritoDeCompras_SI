@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class CarritoDAOMemoria implements CarritoDAO{
-    private List<Carrito> carritos;
+    private final List<Carrito> carritos;
 
     public CarritoDAOMemoria() {
         this.carritos = new ArrayList<Carrito>();
