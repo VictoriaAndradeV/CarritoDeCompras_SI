@@ -25,9 +25,12 @@ public class Main {
                 //iniciar sesion
                 UsuarioDAO usuarioDAO = new UsuarioDAOMemoria();
                 LoginView loginView = new LoginView();
-                loginView.setVisible(true);
+                RegistrarUsuarioView registrarUsuarioView = new RegistrarUsuarioView();
 
                 UsuarioController usuarioController = new UsuarioController(usuarioDAO, loginView);
+                usuarioController.setRegistrarUsuarioView(registrarUsuarioView);
+
+                loginView.setVisible(true);
 
                 loginView.addWindowListener(new WindowAdapter() {
                     @Override

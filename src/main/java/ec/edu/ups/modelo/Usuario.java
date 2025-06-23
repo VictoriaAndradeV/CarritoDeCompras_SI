@@ -1,7 +1,7 @@
 package ec.edu.ups.modelo;
 
 public class Usuario {
-    private String username;
+    private String usuario;
     private String contrasenia;
     private Rol rol;
 
@@ -9,17 +9,17 @@ public class Usuario {
     }
 
     public Usuario(String nombreDeUsuario, String contrasenia, Rol rol) {
-        this.username = nombreDeUsuario;
+        this.usuario = nombreDeUsuario;
         this.contrasenia = contrasenia;
         this.rol = rol;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUsuario() {
+        return usuario;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 
     public String getContrasenia() {
@@ -41,7 +41,7 @@ public class Usuario {
     @Override
     public String toString() {
         return "Usuario{" +
-                "nombreDeUsuario='" + username + '\'' +
+                "nombreDeUsuario='" + usuario + '\'' +
                 ", contrasenia='" + contrasenia + '\'' +
                 ", rol=" + rol +
                 '}';
