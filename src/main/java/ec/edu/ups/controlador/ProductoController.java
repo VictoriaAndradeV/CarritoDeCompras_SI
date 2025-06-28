@@ -48,6 +48,12 @@ public class ProductoController {
             }
         });
 
+        productoListaView.getBtnLimpiar().addActionListener(e -> {
+            productoListaView.getTxtBuscar().setText("");
+            // vacía la tabla
+            productoListaView.cargarDatos(Collections.emptyList());
+        });
+
         carritoView.getBuscarButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -90,12 +96,45 @@ public class ProductoController {
         });
     }
 
-    //VISTA AGREGAR PRODUCTOS
     private void guardarProducto() {
-        int codigo = Integer.parseInt(productoAnadirView.getCampoCodigo().getText());
-        String nombre = productoAnadirView.getCampoNombre().getText();
-        double precio = Double.parseDouble(productoAnadirView.getCampoPrecio().getText());
+        int codigo;
+        try {
+            codigo = Integer.parseInt(productoAnadirView.getCampoCodigo().getText().trim());
+        } catch (NumberFormatException ex) {// cuando la persona ingresa cadena de numeros no valida
+            productoAnadirView.mostrarMensaje("Código inválido");
+            return;
+        }
+        String nombre = productoAnadirView.getCampoNombre().getText().trim();
+        if (nombre.isEmpty()) {
+            productoAnadirView.mostrarMensaje("El nombre no puede estar vacío");
+            return;
+        }
+        double precio;
+        try {
+            precio = Double.parseDouble(productoAnadirView.getCampoPrecio().getText().trim());
+        } catch (NumberFormatException ex) {
+            productoAnadirView.mostrarMensaje("Precio inválido");
+            return;
+        }
 
+        //validamos que no se ingresen codigos de productos iguales
+        if (productoDAO.buscarPorCodigo(codigo) != null) {
+            productoAnadirView.mostrarMensaje(
+                    "Ya existe un producto con el código " + codigo
+            );
+            return;
+        }
+
+        for (Producto p : productoDAO.listarTodos()) {
+            if (p.getNombre().equalsIgnoreCase(nombre)) {
+                productoAnadirView.mostrarMensaje(
+                        "Ya existe un producto con el nombre \"" + nombre + "\""
+                );
+                return;
+            }
+        }
+
+        // creamos el producto y se actualiza la vista de productos
         productoDAO.crear(new Producto(codigo, nombre, precio));
         productoAnadirView.mostrarMensaje("Producto guardado correctamente");
         productoAnadirView.limpiarCampos();

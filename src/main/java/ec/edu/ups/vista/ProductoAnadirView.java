@@ -26,8 +26,6 @@ public class ProductoAnadirView extends JInternalFrame {
         setClosable(true);
         setIconifiable(true);
         setResizable(true);
-        //setVisible(true);
-
     }
 
     public void mostrarMensaje(String mensaje) {
