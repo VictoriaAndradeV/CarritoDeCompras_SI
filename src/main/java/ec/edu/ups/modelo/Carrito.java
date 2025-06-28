@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 //buscar carrito y listar carrito, eliminar carrito
 public class Carrito {
+
     private final double IVA = 0.12;
     private static int contador = 1;// compartido entre todas las instancias, objetos
     //si no ponemos statico, siempre va a valer 1, pertenece a la clase no a la instancia
@@ -44,6 +45,19 @@ public class Carrito {
         while (it.hasNext()) {
             if (it.next().getProducto().getCodigo() == codigoProducto) {
                 it.remove();
+                break;
+            }
+        }
+    }
+
+    public void eliminarItem(int codigoProducto) {
+        items.removeIf(item -> item.getProducto().getCodigo() == codigoProducto);
+    }
+
+    public void actualizarCantidad(int codigoProducto, int nuevaCantidad) {
+        for (ItemCarrito item : items) {
+            if (item.getProducto().getCodigo() == codigoProducto) {
+                item.setCantidad(nuevaCantidad);
                 break;
             }
         }
@@ -97,8 +111,6 @@ public class Carrito {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
-
-
 
     @Override
     public String toString() {

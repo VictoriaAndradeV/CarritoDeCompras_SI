@@ -18,6 +18,8 @@ public class CarritoView extends JInternalFrame {
     private JPanel panelPrincipal;
     private JButton limpiarButton;
     private JComboBox comboBox1;
+    private JButton btnEliminar;
+    private JButton btnActualizar;
 
     public CarritoView() {
         super("Carrito de Compras", true, true, false, true);
@@ -42,6 +44,22 @@ public class CarritoView extends JInternalFrame {
 
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
+    }
+
+    public JButton getBtnActualizar() {
+        return btnActualizar;
+    }
+
+    public void setBtnActualizar(JButton btnActualizar) {
+        this.btnActualizar = btnActualizar;
+    }
+
+    public JButton getBtnEliminar() {
+        return btnEliminar;
+    }
+
+    public void setBtnEliminar(JButton btnEliminar) {
+        this.btnEliminar = btnEliminar;
     }
 
     public JTextField getTxtCodigo() {

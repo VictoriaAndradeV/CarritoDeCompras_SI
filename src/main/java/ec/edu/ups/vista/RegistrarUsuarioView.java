@@ -1,13 +1,9 @@
 package ec.edu.ups.vista;
-
-import ec.edu.ups.modelo.Rol;
-
 import javax.swing.*;
 
 public class RegistrarUsuarioView extends JFrame {
     private JPanel panelPrincipal;
     private JTextField txtUsuario;
-    private JComboBox comboBoxRol;
     private JButton btnRegistrarse;
     private JPasswordField passwordField1;
 
@@ -17,12 +13,6 @@ public class RegistrarUsuarioView extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(400, 250);
-
-
-        comboBoxRol.removeAllItems();
-        for (Rol rol : Rol.values()) {
-            comboBoxRol.addItem(rol);
-        }
     }
 
     public void mostrarMensaje(String mensaje) {
@@ -32,7 +22,6 @@ public class RegistrarUsuarioView extends JFrame {
     public void limpiarCampos() {
         txtUsuario.setText("");
         passwordField1.setText("");
-        comboBoxRol.setSelectedIndex(0);
     }
 
     public JPanel getPanelPrincipal() {
@@ -57,14 +46,6 @@ public class RegistrarUsuarioView extends JFrame {
 
     public void setPasswordField1(JPasswordField passwordField1) {
         this.passwordField1 = passwordField1;
-    }
-
-    public JComboBox getComboBoxRol() {
-        return comboBoxRol;
-    }
-
-    public void setComboBoxRol(JComboBox comboBoxRol) {
-        this.comboBoxRol = comboBoxRol;
     }
 
     public JButton getBtnRegistrarse() {

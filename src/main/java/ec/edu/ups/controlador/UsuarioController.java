@@ -1,13 +1,14 @@
 package ec.edu.ups.controlador;
 
 import ec.edu.ups.dao.UsuarioDAO;
-import ec.edu.ups.modelo.Rol;
 import ec.edu.ups.modelo.Usuario;
 import ec.edu.ups.vista.LoginView;
 import ec.edu.ups.vista.RegistrarUsuarioView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import static ec.edu.ups.modelo.Rol.USUARIO;
 
 public class UsuarioController {
 
@@ -58,8 +59,6 @@ public class UsuarioController {
     private void registrarUsuario() {
         String username = registrarUsuarioView.getTxtUsuario().getText().trim();
         String contrasenia = registrarUsuarioView.getPasswordField1().getText().trim();
-        Rol rol = (Rol) registrarUsuarioView.getComboBoxRol().getSelectedItem();
-
 
         if (username.isEmpty() || contrasenia.isEmpty()) {
             registrarUsuarioView.mostrarMensaje("Todos los campos son obligatorios.");
@@ -71,13 +70,11 @@ public class UsuarioController {
             return;
         }
 
-        Usuario nuevo = new Usuario(username, contrasenia, rol);
+        Usuario nuevo = new Usuario(username, contrasenia, USUARIO);
         usuarioDAO.crear(nuevo);
         registrarUsuarioView.mostrarMensaje("Usuario registrado exitosamente.");
         registrarUsuarioView.limpiarCampos();
     }
-
-
 
     private void autenticar(){
         String username = loginView.getTxtUsuario().getText();
@@ -94,6 +91,5 @@ public class UsuarioController {
     public Usuario getUsuarioAutenticado(){
         return usuario;
     }
-
 
 }
