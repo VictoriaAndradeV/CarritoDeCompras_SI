@@ -7,14 +7,16 @@ import ec.edu.ups.vista.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.List;
 
 public class ProductoController {
 
     private final ProductoDAO productoDAO;
+    private final CarritoView carritoView;
+
     private final ProductoAnadirView productoAnadirView;
     private final ProductoListaView productoListaView;
-    private final CarritoView carritoView;
 
     private EliminarProductoView eliminarProductoView;
     private ModificarProductoView modificarProductoView;
@@ -28,23 +30,9 @@ public class ProductoController {
         this.configurarEventosEnVistas();
     }
 
-    public void setModificarProductoView(ModificarProductoView modificarProductoView) {
-        this.modificarProductoView = modificarProductoView;
-        configurarEventosModificar(); // Conecta los botones
-    }
-
-    public void setEliminarProductoView(EliminarProductoView eliminarProductoView) {
-        this.eliminarProductoView = eliminarProductoView;
-        configurarEventosEliminar(); // Conecta los botones
-    }
-
+    //para la ventana de REGISTRAR producto
     private void configurarEventosEnVistas(){
-        productoAnadirView.getBtnAceptar().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                guardarProducto();
-            }
-        });
+        productoAnadirView.getBtnAceptar().addActionListener(e -> guardarProducto());
 
         productoListaView.getBtnBuscar().addActionListener(new ActionListener() {
             @Override
@@ -68,7 +56,7 @@ public class ProductoController {
         });
     }
 
-    // EVENTOS EliminarProductoView
+    // EVENTOS Eliminar Producto View
     private void configurarEventosEliminar() {
         eliminarProductoView.getBuscarButton().addActionListener(new ActionListener() {
             @Override
@@ -85,7 +73,7 @@ public class ProductoController {
         });
     }
 
-    // EVENTOS ModificarProductoView
+    // EVENTOS Modificar Producto
     private void configurarEventosModificar() {
         modificarProductoView.getBtnBuscar().addActionListener(new ActionListener() {
             @Override
@@ -102,29 +90,7 @@ public class ProductoController {
         });
     }
 
-
-    private void buscarProductoPorCodigo() {
-        int codigo = Integer.parseInt(carritoView.getTxtCodigo().getText());
-        Producto producto = productoDAO.buscarPorCodigo(codigo);
-        if (producto == null) {
-            carritoView.mostrarMensaje("No se encontro el producto");
-            carritoView.getTxtNombre().setText("");
-            carritoView.getTxtPrecio().setText("");
-        } else {
-            carritoView.getTxtNombre().setText(producto.getNombre());
-            carritoView.getTxtPrecio().setText(String.valueOf(producto.getPrecio()));
-        }
-    }
-
-        /*
-        productoAnadirView.getBtnLimpiar().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                productoAnadirView.limpiarCampos();
-            }
-        });*/
-
-
+    //VISTA AGREGAR PRODUCTOS
     private void guardarProducto() {
         int codigo = Integer.parseInt(productoAnadirView.getCampoCodigo().getText());
         String nombre = productoAnadirView.getCampoNombre().getText();
@@ -136,26 +102,38 @@ public class ProductoController {
         productoAnadirView.mostrarProductos(productoDAO.listarTodos());
     }
 
-    // EVENTOS ProductoListaView
-
-    private void configurarEventosLista() {
-        productoListaView.getBtnBuscar().addActionListener(e -> buscarProducto());
-        productoListaView.getBtnListar().addActionListener(e -> listarProductos());
-    }
-
+    //usamos el metodo para buscar el producto que ingresa el usuario
+    //en ventana LISTAR PRODUCTO
     private void buscarProducto() {
-        String nombre = productoListaView.getTxtBuscar().getText();
+        // obtenemos lo ingresado por el usuario
+        String nombre = productoListaView.getTxtBuscar().getText().trim();
+
+        if (nombre.isEmpty()) {
+            productoListaView.mostrarMensaje(
+                    "Ingrese un nombre de producto para buscar"
+            );
+            productoListaView.cargarDatos(Collections.emptyList());
+            return;
+        }
+        // Llamo al DAO
         List<Producto> productos = productoDAO.buscarPorNombre(nombre);
+
+        // cuando no hay el producto buscado muestro mensaje
+        if (productos.isEmpty()) {
+            productoListaView.mostrarMensaje(
+                    "No se encontró ningún producto que comience con '" + nombre + "'"
+            );
+        }
         productoListaView.cargarDatos(productos);
     }
 
+    //listar productos en Listar Productos View
     private void listarProductos() {
         List<Producto> productos = productoDAO.listarTodos();
         productoListaView.cargarDatos(productos);
     }
 
-
-
+    //Eliminar View
     private void buscarProductoPorNombreParaEliminar() {
         String nombre = eliminarProductoView.getCampoNombre().getText().trim();
 
@@ -163,13 +141,11 @@ public class ProductoController {
             eliminarProductoView.mostrarMensaje("Ingrese el nombre del producto por buscar");
             return;
         }
-
         List<Producto> productos = productoDAO.buscarPorNombre(nombre);
 
         if (productos.isEmpty()) {
             eliminarProductoView.mostrarMensaje("No se encontraron productos con ese nombre");
         }
-
         eliminarProductoView.cargarTabla(productos);
     }
 
@@ -183,7 +159,6 @@ public class ProductoController {
         }
 
         int codigo = Integer.parseInt(codTxt);
-
         int opcion = JOptionPane.showConfirmDialog(
                 eliminarProductoView,
                 "¿Seguro de eliminar el producto con código " + codigo + "?",
@@ -207,6 +182,19 @@ public class ProductoController {
         Producto producto = productoDAO.buscarPorCodigo(codigo);
         if (producto != null) {
             productoDAO.eliminar(codigo);
+            return true;
+        }
+        return false;
+    }
+
+    // Metodo que realiza la modificación real en el DAO
+    private boolean modificarProductoPorNombre(String nombreOriginal, String nuevoNombre, double nuevoPrecio) {
+        List<Producto> productos = productoDAO.buscarPorNombre(nombreOriginal);
+        if (!productos.isEmpty()) {
+            Producto p = productos.get(0); // toma el primero encontrado
+            p.setNombre(nuevoNombre);
+            p.setPrecio(nuevoPrecio);
+            productoDAO.actualizar(p);
             return true;
         }
         return false;
@@ -265,7 +253,7 @@ public class ProductoController {
         }
     }
 
-    // Metodo auxiliar para limpiar los campos del formulario de modificación
+    // Metodo para limpiar los campos de la mofificacion
     private void limpiarCamposModificar() {
         modificarProductoView.getTxtNombreBuscar().setText("");
         modificarProductoView.getTxtNombre().setText("");
@@ -273,20 +261,27 @@ public class ProductoController {
         modificarProductoView.getModelo().setRowCount(0);
     }
 
-    // Metodo que realiza la modificación real en el DAO
-    private boolean modificarProductoPorNombre(String nombreOriginal, String nuevoNombre, double nuevoPrecio) {
-        List<Producto> productos = productoDAO.buscarPorNombre(nombreOriginal);
-        if (!productos.isEmpty()) {
-            Producto p = productos.get(0); // toma el primero encontrado
-            p.setNombre(nuevoNombre);
-            p.setPrecio(nuevoPrecio);
-            productoDAO.actualizar(p);
-            return true;
+    //para buscar el producto al crear el carrito
+    private void buscarProductoPorCodigo() {
+        int codigo = Integer.parseInt(carritoView.getTxtCodigo().getText());
+        Producto producto = productoDAO.buscarPorCodigo(codigo);
+        if (producto == null) {
+            carritoView.mostrarMensaje("No se encontro el producto");
+            carritoView.getTxtNombre().setText("");
+            carritoView.getTxtPrecio().setText("");
+        } else {
+            carritoView.getTxtNombre().setText(producto.getNombre());
+            carritoView.getTxtPrecio().setText(String.valueOf(producto.getPrecio()));
         }
-        return false;
     }
 
-    public List<Producto> buscarProductosPorNombre(String nombre) {
-        return productoDAO.buscarPorNombre(nombre);
+    public void setModificarProductoView(ModificarProductoView modificarProductoView) {
+        this.modificarProductoView = modificarProductoView;
+        configurarEventosModificar(); // Conecta los botones
+    }
+
+    public void setEliminarProductoView(EliminarProductoView eliminarProductoView) {
+        this.eliminarProductoView = eliminarProductoView;
+        configurarEventosEliminar(); // Conecta los botones
     }
 }

@@ -11,6 +11,7 @@ public class ProductoDAOMemoria implements ProductoDAO {
 
     public ProductoDAOMemoria() {
         productos = new ArrayList<Producto>();
+        crear(new Producto(123, "Manzana", 0.25));
     }
 
     @Override
@@ -28,6 +29,7 @@ public class ProductoDAOMemoria implements ProductoDAO {
         return null;
     }
 
+    //metodo para buscar el producto
     @Override
     public List<Producto> buscarPorNombre(String nombre) {
         List<Producto> productosEncontrados = new ArrayList<>();

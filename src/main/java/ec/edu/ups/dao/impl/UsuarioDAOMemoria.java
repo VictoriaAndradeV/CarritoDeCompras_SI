@@ -79,7 +79,6 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
                 usuariosEncontrados.add(usuario);
             }
         }
-
         return usuariosEncontrados;
     }
 }

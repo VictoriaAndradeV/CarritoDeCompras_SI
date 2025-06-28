@@ -10,6 +10,7 @@ import ec.edu.ups.dao.impl.ProductoDAOMemoria;
 import ec.edu.ups.dao.impl.UsuarioDAOMemoria;
 import ec.edu.ups.modelo.Usuario;
 import ec.edu.ups.vista.*;
+import ec.edu.ups.modelo.Rol;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -48,6 +49,12 @@ public class Main {
                             ProductoController productoController = new ProductoController(productoDAO, productoAnadirView, productoListaView, carritoView);
                             CarritoController carritoController = new CarritoController(carritoDAO,carritoView, productoDAO);
 
+                            principalView.mostrarMensaje("Bienvenido: " + usuarioAuntenticado.getUsuario());
+                            //ocultar vistas cuando ingresa un usuario
+                            if(usuarioAuntenticado.getRol().equals(Rol.USUARIO)) {
+                                principalView.deshabilitarMenusAdministrador();
+                            }
+
                             EliminarProductoView eliminarProductoView = new EliminarProductoView(productoController);
                             ModificarProductoView modificarProductoView = new ModificarProductoView(productoController);
 
@@ -83,7 +90,7 @@ public class Main {
                                 }
                             });
 
-                            // menu eliminar produc
+                            // men  u eliminar produc
                             principalView.getMenuItemEliminarProducto().addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {

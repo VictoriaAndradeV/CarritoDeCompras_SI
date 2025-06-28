@@ -4,8 +4,6 @@ import ec.edu.ups.modelo.Producto;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 public class ProductoListaView extends JInternalFrame {
@@ -34,6 +32,10 @@ public class ProductoListaView extends JInternalFrame {
         modelo.setColumnIdentifiers(columnas);
         tblProductos.setModel(modelo);
 
+    }
+
+    public void mostrarMensaje(String msg) {
+        JOptionPane.showMessageDialog(this, msg);
     }
 
     public JTextField getTxtBuscar() {
