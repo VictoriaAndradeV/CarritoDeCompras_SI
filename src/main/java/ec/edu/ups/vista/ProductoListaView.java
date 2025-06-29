@@ -15,6 +15,7 @@ public class ProductoListaView extends JInternalFrame {
     private JButton btnListar;
     private JLabel textoNombre;
     private JPanel textoSup;
+    private JButton btnLimpiar;
     private DefaultTableModel modelo;
 
     public ProductoListaView() {
@@ -31,7 +32,6 @@ public class ProductoListaView extends JInternalFrame {
         Object[] columnas = {"Codigo", "Nombre", "Precio"};
         modelo.setColumnIdentifiers(columnas);
         tblProductos.setModel(modelo);
-
     }
 
     public void mostrarMensaje(String msg) {
@@ -84,6 +84,14 @@ public class ProductoListaView extends JInternalFrame {
 
     public void setModelo(DefaultTableModel modelo) {
         this.modelo = modelo;
+    }
+
+    public JButton getBtnLimpiar() {
+        return btnLimpiar;
+    }
+
+    public void setBtnLimpiar(JButton btnLimpiar) {
+        this.btnLimpiar = btnLimpiar;
     }
 
     public void cargarDatos(List<Producto> listaProductos) {

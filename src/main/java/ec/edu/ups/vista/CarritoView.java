@@ -31,7 +31,6 @@ public class CarritoView extends JInternalFrame {
         Object[] columnas = {"Codigo", "Nombre", "Precio", "Cantidad", "Subtotal"};
         modelo.setColumnIdentifiers(columnas);
         table1.setModel(modelo);
-
         cargarDatos();
     }
 

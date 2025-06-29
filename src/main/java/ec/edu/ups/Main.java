@@ -47,13 +47,7 @@ public class Main {
                             ProductoListaView productoListaView = new ProductoListaView();
 
                             ProductoController productoController = new ProductoController(productoDAO, productoAnadirView, productoListaView, carritoView);
-                            CarritoController carritoController = new CarritoController(carritoDAO,carritoView, productoDAO);
-
-                            principalView.mostrarMensaje("Bienvenido: " + usuarioAuntenticado.getUsuario());
-                            //ocultar vistas cuando ingresa un usuario
-                            if(usuarioAuntenticado.getRol().equals(Rol.USUARIO)) {
-                                principalView.deshabilitarMenusAdministrador();
-                            }
+                            CarritoController carritoController = new CarritoController(carritoDAO,carritoView, productoDAO, usuarioAuntenticado);
 
                             EliminarProductoView eliminarProductoView = new EliminarProductoView(productoController);
                             ModificarProductoView modificarProductoView = new ModificarProductoView(productoController);
@@ -67,6 +61,14 @@ public class Main {
                             principalView.getjDesktopPane().add(modificarProductoView);
                             principalView.getjDesktopPane().add(carritoView);
 
+                            //ocultar vistas cuando ingresa un usuario
+                            if(usuarioAuntenticado.getRol().equals(Rol.USUARIO)) {
+                                principalView.deshabilitarMenusAdministrador();
+                            } else{
+                                principalView.deshabilitarMenusUsuario();
+                            }
+
+                            principalView.mostrarMensaje("Bienvenido: " + usuarioAuntenticado.getUsuario());
 
                             // menu crear producto
                             principalView.getMenuItemCrearProducto().addActionListener(new ActionListener() {
@@ -120,6 +122,14 @@ public class Main {
                                         //principalView.getjDesktopPane().add(carritoView);
                                     }
                                 }
+                            });
+
+                            principalView.getMenuItemListarMisCarritos().addActionListener(evt -> {
+                                ListarCarritosView listarView = new ListarCarritosView();
+                                principalView.getjDesktopPane().add(listarView);
+                                // vincula con desktop
+                                carritoController.vincularListarCarritos(listarView,principalView.getjDesktopPane());
+                                listarView.setVisible(true);
                             });
                         }
                     }

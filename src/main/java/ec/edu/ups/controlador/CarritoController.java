@@ -5,7 +5,10 @@ import ec.edu.ups.dao.ProductoDAO;
 import ec.edu.ups.modelo.Carrito;
 import ec.edu.ups.modelo.ItemCarrito;
 import ec.edu.ups.modelo.Producto;
+import ec.edu.ups.modelo.Usuario;
 import ec.edu.ups.vista.CarritoView;
+import ec.edu.ups.vista.DetallesCarritoUserView;
+import ec.edu.ups.vista.ListarCarritosView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -18,12 +21,15 @@ public class CarritoController {
     private final CarritoDAO carritoDAO;
     private final CarritoView carritoView;
     private final ProductoDAO productoDAO;
+    private final Usuario usuarioActual;
     private Carrito carrito;
 
-    public CarritoController(CarritoDAO carritoDAO, CarritoView carritoView, ProductoDAO productoDAO) {
+    public CarritoController(CarritoDAO carritoDAO, CarritoView carritoView, ProductoDAO productoDAO,
+                             Usuario usuarioActual) {
         this.carritoDAO = carritoDAO;
         this.carritoView = carritoView;
         this.productoDAO = productoDAO;
+        this.usuarioActual = usuarioActual;
         this.carrito = new Carrito();
         configurarEventosEnVista();
     }
@@ -70,18 +76,18 @@ public class CarritoController {
                 mostrarVentanaModificarCantidad();
             }
         });
-
     }
 
     private void guardarCarrito() {
+        //asignar el usuario al carrito
+        carrito.setUsuario(usuarioActual);
         carritoDAO.crear(carrito);
         carritoView.mostrarMensaje("Carrito creado correctamente");
-        System.out.println(carritoDAO.listarTodos());
-        limpiarCampos();
-
-        DefaultTableModel modelo = (DefaultTableModel) carritoView.getTable1().getModel();
-        modelo.setRowCount(0);
-        carrito = new Carrito(); //creamos un nuevo carrito al presionar guardar
+        // limpiamos
+        DefaultTableModel m =
+                (DefaultTableModel) carritoView.getTable1().getModel();
+        m.setRowCount(0);
+        carrito = new Carrito();
     }
 
     //se agregan los productos y su cantidad
@@ -119,10 +125,10 @@ public class CarritoController {
     }
 
     private void cancelarCarrito() {
-        carrito = new Carrito(); // nuevo carrito vacio
+        carrito = new Carrito(); //nuevo carrito vacio
         limpiarCampos();
         DefaultTableModel modelo = (DefaultTableModel) carritoView.getTable1().getModel();
-        modelo.setRowCount(0); // Limpia tabla
+        modelo.setRowCount(0); //Limpia tabla
     }
 
     private void limpiarCampos() {
@@ -146,15 +152,13 @@ public class CarritoController {
                     "Confirmar acción",
                     JOptionPane.YES_NO_OPTION
             );
-
             if (confirmacion == JOptionPane.YES_OPTION) {
                 int codigo = Integer.parseInt(tabla.getValueAt(fila, 0).toString());
                 carrito.eliminarItem(codigo); // Metodo del modelo Carrito que elimina por código de producto
                 actualizarTabla();            // Refresca la tabla
                 mostrarTotales();            // Refresca los totales
-                carritoView.mostrarMensaje("Ítem eliminado correctamente.");
+                carritoView.mostrarMensaje("Item eliminado correctamente");
             }
-
         } else {
             carritoView.mostrarMensaje("Selecciona un item para eliminar");
         }
@@ -162,7 +166,7 @@ public class CarritoController {
 
     private void actualizarTabla() {
         DefaultTableModel modelo = (DefaultTableModel) carritoView.getTable1().getModel();
-        modelo.setRowCount(0); // Limpiar tabla antes de volver a cargar
+        modelo.setRowCount(0); //Limpiar tabla antes de volver a cargar
 
         List<ItemCarrito> items = carrito.obtenerItems();
         for (ItemCarrito item : items) {
@@ -193,7 +197,7 @@ public class CarritoController {
 
             JLabel label = new JLabel("Nueva cantidad:");
 
-            // ComboBox con números del 1 al 20
+            //ComboBox con num del 1 al 20
             JComboBox<Integer> comboCantidad = new JComboBox<>();
             for (int i = 1; i <= 20; i++) {
                 comboCantidad.addItem(i);
@@ -203,9 +207,9 @@ public class CarritoController {
             btnAceptar.addActionListener(ev -> {
                 int nuevaCantidad = (int) comboCantidad.getSelectedItem();
                 carrito.actualizarCantidad(codigoProducto, nuevaCantidad); // método en modelo
-                actualizarTabla();  // refrescar tabla
+                actualizarTabla();  //refrescar tabla
                 mostrarTotales();
-                dialogo.dispose(); // cerrar ventana
+                dialogo.dispose(); //cerrar ventana
                 carritoView.mostrarMensaje("Cantidad actualizada correctamente");
             });
 
@@ -221,4 +225,86 @@ public class CarritoController {
         }
     }
 
+    public void vincularListarCarritos(ListarCarritosView view, JDesktopPane desktop) {
+        // ya existente listener de Listar
+        view.getBtnListar().addActionListener(evt -> {
+            List<Carrito> lista = carritoDAO.listarPorUsuario(usuarioActual.getUsuario());
+            if (lista.isEmpty()) {
+                view.mostrarMensaje("Aún no ha creado ningún carrito");
+            } else {
+                view.cargarDatos(lista);
+            }
+        });
+        // nuevo listener de Detalle
+        view.getBtnDetalle().addActionListener(evt -> {
+            int fila = view.getTable1().getSelectedRow();
+            if (fila < 0) {
+                view.mostrarMensaje("Seleccione un carrito");
+                return;
+            }
+            int codigo = (int) view.getTable1().getValueAt(fila, 0);
+            Carrito c = carritoDAO.buscarPorCodigo(codigo);
+            if (c == null) {
+                view.mostrarMensaje("Carrito no encontrado");
+                return;
+            }
+            DetallesCarritoUserView detView = new DetallesCarritoUserView();
+            desktop.add(detView);
+            detView.setVisible(true);
+            detView.cargarDatos(c.obtenerItems());
+            vincularDetalle(detView, c);
+        });
+        view.getBtnEliminar().addActionListener(evt -> {
+            int fila = view.getTable1().getSelectedRow();
+            if (fila < 0) { //cuando no seleccionamos una fila de la tabla y aplastamos eliminar
+                view.mostrarMensaje("Selecciona un carrito para eliminar");
+                return;
+            }
+            //tomamos el codigo de la fila seleccionada para eliminar el carrito completo
+            int codigo = (int) view.getTable1().getValueAt(fila, 0);
+            carritoDAO.eliminar(codigo);
+            view.mostrarMensaje("Carrito eliminado correctamente");
+            //actualizamos la lista
+            List<Carrito> lista = carritoDAO.listarPorUsuario(usuarioActual.getUsuario());
+            view.cargarDatos(lista);
+        });
+    }
+
+    private void vincularDetalle(DetallesCarritoUserView view, Carrito carrito) {
+        //funcionamiento boton modificar del detalle de la solicitud
+        view.getBtnModificar().addActionListener(evt -> {
+            int fila = view.getTablaDetalles().getSelectedRow();
+            if (fila < 0) {
+                view.mostrarMensaje("Seleccione un producto");
+                return;
+            }
+            int codigoProd = (int) view.getTablaDetalles().getValueAt(fila, 0);
+            String input = JOptionPane.showInputDialog(view, "Nueva cantidad:");
+            if (input != null) {
+                try {
+                    int nuevaCant = Integer.parseInt(input);
+                    carrito.actualizarCantidad(codigoProd, nuevaCant);
+                    carritoDAO.limpiar(carrito);
+                    view.cargarDatos(carrito.obtenerItems());
+                } catch (NumberFormatException ex) {
+                    view.mostrarMensaje("Cantidad inválida");
+                }
+            }
+        });
+
+        //funcionamiento del boton eliminar
+        view.getBtnEliminar().addActionListener(evt -> {
+            int fila = view.getTablaDetalles().getSelectedRow();
+            if (fila < 0) {
+                view.mostrarMensaje("Seleccione un producto");
+                return;
+            }
+            int codigoProd = (int) view.getTablaDetalles().getValueAt(fila, 0);
+            carrito.eliminarItem(codigoProd);
+            carritoDAO.limpiar(carrito);
+            view.cargarDatos(carrito.obtenerItems());
+        });
+    }
 }
+
+

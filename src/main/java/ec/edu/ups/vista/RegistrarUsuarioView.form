@@ -10,7 +10,7 @@
       <font name="JetBrains Mono ExtraBold" size="20"/>
     </properties>
     <border type="none" title="REGISTRAR USUARIO" title-justification="2" title-position="1">
-      <font/>
+      <font name="Artifakt Element Black" size="22"/>
       <title-color color="-16777216"/>
     </border>
     <children>
@@ -28,6 +28,7 @@
         </constraints>
         <properties>
           <background color="-7090474"/>
+          <font name="Artifakt Element Medium" size="16"/>
           <text value="Registrarme"/>
         </properties>
       </component>
