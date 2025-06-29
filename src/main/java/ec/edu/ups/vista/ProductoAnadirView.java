@@ -18,7 +18,6 @@ public class ProductoAnadirView extends JInternalFrame {
     private JLabel textoCodigo;
 
     public ProductoAnadirView() {
-
         setContentPane(panelPrincipal);
         setTitle("Datos del Producto");
         setDefaultCloseOperation(HIDE_ON_CLOSE);

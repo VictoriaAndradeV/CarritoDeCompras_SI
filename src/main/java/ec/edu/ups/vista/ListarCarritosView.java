@@ -1,9 +1,92 @@
 package ec.edu.ups.vista;
 
-import javax.swing.*;
+import ec.edu.ups.modelo.Carrito;
 
-public class ListarCarritosView {
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.text.SimpleDateFormat;
+import java.util.List;
+
+public class ListarCarritosView extends JInternalFrame {
     private JPanel panelPrincipal;
     private JTable table1;
     private JButton btnListar;
+    private JButton btnDetalle;
+    private JButton btnEliminar;
+    private DefaultTableModel modelo;
+
+    // Formateador de fecha
+    private static final SimpleDateFormat SDF =
+            new SimpleDateFormat("dd/MM/yyyy");
+
+    public ListarCarritosView() {
+        super("Listado Carritos", true, true, false, true);
+        setContentPane(panelPrincipal);
+        setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+        setSize(500, 400);
+
+        modelo = new DefaultTableModel();
+        Object[] columnas = {"Código", "Fecha de creación", "Precio total"};
+        modelo.setColumnIdentifiers(columnas);
+        table1.setModel(modelo);
+    }
+
+    public void cargarDatos(List<Carrito> listaCarritos) {
+        modelo.setRowCount(0);
+        for (Carrito c : listaCarritos) {
+            String fechaStr = SDF.format(c.getFechaCreacion().getTime());
+            String totalStr = String.format("%.2f", c.calcularTotal());
+
+            modelo.addRow(new Object[]{
+                    c.getCodigo(),
+                    fechaStr,
+                    totalStr
+            });
+        }
+    }
+
+    public void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje);
+    }
+
+    //getters y setters
+    public JPanel getPanelPrincipal() {
+        return panelPrincipal;
+    }
+
+    public void setPanelPrincipal(JPanel panelPrincipal) {
+        this.panelPrincipal = panelPrincipal;
+    }
+
+    public JTable getTable1() {
+        return table1;
+    }
+
+    public void setTable1(JTable table1) {
+        this.table1 = table1;
+    }
+
+    public JButton getBtnListar() {
+        return btnListar;
+    }
+
+    public void setBtnListar(JButton btnListar) {
+        this.btnListar = btnListar;
+    }
+
+    public JButton getBtnDetalle() {
+        return btnDetalle;
+    }
+
+    public void setBtnDetalle(JButton btnDetalle) {
+        this.btnDetalle = btnDetalle;
+    }
+
+    public JButton getBtnEliminar() {
+        return btnEliminar;
+    }
+
+    public void setBtnEliminar(JButton btnEliminar) {
+        this.btnEliminar = btnEliminar;
+    }
 }
