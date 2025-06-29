@@ -73,7 +73,6 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
     @Override
     public List<Usuario> listarPorRol(Rol rol) {
         List<Usuario> usuariosEncontrados = new ArrayList<>();
-
         for (Usuario usuario : usuarios) {
             if (usuario.getRol().equals(rol)) {
                 usuariosEncontrados.add(usuario);

@@ -20,7 +20,7 @@ public class PrincipalView extends JFrame {
     private JMenuItem menuItemListarMisCarritos;
     private JMenuItem menuItemListarCarritosPorUsuario;
 
-    //oociones para editar la sesion del usuario
+    //opciones para editar la sesion del usuario
     private JMenuItem menuItemCuentaUsuario;
     private JMenuItem menuItemListarUsuarios; //solo para admin
 
@@ -79,23 +79,24 @@ public class PrincipalView extends JFrame {
         getMenuItemActualizarProducto().setEnabled(false);
         getMenuItemEliminarProducto().setEnabled(false);
         getMenuItemListarCarritosPorUsuario().setEnabled(false); //usuario no puede listar los carritos de demas usuarios
+        getMenuItemListarUsuarios().setEnabled(false);
     }
 
     public void deshabilitarMenusUsuario(){
         getMenuItemCrearCarrito().setEnabled(false);
         getMenuItemListarMisCarritos().setEnabled(false);
+        getMenuItemCuentaUsuario().setEnabled(false);
     }
 
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
 
-
+    //GETTERS Y SETTERS
     public JMenuItem getMenuItemCrearProducto() {
         return menuItemCrearProducto;
     }
 
-    //GETTERS Y SETTERS
     public JMenu getMenuProducto() {
         return menuProducto;
     }

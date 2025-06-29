@@ -1,13 +1,12 @@
 package ec.edu.ups.vista;
 
-import ec.edu.ups.modelo.Carrito;
 import ec.edu.ups.modelo.ItemCarrito;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
-public class DetallesCarritoUserView extends JInternalFrame {
+public class DetalleCarritoUserView extends JInternalFrame {
     private JPanel panelPrincipal;
     private JTable tablaDetalles;
     private JButton btnEliminar;
@@ -15,7 +14,7 @@ public class DetallesCarritoUserView extends JInternalFrame {
 
     private DefaultTableModel modelo;
 
-    public DetallesCarritoUserView() {
+    public DetalleCarritoUserView() {
         super("Detalle del carrito", true, true, false, true);
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);

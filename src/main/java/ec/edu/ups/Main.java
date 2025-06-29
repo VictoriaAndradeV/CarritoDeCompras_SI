@@ -3,6 +3,7 @@ package ec.edu.ups;
 import ec.edu.ups.controlador.ProductoController;
 import ec.edu.ups.controlador.CarritoController;
 import ec.edu.ups.controlador.UsuarioController;
+import ec.edu.ups.dao.CarritoDAO;
 import ec.edu.ups.dao.ProductoDAO;
 import ec.edu.ups.dao.UsuarioDAO;
 import ec.edu.ups.dao.impl.CarritoDAOMemoria;
@@ -25,11 +26,15 @@ public class Main {
 
                 //iniciar sesion
                 UsuarioDAO usuarioDAO = new UsuarioDAOMemoria();
+                CarritoDAO carritoDAO = new CarritoDAOMemoria();
+
                 LoginView loginView = new LoginView();
                 RegistrarUsuarioView registrarUsuarioView = new RegistrarUsuarioView();
 
-                UsuarioController usuarioController = new UsuarioController(usuarioDAO, loginView);
-                usuarioController.setRegistrarUsuarioView(registrarUsuarioView);
+                UsuarioController usuarioController = new UsuarioController(usuarioDAO,
+                        carritoDAO,
+                        loginView,
+                        registrarUsuarioView);
 
                 loginView.setVisible(true);
 
@@ -40,26 +45,32 @@ public class Main {
                         if(usuarioAuntenticado != null){
                             PrincipalView principalView = new PrincipalView();
                             CarritoView carritoView = new CarritoView();
+                            ListarCarritosView listarCarritosView = new ListarCarritosView();
+                            ListarCarritoAdminView listarCAdmin = new ListarCarritoAdminView();
 
                             ProductoDAO productoDAO = new ProductoDAOMemoria();
-                            CarritoDAOMemoria carritoDAO = new CarritoDAOMemoria();
+                            //CarritoDAOMemoria carritoDAO = new CarritoDAOMemoria();
                             ProductoAnadirView productoAnadirView = new ProductoAnadirView();
                             ProductoListaView productoListaView = new ProductoListaView();
 
                             ProductoController productoController = new ProductoController(productoDAO, productoAnadirView, productoListaView, carritoView);
-                            CarritoController carritoController = new CarritoController(carritoDAO,carritoView, productoDAO, usuarioAuntenticado);
+                            CarritoController carritoController = new CarritoController(carritoDAO, usuarioDAO,carritoView, productoDAO, usuarioAuntenticado);
 
                             EliminarProductoView eliminarProductoView = new EliminarProductoView(productoController);
                             ModificarProductoView modificarProductoView = new ModificarProductoView(productoController);
 
                             productoController.setModificarProductoView(modificarProductoView);
                             productoController.setEliminarProductoView(eliminarProductoView);
+                            carritoController.vincularListarCarritos(listarCarritosView, principalView.getjDesktopPane());
+                            carritoController.configurarEventosListarCarritoAdmin(listarCAdmin, principalView.getjDesktopPane());
 
                             principalView.getjDesktopPane().add(productoAnadirView);
                             principalView.getjDesktopPane().add(productoListaView);
                             principalView.getjDesktopPane().add(eliminarProductoView);
                             principalView.getjDesktopPane().add(modificarProductoView);
                             principalView.getjDesktopPane().add(carritoView);
+                            principalView.getjDesktopPane().add(listarCarritosView);
+                            principalView.getjDesktopPane().add(listarCAdmin);
 
                             //ocultar vistas cuando ingresa un usuario
                             if(usuarioAuntenticado.getRol().equals(Rol.USUARIO)) {
@@ -124,12 +135,22 @@ public class Main {
                                 }
                             });
 
-                            principalView.getMenuItemListarMisCarritos().addActionListener(evt -> {
-                                ListarCarritosView listarView = new ListarCarritosView();
-                                principalView.getjDesktopPane().add(listarView);
-                                // vincula con desktop
-                                carritoController.vincularListarCarritos(listarView,principalView.getjDesktopPane());
-                                listarView.setVisible(true);
+                            principalView.getMenuItemListarMisCarritos().addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    if(!listarCarritosView.isVisible()){
+                                        listarCarritosView.setVisible(true);
+                                    }
+                                }
+                            });
+
+                            principalView.getMenuItemListarCarritosPorUsuario().addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    if(!listarCAdmin.isVisible()){
+                                        listarCAdmin.setVisible(true);
+                                    }
+                                }
                             });
                         }
                     }
