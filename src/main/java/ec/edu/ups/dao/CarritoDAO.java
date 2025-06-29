@@ -17,4 +17,6 @@ public interface CarritoDAO {
     List<Carrito> listarTodos(); //solo para admin
 
     List<Carrito> listarPorUsuario(String nombreDeUsuario);
+
+    void eliminarPorUsuario(String nombreDeUsuario);
 }

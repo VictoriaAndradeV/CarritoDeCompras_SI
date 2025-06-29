@@ -59,11 +59,23 @@ public class CarritoDAOMemoria implements CarritoDAO{
     public List<Carrito> listarPorUsuario(String nombreDeUsuario) {
         List<Carrito> resultado = new ArrayList<>();
         for (Carrito c : carritos) {
-            // c.getUsuario().getUsuario() te devuelve el nombre de usuario
+            // c.getUsuario().getUsuario() devuelve el nombre de usuario
             if (c.getUsuario().getUsuario().equals(nombreDeUsuario)) {
                 resultado.add(c);
             }
         }
         return resultado;
     }
+
+    @Override
+    public void eliminarPorUsuario(String nombreDeUsuario) {
+        Iterator<Carrito> it = carritos.iterator();
+        while (it.hasNext()) {
+            Carrito c = it.next();
+            if (c.getUsuario().getUsuario().equals(nombreDeUsuario)) {
+                it.remove();
+            }
+        }
+    }
+
 }

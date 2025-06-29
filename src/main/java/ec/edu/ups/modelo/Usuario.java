@@ -34,10 +34,6 @@ public class Usuario {
         return rol;
     }
 
-    public void setRol(Rol rol) {
-        this.rol = rol;
-    }
-
     @Override
     public String toString() {
         return "Usuario{" +
@@ -46,6 +42,4 @@ public class Usuario {
                 ", rol=" + rol +
                 '}';
     }
-
-
 }
