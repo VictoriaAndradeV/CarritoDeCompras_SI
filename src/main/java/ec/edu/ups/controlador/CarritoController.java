@@ -208,7 +208,7 @@ public class CarritoController {
             JButton btnAceptar = new JButton("Actualizar");
             btnAceptar.addActionListener(ev -> {
                 int nuevaCantidad = (int) comboCantidad.getSelectedItem();
-                carrito.actualizarCantidad(codigoProducto, nuevaCantidad); // método en modelo
+                carrito.actualizarCantidad(codigoProducto, nuevaCantidad);
                 actualizarTabla();
                 mostrarTotales();
                 dialogo.dispose(); //cerrar ventana
@@ -216,7 +216,7 @@ public class CarritoController {
             });
             panel.add(label);
             panel.add(comboCantidad);
-            panel.add(Box.createVerticalStrut(10)); // Espacio
+            panel.add(Box.createVerticalStrut(10));
             panel.add(btnAceptar);
 
             dialogo.add(panel);
@@ -225,7 +225,7 @@ public class CarritoController {
             carritoView.mostrarMensaje("Seleccione el item que desee modificar");
         }
     }
-    //listar carritos del usuario, esto no se admin
+    //listar carritos del usuario, esto no hace admin
     public void vincularListarCarritos(ListarCarritosView view, JDesktopPane desktop) {
         configurarEventoListar(view);
         configurarEventoDetalle(view, desktop);
@@ -274,7 +274,7 @@ public class CarritoController {
             int codigo = (int) view.getTable1().getValueAt(fila, 0);
             carritoDAO.eliminar(codigo);
             view.mostrarMensaje("Carrito eliminado correctamente");
-            // refresca la lista
+            //actualiza  la liusta
             List<Carrito> lista = carritoDAO.listarPorUsuario(usuarioActual.getUsuario());
             view.cargarDatos(lista);
         });

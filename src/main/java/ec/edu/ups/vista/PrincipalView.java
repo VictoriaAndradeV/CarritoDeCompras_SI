@@ -1,8 +1,12 @@
 package ec.edu.ups.vista;
 
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
+
 import javax.swing.*;
 
 public class PrincipalView extends JFrame {
+    private MensajeInternacionalizacionHandler mih;
+
     private JMenuBar menuBar;
 
     private JMenu menuProducto;
@@ -51,6 +55,7 @@ public class PrincipalView extends JFrame {
 
         menuBar.add(menuProducto);
         menuBar.add(menuCarrito);
+        menuBar.add(menuSesion);
 
         menuProducto.add(menuItemCrearProducto);
         menuProducto.add(menuItemEliminarProducto);
@@ -65,12 +70,45 @@ public class PrincipalView extends JFrame {
         menuSesion.add(menuItemCuentaUsuario);
         menuSesion.add(menuItemListarUsuarios);
 
+        //idioma por defecto
+        mih = new MensajeInternacionalizacionHandler("es", "EC");
+
+        actualizarTextos();
+
         setJMenuBar(menuBar);
         setContentPane(jDesktopPane);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Sistema de Carrito de Compras En Línea");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setVisible(true);
+    }
+
+    //Nuevo constructor que recibe el handler ya inicializado
+    public PrincipalView(MensajeInternacionalizacionHandler mih) {
+        this();               //llama al constructor por defecto
+        this.mih = mih;       //asigna el handler
+        actualizarTextos();   //pinta los textos con el idioma adecuado
+    }
+
+    public void actualizarTextos() {
+        setTitle(mih.get("app.titulo"));
+        menuProducto.setText(mih.get("menu.producto"));
+        menuCarrito.setText(mih.get("menu.carrito"));
+        menuSesion.setText(mih.get("menu.sesion"));
+
+        //items del producto
+        menuItemCrearProducto.setText(mih.get("menu.producto.crear"));
+        menuItemEliminarProducto.setText(mih.get("menu.producto.eliminar"));
+        menuItemActualizarProducto.setText(mih.get("menu.producto.actualizar"));
+        menuItemBuscarProducto .setText(mih.get("menu.producto.buscar"));
+
+        //items del carrito
+        menuItemCrearCarrito.setText(mih.get("menu.carrito.crear"));
+        menuItemListarMisCarritos.setText(mih.get("menu.carrito.listarMisCarritos"));
+        menuItemListarCarritosPorUsuario.setText(mih.get("menu.carrito.listarPorUsuario"));
+
+        //items de Cuenta
+        menuItemCuentaUsuario .setText(mih.get("menu.cuenta.usuario"));
+        menuItemListarUsuarios.setText(mih.get("menu.cuenta.admin"));
     }
 
     public void deshabilitarMenusAdministrador() {
@@ -93,6 +131,14 @@ public class PrincipalView extends JFrame {
     }
 
     //GETTERS Y SETTERS
+    public MensajeInternacionalizacionHandler getMih() {
+        return mih;
+    }
+
+    public void setMih(MensajeInternacionalizacionHandler mih) {
+        this.mih = mih;
+    }
+
     public JMenuItem getMenuItemCrearProducto() {
         return menuItemCrearProducto;
     }
