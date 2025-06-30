@@ -10,6 +10,8 @@ import ec.edu.ups.dao.impl.CarritoDAOMemoria;
 import ec.edu.ups.dao.impl.ProductoDAOMemoria;
 import ec.edu.ups.dao.impl.UsuarioDAOMemoria;
 import ec.edu.ups.modelo.Usuario;
+import ec.edu.ups.util.IdiomaUsado;
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.vista.*;
 import ec.edu.ups.modelo.Rol;
 
@@ -31,11 +33,8 @@ public class Main {
                 LoginView loginView = new LoginView();
                 RegistrarUsuarioView registrarUsuarioView = new RegistrarUsuarioView();
 
-                UsuarioController usuarioController = new UsuarioController(usuarioDAO,
-                        carritoDAO,
-                        loginView,
-                        registrarUsuarioView);
-
+                UsuarioController usuarioController = new UsuarioController(usuarioDAO,carritoDAO,loginView,
+                                                                            registrarUsuarioView);
                 loginView.setVisible(true);
 
                 loginView.addWindowListener(new WindowAdapter() {
@@ -43,13 +42,25 @@ public class Main {
                     public void windowClosed(WindowEvent e){
                         Usuario usuarioAuntenticado = usuarioController.getUsuarioAutenticado();
                         if(usuarioAuntenticado != null){
-                            PrincipalView principalView = new PrincipalView();
+                            // Toma el idioma seleccionado en el login
+                            IdiomaUsado sel = (IdiomaUsado)loginView.getComboBoxIdioma().getSelectedItem();
+                            String lenguaje = sel.getLocale().getLanguage();
+                            String pais = sel.getLocale().getCountry();
+
+                            // Crea el objeto que va a encargarse de las traducciones,
+                            // indicandole el idioma y pais seleccionado
+                            MensajeInternacionalizacionHandler mih = new MensajeInternacionalizacionHandler(lenguaje, pais);
+
+                            PrincipalView principalView = usuarioController.getPrincipalView();  // ya tiene listeners
+                            principalView.setMih(mih);
+                            principalView.actualizarTextos();
+                            principalView.setVisible(true);
+
                             CarritoView carritoView = new CarritoView();
                             ListarCarritosView listarCarritosView = new ListarCarritosView();
                             ListarCarritoAdminView listarCAdmin = new ListarCarritoAdminView();
 
                             ProductoDAO productoDAO = new ProductoDAOMemoria();
-                            //CarritoDAOMemoria carritoDAO = new CarritoDAOMemoria();
                             ProductoAnadirView productoAnadirView = new ProductoAnadirView();
                             ProductoListaView productoListaView = new ProductoListaView();
 

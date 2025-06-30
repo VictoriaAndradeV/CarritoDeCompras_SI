@@ -24,7 +24,6 @@ public class ListarCarritoAdminView extends JInternalFrame {
         modelo.setColumnIdentifiers(columnas);
         table1.setModel(modelo);
     }
-    //falta cargar datos de la tabla
 
     public void cargarUsuarios(java.util.List<String> usuarios) {
         modelo.setRowCount(0);

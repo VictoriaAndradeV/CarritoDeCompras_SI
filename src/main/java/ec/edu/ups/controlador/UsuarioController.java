@@ -3,12 +3,14 @@ package ec.edu.ups.controlador;
 import ec.edu.ups.dao.CarritoDAO;
 import ec.edu.ups.dao.UsuarioDAO;
 import ec.edu.ups.modelo.Usuario;
-import ec.edu.ups.vista.CuentaUsuarioView;
-import ec.edu.ups.vista.LoginView;
-import ec.edu.ups.vista.PrincipalView;
-import ec.edu.ups.vista.RegistrarUsuarioView;
+import ec.edu.ups.vista.*;
 
 import javax.swing.*;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static ec.edu.ups.modelo.Rol.USUARIO;
 
@@ -19,9 +21,10 @@ public class UsuarioController {
     private final CarritoDAO carritoDAO;
 
     private final LoginView loginView;
-    private RegistrarUsuarioView registrarUsuarioView;
+    private final RegistrarUsuarioView registrarUsuarioView;
     private PrincipalView principalView;
     private CuentaUsuarioView cuentaUsuarioView;
+    private CuendaAdminView cuentaAdminView;
 
     public UsuarioController(UsuarioDAO usuarioDAO, CarritoDAO carritoDAO, LoginView loginView,
                              RegistrarUsuarioView registrarUsuarioView) {
@@ -79,9 +82,19 @@ public class UsuarioController {
     private void iniciarPrincipal() {
         principalView = new PrincipalView();
         cuentaUsuarioView = new CuentaUsuarioView();
-        principalView.getjDesktopPane().add(cuentaUsuarioView);
+        cuentaAdminView = new CuendaAdminView();
 
+        principalView.getjDesktopPane().add(cuentaUsuarioView);
+        principalView.getjDesktopPane().add(cuentaAdminView);
+
+        // menú Cuenta de usuario
         principalView.getMenuItemCuentaUsuario().addActionListener(e -> abrirCuentaUsuario());
+        // menú Listar Usuarios (solo admin)
+        principalView.getMenuItemListarUsuarios().addActionListener(e -> abrirCuentaAdmin());
+
+        //principalView.setVisible(true);
+        configurarEventosCuenta();
+        configurarEventosCuentaAdmin();
     }
 
     private void abrirCuentaUsuario() {
@@ -99,33 +112,23 @@ public class UsuarioController {
     }
 
     private void editarNombre() {
-        String nuevo = JOptionPane.showInputDialog(
-                cuentaUsuarioView,
-                "Ingrese nuevo nombre de usuario:",
-                usuario.getUsuario()
-        );
+        cuentaUsuarioView.mostrarMensaje("Ingrese el nuevo nombre de usuario:");
+        String nuevo =usuario.getUsuario();
         if (nuevo != null && !nuevo.trim().isEmpty()) {
             if (usuarioDAO.buscarPorUsername(nuevo) != null) {
-                JOptionPane.showMessageDialog(
-                        cuentaUsuarioView,
-                        "El nombre ya está en uso.",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE
-                );
+                cuentaUsuarioView.mostrarMensaje("El nombre de usuario ya existe.");
                 return;
             }
             usuario.setUsuario(nuevo);
             usuarioDAO.actualizar(usuario);
             cuentaUsuarioView.getTxtNombreUsuario().setText(nuevo);
-            JOptionPane.showMessageDialog(
-                    cuentaUsuarioView,
-                    "Nombre actualizado exitosamente."
-            );
+            cuentaUsuarioView.mostrarMensaje("Usuario actualizado exitosamente.");
         }
     }
 
     private void cambiarContrasenia() {
         JPasswordField pf = new JPasswordField();
+
         int ok = JOptionPane.showConfirmDialog(
                 cuentaUsuarioView,
                 pf,
@@ -137,7 +140,7 @@ public class UsuarioController {
             if (nueva.isEmpty()) {
                 JOptionPane.showMessageDialog(
                         cuentaUsuarioView,
-                        "La contraseña no puede quedar vacía.",
+                        "La contraseña no puede estar vacia",
                         "Error",
                         JOptionPane.ERROR_MESSAGE
                 );
@@ -147,7 +150,7 @@ public class UsuarioController {
             usuarioDAO.actualizar(usuario);
             JOptionPane.showMessageDialog(
                     cuentaUsuarioView,
-                    "Contraseña cambiada exitosamente."
+                    "Contraseña modificada"
             );
         }
     }
@@ -173,8 +176,157 @@ public class UsuarioController {
         loginView.setVisible(true);
     }
 
+    private void abrirCuentaAdmin() {
+        // carga todos los usuarios inicialmente
+        List<String> todos = usuarioDAO.listarTodos()
+                .stream().map(Usuario::getUsuario)
+                .collect(Collectors.toList());
+        cuentaAdminView.cargarUsuarios(todos);
+        cuentaAdminView.setVisible(true);
+    }
+
+    private void configurarEventosCuentaAdmin() {
+
+        cuentaAdminView.getBtnListar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                listarUsuarios();
+            }
+        });
+
+        cuentaAdminView.getBtnBuscar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                buscarUsuario();
+            }
+        });
+        cuentaAdminView.getBtnEliminar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                eliminarUsuario();
+            }
+        });
+
+        cuentaAdminView.getBtnModificarNom().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                modificarNombreUsuario();
+            }
+        });
+
+        cuentaAdminView.getBtnModificarContra().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                modificarContraseniaUsuario();
+            }
+        });
+
+        cuentaAdminView.getBtnCerrarSesion().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                cerrarSesionAdmin();
+            }
+        });
+    }
+
+    private void listarUsuarios() {
+        List<String> lista = usuarioDAO.listarTodos()
+                .stream().map(Usuario::getUsuario)
+                .collect(Collectors.toList());
+        cuentaAdminView.cargarUsuarios(lista);
+    }
+
+    private void buscarUsuario() {
+        String nombre = cuentaAdminView.getTextField1().getText().trim();
+        if (nombre.isEmpty()) {
+            cuentaAdminView.mostrarMensaje("Ingrese nombre de usuario a buscar");
+            return;
+        }
+        Usuario u = usuarioDAO.buscarPorUsername(nombre);
+        if (u == null) {
+            cuentaAdminView.mostrarMensaje("Usuario no encontrado");
+            cuentaAdminView.cargarUsuarios(List.of());
+        } else {
+            cuentaAdminView.cargarUsuarios(List.of(u.getUsuario()));
+        }
+    }
+
+    private void eliminarUsuario() {
+        int idx = cuentaAdminView.getTable1().getSelectedRow();
+        if (idx < 0) {
+            cuentaAdminView.mostrarMensaje("Seleccione un usuario para eliminar");
+            return;
+        }
+        String nom = (String) cuentaAdminView.getTable1().getValueAt(idx, 0);
+        usuarioDAO.eliminar(nom);
+        abrirCuentaAdmin();
+        cuentaAdminView.mostrarMensaje("Usuario " + nom + " eliminado");
+    }
+
+    private void modificarNombreUsuario() {
+        int idx = cuentaAdminView.getTable1().getSelectedRow();
+        if (idx < 0) {
+            cuentaAdminView.mostrarMensaje("Seleccione un usuario para modificar nombre");
+            return;
+        }
+        String actual = (String) cuentaAdminView.getTable1().getValueAt(idx, 0);
+        String nuevo = JOptionPane.showInputDialog(
+                cuentaAdminView,
+                "Nuevo nombre para " + actual + ":", actual
+        );
+        if (nuevo != null && !nuevo.trim().isEmpty()) {
+            if (usuarioDAO.buscarPorUsername(nuevo) != null) {
+                cuentaAdminView.mostrarMensaje("Nombre ya en uso");
+                return;
+            }
+            Usuario u = usuarioDAO.buscarPorUsername(actual);
+            u.setUsuario(nuevo);
+            usuarioDAO.actualizar(u);
+            abrirCuentaAdmin();
+            cuentaAdminView.mostrarMensaje("Nombre modificado");
+        }
+    }
+
+    private void modificarContraseniaUsuario() {
+        int idx = cuentaAdminView.getTable1().getSelectedRow();
+        if (idx < 0) {
+            cuentaAdminView.mostrarMensaje("Seleccione un usuario para modificar contraseña");
+            return;
+        }
+        String nom = (String) cuentaAdminView.getTable1().getValueAt(idx, 0);
+        JPasswordField pf = new JPasswordField();
+        int ok = JOptionPane.showConfirmDialog(
+                cuentaAdminView,
+                pf,
+                "Nueva contraseña para " + nom + ":",
+                JOptionPane.OK_CANCEL_OPTION
+        );
+        if (ok == JOptionPane.OK_OPTION) {
+            String nueva = new String(pf.getPassword()).trim();
+            if (nueva.isEmpty()) {
+                cuentaAdminView.mostrarMensaje("Contraseña no puede quedar vacía");
+                return;
+            }
+            Usuario u = usuarioDAO.buscarPorUsername(nom);
+            u.setContrasenia(nueva);
+            usuarioDAO.actualizar(u);
+            cuentaAdminView.mostrarMensaje("Contraseña modificada");
+        }
+    }
+
+    private void cerrarSesionAdmin() {
+        cuentaAdminView.dispose();
+        principalView.dispose();
+        loginView.setVisible(true);
+    }
+
     public Usuario getUsuarioAutenticado() {
         return usuario;
+    }
+
+    //Permite acceder a la ventana principal creada internamente
+    public PrincipalView getPrincipalView() {
+        return principalView;
     }
 
 }

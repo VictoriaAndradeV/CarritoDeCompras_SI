@@ -17,9 +17,11 @@ public class CuentaUsuarioView extends JInternalFrame {
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
         setSize(500, 500);
-
     }
 
+    public void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje);
+    }
 
 
     //getters y setters
