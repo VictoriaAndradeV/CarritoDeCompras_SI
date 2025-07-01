@@ -1,7 +1,6 @@
 package ec.edu.ups.vista;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.Locale;
 import ec.edu.ups.util.*;
 
@@ -15,6 +14,8 @@ public class LoginView extends JFrame {
     private JComboBox<IdiomaUsado> comboBoxIdioma;
     private JLabel lblUsuario;
     private JLabel lblContrasenia;
+    private JLabel lblIdioma;
+    private JLabel lblIniciarSesion;
 
     private MensajeInternacionalizacionHandler mih;
 
@@ -53,7 +54,8 @@ public class LoginView extends JFrame {
     }
 
     private void actualizarTextos() {
-        setTitle(mih.get("login.titulo"));
+        lblIniciarSesion.setText(mih.get("login.titulo"));
+        lblIdioma.setText(mih.get("login.txtIdioma"));
         lblUsuario.setText(mih.get("login.txtUsuario"));
         lblContrasenia.setText(mih.get("login.txtContrasenia"));
         btnIniciarSesion.setText(mih.get("button.login"));
@@ -127,5 +129,21 @@ public class LoginView extends JFrame {
 
     public void setLblContrasenia(JLabel lblContrasenia) {
         this.lblContrasenia = lblContrasenia;
+    }
+
+    public JLabel getLblIdioma() {
+        return lblIdioma;
+    }
+
+    public void setLblIdioma(JLabel lblIdioma) {
+        this.lblIdioma = lblIdioma;
+    }
+
+    public JLabel getLblIniciarSesion() {
+        return lblIniciarSesion;
+    }
+
+    public void setLblIniciarSesion(JLabel lblIniciarSesion) {
+        this.lblIniciarSesion = lblIniciarSesion;
     }
 }
