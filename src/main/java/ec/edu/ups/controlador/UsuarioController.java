@@ -3,6 +3,8 @@ package ec.edu.ups.controlador;
 import ec.edu.ups.dao.CarritoDAO;
 import ec.edu.ups.dao.UsuarioDAO;
 import ec.edu.ups.modelo.Usuario;
+import ec.edu.ups.util.IdiomaUsado;
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.vista.*;
 
 import javax.swing.*;
@@ -26,6 +28,8 @@ public class UsuarioController {
     private CuentaUsuarioView cuentaUsuarioView;
     private CuendaAdminView cuentaAdminView;
 
+    private MensajeInternacionalizacionHandler mih;
+
     public UsuarioController(UsuarioDAO usuarioDAO, CarritoDAO carritoDAO, LoginView loginView,
                              RegistrarUsuarioView registrarUsuarioView) {
         this.usuarioDAO = usuarioDAO;
@@ -43,7 +47,17 @@ public class UsuarioController {
     }
 
     private void mostrarRegistrarse() {
-        if (!registrarUsuarioView.isVisible()) {
+        // se lee el idioma tomado del combobox
+        IdiomaUsado sel = (IdiomaUsado) loginView.getComboBoxIdioma().getSelectedItem();
+        String lenguaje = sel.getLocale().getLanguage();
+        String pais = sel.getLocale().getCountry();
+
+        MensajeInternacionalizacionHandler handler = new MensajeInternacionalizacionHandler(lenguaje, pais);
+
+        registrarUsuarioView.setMih(handler);
+        registrarUsuarioView.actualizarTextos();
+
+        if (!registrarUsuarioView.isVisible()) { //se muestra la ventana
             registrarUsuarioView.setVisible(true);
         }
     }
@@ -74,13 +88,22 @@ public class UsuarioController {
         if (usuario == null) {
             loginView.mostrarMensaje("Usuario o contraseña incorrectos.");
         } else {
+            // se lee el idioma que eligió el usuario
+            IdiomaUsado sel = (IdiomaUsado) loginView.getComboBoxIdioma().getSelectedItem();
+            String lang = sel.getLocale().getLanguage();
+            String country = sel.getLocale().getCountry();
+
+            //Creamos el handler UNA SOLA VEZ para toda la sesion
+            this.mih = new MensajeInternacionalizacionHandler(lang, country);
+
+            //Cerramos el login y arrancamos la principal
             loginView.dispose();
             iniciarPrincipal();
         }
     }
 
     private void iniciarPrincipal() {
-        principalView = new PrincipalView();
+        principalView = new PrincipalView(mih);
         cuentaUsuarioView = new CuentaUsuarioView();
         cuentaAdminView = new CuendaAdminView();
 
@@ -95,6 +118,7 @@ public class UsuarioController {
         //principalView.setVisible(true);
         configurarEventosCuenta();
         configurarEventosCuentaAdmin();
+        principalView.setVisible(true);
     }
 
     private void abrirCuentaUsuario() {
@@ -113,7 +137,7 @@ public class UsuarioController {
 
     private void editarNombre() {
         cuentaUsuarioView.mostrarMensaje("Ingrese el nuevo nombre de usuario:");
-        String nuevo =usuario.getUsuario();
+        String nuevo = usuario.getUsuario();
         if (nuevo != null && !nuevo.trim().isEmpty()) {
             if (usuarioDAO.buscarPorUsername(nuevo) != null) {
                 cuentaUsuarioView.mostrarMensaje("El nombre de usuario ya existe.");
@@ -186,44 +210,43 @@ public class UsuarioController {
     }
 
     private void configurarEventosCuentaAdmin() {
-
         cuentaAdminView.getBtnListar().addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){
+            public void actionPerformed(ActionEvent e) {
                 listarUsuarios();
             }
         });
 
         cuentaAdminView.getBtnBuscar().addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){
+            public void actionPerformed(ActionEvent e) {
                 buscarUsuario();
             }
         });
         cuentaAdminView.getBtnEliminar().addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){
+            public void actionPerformed(ActionEvent e) {
                 eliminarUsuario();
             }
         });
 
         cuentaAdminView.getBtnModificarNom().addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){
+            public void actionPerformed(ActionEvent e) {
                 modificarNombreUsuario();
             }
         });
 
         cuentaAdminView.getBtnModificarContra().addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){
+            public void actionPerformed(ActionEvent e) {
                 modificarContraseniaUsuario();
             }
         });
 
         cuentaAdminView.getBtnCerrarSesion().addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){
+            public void actionPerformed(ActionEvent e) {
                 cerrarSesionAdmin();
             }
         });

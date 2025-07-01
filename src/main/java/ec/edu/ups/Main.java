@@ -10,8 +10,6 @@ import ec.edu.ups.dao.impl.CarritoDAOMemoria;
 import ec.edu.ups.dao.impl.ProductoDAOMemoria;
 import ec.edu.ups.dao.impl.UsuarioDAOMemoria;
 import ec.edu.ups.modelo.Usuario;
-import ec.edu.ups.util.IdiomaUsado;
-import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.vista.*;
 import ec.edu.ups.modelo.Rol;
 
@@ -42,19 +40,7 @@ public class Main {
                     public void windowClosed(WindowEvent e){
                         Usuario usuarioAuntenticado = usuarioController.getUsuarioAutenticado();
                         if(usuarioAuntenticado != null){
-                            // Toma el idioma seleccionado en el login
-                            IdiomaUsado sel = (IdiomaUsado)loginView.getComboBoxIdioma().getSelectedItem();
-                            String lenguaje = sel.getLocale().getLanguage();
-                            String pais = sel.getLocale().getCountry();
-
-                            // Crea el objeto que va a encargarse de las traducciones,
-                            // indicandole el idioma y pais seleccionado
-                            MensajeInternacionalizacionHandler mih = new MensajeInternacionalizacionHandler(lenguaje, pais);
-
                             PrincipalView principalView = usuarioController.getPrincipalView();  // ya tiene listeners
-                            principalView.setMih(mih);
-                            principalView.actualizarTextos();
-                            principalView.setVisible(true);
 
                             CarritoView carritoView = new CarritoView();
                             ListarCarritosView listarCarritosView = new ListarCarritosView();
@@ -109,18 +95,16 @@ public class Main {
                                 public void actionPerformed(ActionEvent e) {
                                     if(!productoListaView.isVisible()){
                                         productoListaView.setVisible(true);
-                                        //principalView.getjDesktopPane().add(productoListaView);
                                     }
                                 }
                             });
 
-                            // men  u eliminar produc
+                            // menu eliminar produc
                             principalView.getMenuItemEliminarProducto().addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
                                     if (!eliminarProductoView.isVisible()) {
                                         eliminarProductoView.setVisible(true);
-                                        //principalView.getjDesktopPane().add(eliminarProductoView);
                                     }
                                 }
                             });
@@ -131,7 +115,6 @@ public class Main {
                                 public void actionPerformed(ActionEvent e) {
                                     if (!modificarProductoView.isVisible()) {
                                         modificarProductoView.setVisible(true);
-                                        //principalView.getjDesktopPane().add(modificarProductoView);
                                     }
                                 }
                             });
@@ -141,7 +124,6 @@ public class Main {
                                 public void actionPerformed(ActionEvent e) {
                                     if(!carritoView.isVisible()){
                                         carritoView.setVisible(true);
-                                        //principalView.getjDesktopPane().add(carritoView);
                                     }
                                 }
                             });

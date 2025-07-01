@@ -72,7 +72,6 @@ public class PrincipalView extends JFrame {
 
         //idioma por defecto
         mih = new MensajeInternacionalizacionHandler("es", "EC");
-
         actualizarTextos();
 
         setJMenuBar(menuBar);
