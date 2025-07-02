@@ -2,6 +2,7 @@ package ec.edu.ups.vista;
 
 import ec.edu.ups.controlador.ProductoController;
 import ec.edu.ups.modelo.Producto;
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -14,38 +15,76 @@ public class ModificarProductoView extends JInternalFrame {
     private JTable tblProductos;
     private JTextField txtNombre;
     private JTextField txtPrecio;
+    private JLabel lblPrice;
     private JButton btnModificar;
+    private JLabel tituloModificar;
+    private JLabel lblNombre;
     private DefaultTableModel modelo;
     private final ProductoController productoController;
 
+    private MensajeInternacionalizacionHandler mih;
 
     public ModificarProductoView(ProductoController productoController) {
         this.productoController = productoController;
-
         setContentPane(panelPrincipal);
-        setTitle("Modificar Productos");
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         setSize(500, 400);
         setClosable(true);
         setIconifiable(true);
         setResizable(true);
 
+        // Modelo provisional de la tabla
         modelo = new DefaultTableModel();
-        Object[] columnas = {"Codigo", "Nombre", "Precio"};
-        modelo.setColumnIdentifiers(columnas);
+        modelo.setColumnIdentifiers(new Object[]{"Codigo", "Nombre", "Precio"});
         tblProductos.setModel(modelo);
+    }
+
+    public void setMensajeHandler(MensajeInternacionalizacionHandler mih) {
+        this.mih = mih;
+        actualizarTextos();
+    }
+
+    private void actualizarTextos() {
+        setTitle(mih.get("modificarP.titulo"));
+        tituloModificar.setText(mih.get("modificarP.titulo"));
+        lblNombre.setText(mih.get("modificarP.txtNombre"));
+        lblPrice.setText(mih.get("modificarP.txtPrecio"));
+        btnBuscar.setText(mih.get("modificarP.btnBuscar"));
+        btnModificar.setText(mih.get("modificarP.btnModificar"));
+        // columnas de la tabla
+        modelo.setColumnIdentifiers(new Object[]{
+                mih.get("modificarP.colCodigo"),
+                mih.get("modificarP.colNombre"),
+                mih.get("modificarP.colPrecio")
+        });
     }
 
     public void mostrarMensaje(String msg) {
         JOptionPane.showMessageDialog(this, msg);
     }
 
-
     public void cargarTabla(List<Producto> lista) {
         modelo.setRowCount(0);
         for (Producto p : lista) {
             modelo.addRow(new Object[]{p.getCodigo(), p.getNombre(), p.getPrecio()});
         }
+    }
+
+    //getters y setters
+    public JPanel getPanelPrincipal() {
+        return panelPrincipal;
+    }
+
+    public void setPanelPrincipal(JPanel panelPrincipal) {
+        this.panelPrincipal = panelPrincipal;
+    }
+
+    public JLabel getTituloModificar() {
+        return tituloModificar;
+    }
+
+    public void setTituloModificar(JLabel tituloModificar) {
+        this.tituloModificar = tituloModificar;
     }
 
     public JTextField getTxtNombreBuscar() {

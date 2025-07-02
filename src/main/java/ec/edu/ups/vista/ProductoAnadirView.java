@@ -4,9 +4,6 @@ import ec.edu.ups.modelo.Producto;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
-import javax.swing.event.InternalFrameAdapter;
-import javax.swing.event.InternalFrameEvent;
-import java.awt.*;
 import java.util.List;
 
 public class ProductoAnadirView extends JInternalFrame {

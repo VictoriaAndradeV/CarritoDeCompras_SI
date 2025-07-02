@@ -2,6 +2,7 @@ package ec.edu.ups.vista;
 
 import ec.edu.ups.controlador.ProductoController;
 import ec.edu.ups.modelo.Producto;
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -14,14 +15,16 @@ public class EliminarProductoView extends JInternalFrame {
     private JButton eliminarButton;
     private JButton buscarButton;
     private DefaultTableModel modelo;
-    private JLabel textoPrincipal;
+    private JLabel txtTitulo;
     private JTextField campoNombre;
+    private JLabel lblNombre;
+    private JLabel lblCodigo;
 
     private final ProductoController productoC;
+    private MensajeInternacionalizacionHandler mih;
 
     public EliminarProductoView(ProductoController productoC) {
         this.productoC = productoC;
-
         setContentPane(panelPrincipal);
         setTitle("Eliminar Productos");
         setDefaultCloseOperation(HIDE_ON_CLOSE);
@@ -34,7 +37,26 @@ public class EliminarProductoView extends JInternalFrame {
         Object[] columnas = {"Codigo", "Nombre", "Precio"};
         modelo.setColumnIdentifiers(columnas);
         tblProductos.setModel(modelo);
+    }
 
+    public void setMensajeHandler(MensajeInternacionalizacionHandler mih) {
+        this.mih = mih;
+        actualizarTextos();
+    }
+
+    private void actualizarTextos() {
+        setTitle(mih.get("eliminarP.titulo"));
+        txtTitulo.setText(mih.get("eliminarP.titulo"));
+        lblNombre.setText(mih.get("eliminarP.txtNombre"));
+        lblCodigo.setText(mih.get("eliminarP.txtCodigo"));
+        buscarButton.setText(mih.get("eliminarP.btnBuscar"));
+        eliminarButton.setText(mih.get("eliminarP.btnEliminar"));
+
+        modelo.setColumnIdentifiers(new Object[]{
+                mih.get("eliminarP.colCodigo"),
+                mih.get("eliminarP.colNombre"),
+                mih.get("eliminarP.colPrecio")
+        });
     }
 
     public void cargarTabla(List<Producto> lista) {
@@ -51,6 +73,36 @@ public class EliminarProductoView extends JInternalFrame {
                 break;
             }
         }
+    }
+
+    //Getters y setters
+
+    public JLabel getTxtTitulo() {
+        return txtTitulo;
+    }
+
+    public void setTxtTitulo(JLabel txtTitulo) {
+        this.txtTitulo = txtTitulo;
+    }
+
+    public void setCampoNombre(JTextField campoNombre) {
+        this.campoNombre = campoNombre;
+    }
+
+    public JLabel getLblNombre() {
+        return lblNombre;
+    }
+
+    public void setLblNombre(JLabel lblNombre) {
+        this.lblNombre = lblNombre;
+    }
+
+    public JLabel getLblCodigo() {
+        return lblCodigo;
+    }
+
+    public void setLblCodigo(JLabel lblCodigo) {
+        this.lblCodigo = lblCodigo;
     }
 
     public void mostrarMensaje(String msg) {
@@ -102,11 +154,11 @@ public class EliminarProductoView extends JInternalFrame {
     }
 
     public JLabel getTextoPrincipal() {
-        return textoPrincipal;
+        return txtTitulo;
     }
 
     public void setTextoPrincipal(JLabel textoPrincipal) {
-        this.textoPrincipal = textoPrincipal;
+        this.txtTitulo = textoPrincipal;
     }
 
 
