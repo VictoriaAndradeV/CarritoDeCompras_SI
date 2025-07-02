@@ -10,6 +10,7 @@ import ec.edu.ups.dao.impl.CarritoDAOMemoria;
 import ec.edu.ups.dao.impl.ProductoDAOMemoria;
 import ec.edu.ups.dao.impl.UsuarioDAOMemoria;
 import ec.edu.ups.modelo.Usuario;
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.vista.*;
 import ec.edu.ups.modelo.Rol;
 
@@ -42,15 +43,22 @@ public class Main {
                         if(usuarioAuntenticado != null){
                             PrincipalView principalView = usuarioController.getPrincipalView();  // ya tiene listeners
 
+                            // 1) Recupera el handler ya inicializado tras el login
+                            MensajeInternacionalizacionHandler mih = usuarioController.getMih();
+
                             CarritoView carritoView = new CarritoView();
                             ListarCarritosView listarCarritosView = new ListarCarritosView();
                             ListarCarritoAdminView listarCAdmin = new ListarCarritoAdminView();
 
                             ProductoDAO productoDAO = new ProductoDAOMemoria();
+                            //vista de registrar productos con el mih
                             ProductoAnadirView productoAnadirView = new ProductoAnadirView();
+                            productoAnadirView.setMensajeHandler(mih);
+                            //vista de listar productos
                             ProductoListaView productoListaView = new ProductoListaView();
+                            productoListaView.setMensajeHandler(mih);
 
-                            ProductoController productoController = new ProductoController(productoDAO, productoAnadirView, productoListaView, carritoView);
+                            ProductoController productoController = new ProductoController(mih, productoDAO, productoAnadirView, productoListaView, carritoView);
                             CarritoController carritoController = new CarritoController(carritoDAO, usuarioDAO,carritoView, productoDAO, usuarioAuntenticado);
 
                             EliminarProductoView eliminarProductoView = new EliminarProductoView(productoController);

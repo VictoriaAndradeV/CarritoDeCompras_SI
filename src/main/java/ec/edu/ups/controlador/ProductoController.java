@@ -2,11 +2,13 @@ package ec.edu.ups.controlador;
 
 import ec.edu.ups.dao.ProductoDAO;
 import ec.edu.ups.modelo.Producto;
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.vista.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,8 +23,11 @@ public class ProductoController {
     private EliminarProductoView eliminarProductoView;
     private ModificarProductoView modificarProductoView;
 
-    public ProductoController(ProductoDAO productoDAO, ProductoAnadirView productoAnadirView,
+    private final MensajeInternacionalizacionHandler mih;
+
+    public ProductoController(MensajeInternacionalizacionHandler mih, ProductoDAO productoDAO, ProductoAnadirView productoAnadirView,
                               ProductoListaView productoListaView, CarritoView carritoView) {
+        this.mih = mih;
         this.productoDAO = productoDAO;
         this.productoAnadirView = productoAnadirView;
         this.productoListaView = productoListaView;
@@ -96,47 +101,48 @@ public class ProductoController {
         });
     }
 
+    //REGISTRAR PRODUCTO
     private void guardarProducto() {
         int codigo;
         try {
             codigo = Integer.parseInt(productoAnadirView.getCampoCodigo().getText().trim());
         } catch (NumberFormatException ex) {// cuando la persona ingresa cadena de numeros no valida
-            productoAnadirView.mostrarMensaje("Código inválido");
+            productoAnadirView.mostrarMensaje(mih.get("producto.mensajeError.codigo"));
             return;
         }
         String nombre = productoAnadirView.getCampoNombre().getText().trim();
         if (nombre.isEmpty()) {
-            productoAnadirView.mostrarMensaje("El nombre no puede estar vacío");
+            productoAnadirView.mostrarMensaje(mih.get("producto.mensajeError.nombre"));
             return;
         }
         double precio;
         try {
             precio = Double.parseDouble(productoAnadirView.getCampoPrecio().getText().trim());
         } catch (NumberFormatException ex) {
-            productoAnadirView.mostrarMensaje("Precio inválido");
+            productoAnadirView.mostrarMensaje(mih.get("producto.mensajeError.precio"));
             return;
         }
 
         //validamos que no se ingresen codigos de productos iguales
         if (productoDAO.buscarPorCodigo(codigo) != null) {
-            productoAnadirView.mostrarMensaje(
-                    "Ya existe un producto con el código " + codigo
-            );
+            String msg = MessageFormat.format(mih.get("producto.mensajeError.codigoExistente"), codigo);
+            productoAnadirView.mostrarMensaje(msg);
             return;
         }
 
         for (Producto p : productoDAO.listarTodos()) {
             if (p.getNombre().equalsIgnoreCase(nombre)) {
-                productoAnadirView.mostrarMensaje(
-                        "Ya existe un producto con el nombre \"" + nombre + "\""
+                String msg = MessageFormat.format(
+                        mih.get("producto.mensajeError.nombreExistente"),
+                        nombre
                 );
+                productoAnadirView.mostrarMensaje(msg);
                 return;
             }
         }
-
         // creamos el producto y se actualiza la vista de productos
         productoDAO.crear(new Producto(codigo, nombre, precio));
-        productoAnadirView.mostrarMensaje("Producto guardado correctamente");
+        productoAnadirView.mostrarMensaje(mih.get("producto.mensaje.guardado"));
         productoAnadirView.limpiarCampos();
         productoAnadirView.mostrarProductos(productoDAO.listarTodos());
     }
@@ -148,9 +154,7 @@ public class ProductoController {
         String nombre = productoListaView.getTxtBuscar().getText().trim();
 
         if (nombre.isEmpty()) {
-            productoListaView.mostrarMensaje(
-                    "Ingrese un nombre de producto para buscar"
-            );
+            productoListaView.mostrarMensaje(mih.get("producto.mensajeError.campoVacio"));
             productoListaView.cargarDatos(Collections.emptyList());
             return;
         }
@@ -159,9 +163,7 @@ public class ProductoController {
 
         // cuando no hay el producto buscado muestro mensaje
         if (productos.isEmpty()) {
-            productoListaView.mostrarMensaje(
-                    "No se encontró ningún producto que comience con '" + nombre + "'"
-            );
+            productoListaView.mostrarMensaje(mih.get("producto.mensajeError.productoNoEncontrado"));
         }
         productoListaView.cargarDatos(productos);
     }

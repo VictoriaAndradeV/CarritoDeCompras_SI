@@ -1,8 +1,12 @@
 package ec.edu.ups.vista;
 
 import ec.edu.ups.modelo.Producto;
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
+import java.awt.*;
 import java.util.List;
 
 public class ProductoAnadirView extends JInternalFrame {
@@ -16,15 +20,28 @@ public class ProductoAnadirView extends JInternalFrame {
     private JLabel textoPrecio;
     private JLabel textoNombre;
     private JLabel textoCodigo;
+    private JLabel lblRegistrarProducto;
+
+    private MensajeInternacionalizacionHandler mih;
 
     public ProductoAnadirView() {
         setContentPane(panelPrincipal);
         setTitle("Datos del Producto");
         setDefaultCloseOperation(HIDE_ON_CLOSE);
-        setSize(400, 400);
+        setSize(450, 450);
         setClosable(true);
         setIconifiable(true);
         setResizable(true);
+    }
+
+    public void actualizarTextos() {
+        setTitle(mih.get("agregarP.titulo"));
+        lblRegistrarProducto.setText(mih.get("agregarP.titulo"));
+        textoCodigo.setText(mih.get("agregarP.txtCodigo"));
+        textoNombre.setText(mih.get("agregarP.txtNombre"));
+        textoPrecio.setText(mih.get("agregarP.txtPrecio"));
+        btnAceptar.setText(mih.get("agregar.btnAceptar"));
+        btnLimpiar.setText(mih.get("agregar.btnLimpiar"));
     }
 
     public void mostrarMensaje(String mensaje) {
@@ -41,6 +58,11 @@ public class ProductoAnadirView extends JInternalFrame {
         for (Producto producto : productos) {
             System.out.println(producto);
         }
+    }
+
+    public void setMensajeHandler(MensajeInternacionalizacionHandler mih) {
+        this.mih = mih;
+        actualizarTextos();
     }
 
     public JPanel getPanelPrincipal() {
@@ -115,4 +137,11 @@ public class ProductoAnadirView extends JInternalFrame {
         this.textoCodigo = textoCodigo;
     }
 
+    public JLabel getLblRegistrarProducto() {
+        return lblRegistrarProducto;
+    }
+
+    public void setLblRegistrarProducto(JLabel lblRegistrarProducto) {
+        this.lblRegistrarProducto = lblRegistrarProducto;
+    }
 }

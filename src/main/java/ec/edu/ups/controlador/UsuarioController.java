@@ -352,4 +352,11 @@ public class UsuarioController {
         return principalView;
     }
 
+    public MensajeInternacionalizacionHandler getMih() {
+        return mih;
+    }
+
+    public void setMih(MensajeInternacionalizacionHandler mih) {
+        this.mih = mih;
+    }
 }
