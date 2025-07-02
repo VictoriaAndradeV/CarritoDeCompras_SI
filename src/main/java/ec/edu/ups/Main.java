@@ -43,36 +43,40 @@ public class Main {
                         if(usuarioAuntenticado != null){
                             PrincipalView principalView = usuarioController.getPrincipalView();  // ya tiene listeners
 
-                            // 1) Recupera el handler ya inicializado tras el login
+                            //Recupera el handler ya inicializado tras el login
                             MensajeInternacionalizacionHandler mih = usuarioController.getMih();
 
-                            CarritoView carritoView = new CarritoView();
                             ListarCarritosView listarCarritosView = new ListarCarritosView();
                             ListarCarritoAdminView listarCAdmin = new ListarCarritoAdminView();
-
+                            CarritoView carritoView = new CarritoView();
                             ProductoDAO productoDAO = new ProductoDAOMemoria();
+
                             //vista de registrar productos con el mih
                             ProductoAnadirView productoAnadirView = new ProductoAnadirView();
                             productoAnadirView.setMensajeHandler(mih);
+                            principalView.getjDesktopPane().add(productoAnadirView);
+
                             //vista de listar productos
                             ProductoListaView productoListaView = new ProductoListaView();
                             productoListaView.setMensajeHandler(mih);
+                            principalView.getjDesktopPane().add(productoListaView);
 
                             ProductoController productoController = new ProductoController(mih, productoDAO, productoAnadirView, productoListaView, carritoView);
                             CarritoController carritoController = new CarritoController(carritoDAO, usuarioDAO,carritoView, productoDAO, usuarioAuntenticado);
 
                             EliminarProductoView eliminarProductoView = new EliminarProductoView(productoController);
-                            ModificarProductoView modificarProductoView = new ModificarProductoView(productoController);
-
-                            productoController.setModificarProductoView(modificarProductoView);
+                            eliminarProductoView.setMensajeHandler(mih);
                             productoController.setEliminarProductoView(eliminarProductoView);
+                            principalView.getjDesktopPane().add(eliminarProductoView);
+
+                            ModificarProductoView modificarProductoView = new ModificarProductoView(productoController);
+                            modificarProductoView.setMensajeHandler(mih);
+                            productoController.setModificarProductoView(modificarProductoView);
+                            principalView.getjDesktopPane().add(modificarProductoView);
+
                             carritoController.vincularListarCarritos(listarCarritosView, principalView.getjDesktopPane());
                             carritoController.configurarEventosListarCarritoAdmin(listarCAdmin, principalView.getjDesktopPane());
 
-                            principalView.getjDesktopPane().add(productoAnadirView);
-                            principalView.getjDesktopPane().add(productoListaView);
-                            principalView.getjDesktopPane().add(eliminarProductoView);
-                            principalView.getjDesktopPane().add(modificarProductoView);
                             principalView.getjDesktopPane().add(carritoView);
                             principalView.getjDesktopPane().add(listarCarritosView);
                             principalView.getjDesktopPane().add(listarCAdmin);

@@ -179,13 +179,13 @@ public class ProductoController {
         String nombre = eliminarProductoView.getCampoNombre().getText().trim();
 
         if (nombre.isEmpty()) {
-            eliminarProductoView.mostrarMensaje("Ingrese el nombre del producto por buscar");
+            eliminarProductoView.mostrarMensaje(mih.get("producto.mensajeError.campoVacio"));
             return;
         }
         List<Producto> productos = productoDAO.buscarPorNombre(nombre);
 
         if (productos.isEmpty()) {
-            eliminarProductoView.mostrarMensaje("No se encontraron productos con ese nombre");
+            eliminarProductoView.mostrarMensaje(mih.get("producto.mensajeError.productoNoEncontrado"));
         }
         eliminarProductoView.cargarTabla(productos);
     }
@@ -195,15 +195,14 @@ public class ProductoController {
         String codTxt = eliminarProductoView.getTxtCodigoEliminar().getText().trim();
 
         if (!codTxt.matches("\\d+")) {
-            eliminarProductoView.mostrarMensaje("Código inválido");
+            eliminarProductoView.mostrarMensaje(mih.get("producto.mensajeError"));
             return;
         }
 
         int codigo = Integer.parseInt(codTxt);
-        int opcion = JOptionPane.showConfirmDialog(
-                eliminarProductoView,
-                "¿Seguro de eliminar el producto con código " + codigo + "?",
-                "Confirmación",
+        int opcion = JOptionPane.showConfirmDialog(eliminarProductoView,
+                MessageFormat.format(mih.get("producto.mensajeConfirmar.eliminar"),codigo),
+                mih.get("producto.titulo.mensajeAccion"),
                 JOptionPane.YES_NO_OPTION
         );
 
@@ -211,9 +210,9 @@ public class ProductoController {
             boolean eliminado = eliminarProducto(codigo);
             if (eliminado) {
                 eliminarProductoView.removerFila(codigo);
-                eliminarProductoView.mostrarMensaje("Producto eliminado correctamente");
+                eliminarProductoView.mostrarMensaje(mih.get("producto.mensajeExito.eliminar"));
             } else {
-                eliminarProductoView.mostrarMensaje("Producto NO encontrado");
+                eliminarProductoView.mostrarMensaje(mih.get("producto.mensajeError.eliminar"));
             }
         }
     }
@@ -246,50 +245,49 @@ public class ProductoController {
         String nombre = modificarProductoView.getTxtNombreBuscar().getText().trim();
 
         if (nombre.isEmpty()) {
-            modificarProductoView.mostrarMensaje("Ingrese el nombre del producto por buscar");
+            modificarProductoView.mostrarMensaje(mih.get("producto.mensajeError.campoVacio"));
             return;
         }
         List<Producto> productos = productoDAO.buscarPorNombre(nombre);
 
         if (productos.isEmpty()) {
-            modificarProductoView.mostrarMensaje("No se encontraron productos con ese nombre");
+            modificarProductoView.mostrarMensaje(mih.get("producto.mensajeError.productoNoEncontrado"));
         }
         modificarProductoView.cargarTabla(productos);
     }
 
-
-    // Metodo para confirmar y realizar la modificación del producto
+    //Metodo para confirmar y realizar la modificación del producto
     private void confirmarYModificarProducto() {
         String nombreBuscar = modificarProductoView.getTxtNombreBuscar().getText().trim();
         String nuevoNombre = modificarProductoView.getTxtNombre().getText().trim();
         String nuevoPrecioTexto = modificarProductoView.getTxtPrecio().getText().trim();
 
         if (nombreBuscar.isEmpty() || nuevoNombre.isEmpty() || nuevoPrecioTexto.isEmpty()) {
-            JOptionPane.showMessageDialog(modificarProductoView, "Ingrese los datos del producto por modificar", "Error", JOptionPane.ERROR_MESSAGE);
+            modificarProductoView.mostrarMensaje(mih.get("producto.mensajeError.campoModificar"));
             return;
         }
 
+        //Validar formato de precio
         if (!nuevoPrecioTexto.matches("\\d+(\\.\\d+)?")) {
-            JOptionPane.showMessageDialog(modificarProductoView, "Precio no válido", "Error", JOptionPane.ERROR_MESSAGE);
+            modificarProductoView.mostrarMensaje(mih.get("producto.mensajeError.precio"));
             return;
         }
 
-        int opcion = JOptionPane.showConfirmDialog(
-                modificarProductoView,
-                "¿Seguro de modificar el producto '" + nombreBuscar + "'?",
-                "Confirmar acción",
-                JOptionPane.YES_NO_OPTION
-        );
+        int opcion = JOptionPane.showConfirmDialog(modificarProductoView,mih.get("producto.mensajeConfirmar.modificar"),
+        mih.get("producto.titulo.mensajeAccion"),JOptionPane.YES_NO_OPTION);
+
+        if (opcion != JOptionPane.YES_OPTION) {
+            return;
+        }
 
         if (opcion == JOptionPane.YES_OPTION) {
             double nuevoPrecio = Double.parseDouble(nuevoPrecioTexto);
             boolean modificado = modificarProductoPorNombre(nombreBuscar, nuevoNombre, nuevoPrecio);
 
             if (modificado) {
-                JOptionPane.showMessageDialog(modificarProductoView, "Producto modificado correctamente");
-                limpiarCamposModificar();
+                modificarProductoView.mostrarMensaje(mih.get("producto.mensajeExito.modificar"));
             } else {
-                JOptionPane.showMessageDialog(modificarProductoView, "Producto a modificar no encontrado", "Error", JOptionPane.ERROR_MESSAGE);
+                modificarProductoView.mostrarMensaje(mih.get("producto.mensajeError.modificar"));
             }
         }
     }

@@ -9,10 +9,13 @@ public class MensajeInternacionalizacionHandler {
     private Locale locale;
 
      //Constructor: carga el ResourceBundle para el lenguaje y país indicados.
-    public MensajeInternacionalizacionHandler(String lenguaje, String pais) {
-        this.locale = new Locale(lenguaje, pais);
-        this.bundle = ResourceBundle.getBundle("mensajes", locale);
-    }
+     public MensajeInternacionalizacionHandler(String lenguaje, String pais) {
+         this.locale = new Locale(lenguaje, pais);
+         this.bundle = ResourceBundle.getBundle("mensajes", locale);
+         System.out.println(">> Bundle cargado: baseName='mensajes', locale=" + locale
+                 + ", contiene modificarP.titulo? "
+                 + bundle.containsKey("modificarP.titulo"));
+     }
 
     /*
      * Al llamar a getString(key), Java busca en el archivo .properties
