@@ -109,6 +109,7 @@ public class UsuarioController {
         principalView.getjDesktopPane().add(cuentaUsuarioView);
 
         cuentaAdminView = new CuendaAdminView();
+        cuentaAdminView.setMensajeHandler(mih);
         principalView.getjDesktopPane().add(cuentaAdminView);
 
         // menú Cuenta de usuario
@@ -266,12 +267,12 @@ public class UsuarioController {
     private void buscarUsuario() {
         String nombre = cuentaAdminView.getTextField1().getText().trim();
         if (nombre.isEmpty()) {
-            cuentaAdminView.mostrarMensaje("Ingrese nombre de usuario a buscar");
+            cuentaAdminView.mostrarMensaje(mih.get("sesionA.mensajeIngreso"));
             return;
         }
         Usuario u = usuarioDAO.buscarPorUsername(nombre);
         if (u == null) {
-            cuentaAdminView.mostrarMensaje("Usuario no encontrado");
+            cuentaAdminView.mostrarMensaje(mih.get("sesionA.mensaje.usuarioNo"));
             cuentaAdminView.cargarUsuarios(List.of());
         } else {
             cuentaAdminView.cargarUsuarios(List.of(u.getUsuario()));
@@ -281,63 +282,59 @@ public class UsuarioController {
     private void eliminarUsuario() {
         int idx = cuentaAdminView.getTable1().getSelectedRow();
         if (idx < 0) {
-            cuentaAdminView.mostrarMensaje("Seleccione un usuario para eliminar");
+            cuentaAdminView.mostrarMensaje(mih.get("sesionA.seleccioneU"));
             return;
         }
         String nom = (String) cuentaAdminView.getTable1().getValueAt(idx, 0);
         usuarioDAO.eliminar(nom);
         abrirCuentaAdmin();
-        cuentaAdminView.mostrarMensaje("Usuario " + nom + " eliminado");
+        cuentaAdminView.mostrarMensaje(mih.get("sesionA.mensajeConf.usuaEli"));
     }
 
     private void modificarNombreUsuario() {
         int idx = cuentaAdminView.getTable1().getSelectedRow();
         if (idx < 0) {
-            cuentaAdminView.mostrarMensaje("Seleccione un usuario para modificar nombre");
+            cuentaAdminView.mostrarMensaje(mih.get("sesionA.seleccU.modif"));
             return;
         }
         String actual = (String) cuentaAdminView.getTable1().getValueAt(idx, 0);
-        String nuevo = JOptionPane.showInputDialog(
-                cuentaAdminView,
-                "Nuevo nombre para " + actual + ":", actual
-        );
+        String prompt = mih.get("sesionA.nuevoNom") + ":";
+        String nuevo = (String) JOptionPane.showInputDialog(cuentaAdminView,prompt,prompt,JOptionPane.PLAIN_MESSAGE,
+                null,null,actual);
         if (nuevo != null && !nuevo.trim().isEmpty()) {
             if (usuarioDAO.buscarPorUsername(nuevo) != null) {
-                cuentaAdminView.mostrarMensaje("Nombre ya en uso");
+                cuentaAdminView.mostrarMensaje(mih.get("sesionA.nomUso"));
                 return;
             }
             Usuario u = usuarioDAO.buscarPorUsername(actual);
             u.setUsuario(nuevo);
             usuarioDAO.actualizar(u);
             abrirCuentaAdmin();
-            cuentaAdminView.mostrarMensaje("Nombre modificado");
+            cuentaAdminView.mostrarMensaje(mih.get("sesionA.mensaje.nomModif"));
         }
     }
 
     private void modificarContraseniaUsuario() {
         int idx = cuentaAdminView.getTable1().getSelectedRow();
         if (idx < 0) {
-            cuentaAdminView.mostrarMensaje("Seleccione un usuario para modificar contraseña");
+            cuentaAdminView.mostrarMensaje(mih.get("sesionA.seleccUsu.contra"));
             return;
         }
         String nom = (String) cuentaAdminView.getTable1().getValueAt(idx, 0);
+        String title = mih.get("sesionA.mensajeNueva.contra") + ": " + nom;
         JPasswordField pf = new JPasswordField();
-        int ok = JOptionPane.showConfirmDialog(
-                cuentaAdminView,
-                pf,
-                "Nueva contraseña para " + nom + ":",
-                JOptionPane.OK_CANCEL_OPTION
-        );
+        int ok = JOptionPane.showConfirmDialog(cuentaAdminView,pf,title,JOptionPane.OK_CANCEL_OPTION);
+
         if (ok == JOptionPane.OK_OPTION) {
             String nueva = new String(pf.getPassword()).trim();
             if (nueva.isEmpty()) {
-                cuentaAdminView.mostrarMensaje("Contraseña no puede quedar vacía");
+                cuentaAdminView.mostrarMensaje(mih.get("sesionA.contraVacia"));
                 return;
             }
             Usuario u = usuarioDAO.buscarPorUsername(nom);
             u.setContrasenia(nueva);
             usuarioDAO.actualizar(u);
-            cuentaAdminView.mostrarMensaje("Contraseña modificada");
+            cuentaAdminView.mostrarMensaje(mih.get("sesionA.contr.modif"));
         }
     }
 

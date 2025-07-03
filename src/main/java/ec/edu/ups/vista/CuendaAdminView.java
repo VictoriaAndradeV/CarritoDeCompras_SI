@@ -1,5 +1,7 @@
 package ec.edu.ups.vista;
 
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -13,20 +15,50 @@ public class CuendaAdminView extends JInternalFrame {
     private JButton btnModificarContra;
     private JButton btnModificarNom;
     private JButton btnCerrarSesion;
+    private JLabel lblNombre;
+    private JLabel tituloVentana;
 
     private DefaultTableModel modelo;
+
+    private MensajeInternacionalizacionHandler mih;
 
     public CuendaAdminView() {
         super("Cuenta administrador", true, true, false, true);
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
-        setSize(500, 500);
+        setSize(750, 500);
 
         modelo = new DefaultTableModel();
         Object[] columnas = {"Usuario"};
         modelo.setColumnIdentifiers(columnas);
         table1.setModel(modelo);
     }
+
+    public void setMensajeHandler(MensajeInternacionalizacionHandler mih) {
+        this.mih = mih;
+        actualizarTextos();
+    }
+
+    private void actualizarTextos() {
+        setTitle(mih.get("sesionAdmin.titulo"));
+        tituloVentana.setText(mih.get("sesionAdmin.titulo"));
+        lblNombre.setText(mih.get("agregarP.txtNombre"));
+        btnListar.setText(mih.get("listarP.btnListar"));
+        btnBuscar.setText(mih.get("listarP.btnBuscar"));
+        btnEliminar.setText(mih.get("eliminarP.btnEliminar"));
+        btnModificarNom.setText(mih.get("sesionAdmin.btn.modifNom"));
+        btnModificarContra.setText(mih.get("sesionAdmin.btn.modifContra"));
+        btnCerrarSesion.setText(mih.get("sesionAdmin.btn.cerrarS"));
+
+        DefaultTableModel modelo = (DefaultTableModel) table1.getModel();
+        modelo.setColumnIdentifiers(new Object[]{
+                mih.get("login.txtUsuario")
+        });
+
+        panelPrincipal.revalidate();
+        panelPrincipal.repaint();
+    }
+
 
     public void cargarUsuarios(java.util.List<String> usuarios) {
         modelo.setRowCount(0);
@@ -40,6 +72,21 @@ public class CuendaAdminView extends JInternalFrame {
     }
 
     //getters y setters
+    public JLabel getLblNombre() {
+        return lblNombre;
+    }
+
+    public void setLblNombre(JLabel lblNombre) {
+        this.lblNombre = lblNombre;
+    }
+
+    public JLabel getTituloVentana() {
+        return tituloVentana;
+    }
+
+    public void setTituloVentana(JLabel tituloVentana) {
+        this.tituloVentana = tituloVentana;
+    }
 
     public JButton getBtnCerrarSesion() {
         return btnCerrarSesion;
