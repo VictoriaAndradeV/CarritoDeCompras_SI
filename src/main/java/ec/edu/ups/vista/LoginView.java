@@ -5,7 +5,6 @@ import java.util.Locale;
 import ec.edu.ups.util.*;
 
 public class LoginView extends JFrame {
-
     private JPanel panelPrincipal;
     private JTextField txtUsuario;
     private JButton btnIniciarSesion;
@@ -16,6 +15,7 @@ public class LoginView extends JFrame {
     private JLabel lblContrasenia;
     private JLabel lblIdioma;
     private JLabel lblIniciarSesion;
+    private JButton btnRecuperarContra;
 
     private MensajeInternacionalizacionHandler mih;
 
@@ -60,6 +60,7 @@ public class LoginView extends JFrame {
         lblContrasenia.setText(mih.get("login.txtContrasenia"));
         btnIniciarSesion.setText(mih.get("button.login"));
         btnRegistrarse.setText(mih.get("button.registrar"));
+        btnRecuperarContra.setText(mih.get("button.olvido.contrasenia"));
     }
 
     public void mostrarMensaje(String mensaje) {
@@ -145,5 +146,13 @@ public class LoginView extends JFrame {
 
     public void setLblIniciarSesion(JLabel lblIniciarSesion) {
         this.lblIniciarSesion = lblIniciarSesion;
+    }
+
+    public JButton getBtnRecuperarContra() {
+        return btnRecuperarContra;
+    }
+
+    public void setBtnRecuperarContra(JButton btnRecuperarContra) {
+        this.btnRecuperarContra = btnRecuperarContra;
     }
 }

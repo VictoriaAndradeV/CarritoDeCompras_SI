@@ -9,12 +9,12 @@ import java.util.Iterator;
 import java.util.List;
 
 public class UsuarioDAOMemoria implements UsuarioDAO {
-    private List<Usuario> usuarios;
+    private final List<Usuario> usuarios;
 
     public UsuarioDAOMemoria() {
         usuarios = new ArrayList<Usuario>();
-        crear(new Usuario("admin", "12345", Rol.ADMINISTRADOR));
-        crear(new Usuario("user", "12345", Rol.USUARIO));
+        crear(new Usuario("admin", "1234", Rol.ADMINISTRADOR, "Victoria", "Andrade", null, "victoriaavchico@gmail.com", "0962301221"));
+        crear(new Usuario("user", "1234", Rol.USUARIO, "Dalyana", "matute", null, "dalyanavchico@gmail.com", "0962301223"));
     }
 
     @Override
