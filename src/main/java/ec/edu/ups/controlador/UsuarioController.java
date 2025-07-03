@@ -105,9 +105,10 @@ public class UsuarioController {
     private void iniciarPrincipal() {
         principalView = new PrincipalView(mih);
         cuentaUsuarioView = new CuentaUsuarioView();
-        cuentaAdminView = new CuendaAdminView();
-
+        cuentaUsuarioView.setMensajeHandler(mih);
         principalView.getjDesktopPane().add(cuentaUsuarioView);
+
+        cuentaAdminView = new CuendaAdminView();
         principalView.getjDesktopPane().add(cuentaAdminView);
 
         // menú Cuenta de usuario
@@ -136,27 +137,34 @@ public class UsuarioController {
     }
 
     private void editarNombre() {
-        cuentaUsuarioView.mostrarMensaje("Ingrese el nuevo nombre de usuario:");
-        String nuevo = usuario.getUsuario();
-        if (nuevo != null && !nuevo.trim().isEmpty()) {
-            if (usuarioDAO.buscarPorUsername(nuevo) != null) {
-                cuentaUsuarioView.mostrarMensaje("El nombre de usuario ya existe.");
-                return;
-            }
-            usuario.setUsuario(nuevo);
-            usuarioDAO.actualizar(usuario);
-            cuentaUsuarioView.getTxtNombreUsuario().setText(nuevo);
-            cuentaUsuarioView.mostrarMensaje("Usuario actualizado exitosamente.");
+        String nuevo = cuentaUsuarioView.getTxtNombreUsuario().getText().trim();
+        if (nuevo.isEmpty()) {
+            cuentaUsuarioView.mostrarMensaje(
+                    mih.get("sesionUsuario.mensajeError.usuarioVacio")
+            );
+            return;
         }
+        if (usuarioDAO.buscarPorUsername(nuevo) != null) {
+            cuentaUsuarioView.mostrarMensaje(
+                    mih.get("sesionUsuario.mensajeError.usuarioExis")
+            );
+            return;
+        }
+        //actualiza modelo y base datos
+        usuario.setUsuario(nuevo);
+        usuarioDAO.actualizar(usuario);
+        //cambios en interfaz
+        cuentaUsuarioView.getTxtNombreUsuario().setText(nuevo);
+        cuentaUsuarioView.mostrarMensaje(
+                mih.get("sesionUsuario.mensajeExito")
+        );
     }
+
 
     private void cambiarContrasenia() {
         JPasswordField pf = new JPasswordField();
 
-        int ok = JOptionPane.showConfirmDialog(
-                cuentaUsuarioView,
-                pf,
-                "Ingrese nueva contraseña:",
+        int ok = JOptionPane.showConfirmDialog(cuentaUsuarioView,pf,mih.get("sesionUsuario.mensaje.contrasenia"),
                 JOptionPane.OK_CANCEL_OPTION
         );
         if (ok == JOptionPane.OK_OPTION) {
@@ -164,27 +172,23 @@ public class UsuarioController {
             if (nueva.isEmpty()) {
                 JOptionPane.showMessageDialog(
                         cuentaUsuarioView,
-                        "La contraseña no puede estar vacia",
-                        "Error",
+                        mih.get("sesionUsuario.mensajeError.contraseniaV"),
+                        mih.get("sesionUsuario.titulo.mensaje"),
                         JOptionPane.ERROR_MESSAGE
                 );
                 return;
             }
             usuario.setContrasenia(nueva);
             usuarioDAO.actualizar(usuario);
-            JOptionPane.showMessageDialog(
-                    cuentaUsuarioView,
-                    "Contraseña modificada"
-            );
+            JOptionPane.showMessageDialog(cuentaUsuarioView,mih.get("sesionUsuario.mensajeExito.modif"));
         }
     }
 
     private void eliminarCuenta() {
-        int confirm = JOptionPane.showConfirmDialog(
-                cuentaUsuarioView,
-                "Se eliminarán todos sus carritos. ¿Está seguro de eliminar su cuenta? ",
-                "Confirmar eliminar cuenta",
-                JOptionPane.YES_NO_OPTION
+        int confirm = JOptionPane.showConfirmDialog(cuentaUsuarioView,
+                    mih.get("sesionUsuario.mensajeComprobacion"),
+                    mih.get("sesionUsuario.mensajeComprobacion.titulo"),
+                    JOptionPane.YES_NO_OPTION
         );
         if (confirm == JOptionPane.YES_OPTION) {
             carritoDAO.eliminarPorUsuario(usuario.getUsuario());

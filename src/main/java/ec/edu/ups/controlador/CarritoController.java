@@ -7,6 +7,7 @@ import ec.edu.ups.modelo.Carrito;
 import ec.edu.ups.modelo.ItemCarrito;
 import ec.edu.ups.modelo.Producto;
 import ec.edu.ups.modelo.Usuario;
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.vista.*;
 
 import javax.swing.*;
@@ -25,8 +26,11 @@ public class CarritoController {
     private final Usuario usuarioActual;
     private Carrito carrito;
 
-    public CarritoController(CarritoDAO carritoDAO, UsuarioDAO usuarioDAO, CarritoView carritoView, ProductoDAO productoDAO,
+    private final MensajeInternacionalizacionHandler mih;
+
+    public CarritoController(MensajeInternacionalizacionHandler mih, CarritoDAO carritoDAO, UsuarioDAO usuarioDAO, CarritoView carritoView, ProductoDAO productoDAO,
                              Usuario usuarioActual) {
+        this.mih = mih;
         this.carritoDAO = carritoDAO;
         this.usuarioDAO = usuarioDAO;
         this.carritoView = carritoView;
@@ -84,10 +88,9 @@ public class CarritoController {
         //asignar el usuario al carrito
         carrito.setUsuario(usuarioActual);
         carritoDAO.crear(carrito);
-        carritoView.mostrarMensaje("Carrito creado correctamente");
+        carritoView.mostrarMensaje(mih.get("carrito.mensajeConfirmar"));
         // limpiamos
-        DefaultTableModel m =
-                (DefaultTableModel) carritoView.getTable1().getModel();
+        DefaultTableModel m = (DefaultTableModel) carritoView.getTable1().getModel();
         m.setRowCount(0);
         carrito = new Carrito();
     }
@@ -148,21 +151,21 @@ public class CarritoController {
         int fila = tabla.getSelectedRow();
 
         if (fila >= 0) {
-            int confirmacion = JOptionPane.showConfirmDialog(
-                    carritoView,
-                    "¿Esta seguro de eliminar el item seleccionado?",
-                    "Confirmar acción",
+            int confirmacion = JOptionPane.showConfirmDialog(carritoView,
+                    mih.get("carrito.mensajeConfirmar.eliminar"),mih.get("carrito.titulo"),
                     JOptionPane.YES_NO_OPTION
             );
             if (confirmacion == JOptionPane.YES_OPTION) {
                 int codigo = Integer.parseInt(tabla.getValueAt(fila, 0).toString());
-                carrito.eliminarItem(codigo); // Metodo del modelo Carrito que elimina por código de producto
-                actualizarTabla();            // Refresca la tabla
-                mostrarTotales();            // Refresca los totales
-                carritoView.mostrarMensaje("Item eliminado correctamente");
+                carrito.eliminarItem(codigo);
+                actualizarTabla();
+                mostrarTotales();
+                carritoView.mostrarMensaje(
+                        mih.get("carrito.mensajeItemEliminado")
+                );
             }
         } else {
-            carritoView.mostrarMensaje("Selecciona un item para eliminar");
+            carritoView.mostrarMensaje(mih.get("carrito.mensaje.ItemNOSeleccionado"));
         }
     }
 
@@ -189,15 +192,17 @@ public class CarritoController {
         if (fila >= 0) {
             int codigoProducto = Integer.parseInt(tabla.getValueAt(fila, 0).toString());
 
-            // Crear ventana para modificar cantidad del producto
-            JDialog dialogo = new JDialog((JFrame) SwingUtilities.getWindowAncestor(carritoView), "Modificar cantidad", true);
+            //Crear ventana para modificar cantidad del producto
+            JDialog dialogo = new JDialog((JFrame) SwingUtilities.getWindowAncestor(carritoView),
+                                mih.get("carrito.ventanaModificar.titulo"),true);
+
             dialogo.setSize(250, 150);
             dialogo.setLocationRelativeTo(carritoView);
 
             JPanel panel = new JPanel();
             panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-            JLabel label = new JLabel("Nueva cantidad:");
+            JLabel label = new JLabel(mih.get("carrito.txtCantidad.modificar"));
 
             //ComboBox con num del 1 al 20
             JComboBox<Integer> comboCantidad = new JComboBox<>();
@@ -205,14 +210,15 @@ public class CarritoController {
                 comboCantidad.addItem(i);
             }
 
-            JButton btnAceptar = new JButton("Actualizar");
+            JButton btnAceptar = new JButton(mih.get("carrito.modificar.btnActualizar"));
+
             btnAceptar.addActionListener(ev -> {
                 int nuevaCantidad = (int) comboCantidad.getSelectedItem();
                 carrito.actualizarCantidad(codigoProducto, nuevaCantidad);
                 actualizarTabla();
                 mostrarTotales();
                 dialogo.dispose(); //cerrar ventana
-                carritoView.mostrarMensaje("Cantidad actualizada correctamente");
+                carritoView.mostrarMensaje(mih.get("carrito.mensajeExito.modificar"));
             });
             panel.add(label);
             panel.add(comboCantidad);
@@ -222,10 +228,11 @@ public class CarritoController {
             dialogo.add(panel);
             dialogo.setVisible(true);
         } else {
-            carritoView.mostrarMensaje("Seleccione el item que desee modificar");
+            carritoView.mostrarMensaje(mih.get("carrito.mensaje.ItemNOSeleccionado"));
         }
     }
-    //listar carritos del usuario, esto no hace admin
+
+    //LISTAR CARRITOS DEL USUARIO, A ESTO NO TIENE ACCESO EL ADMIN
     public void vincularListarCarritos(ListarCarritosView view, JDesktopPane desktop) {
         configurarEventoListar(view);
         configurarEventoDetalle(view, desktop);
@@ -233,10 +240,11 @@ public class CarritoController {
     }
 
     private void configurarEventoListar(ListarCarritosView view) {
+        view.getBtnListar().setText(mih.get("listarP.btnListar"));
         view.getBtnListar().addActionListener(evt -> {
             List<Carrito> lista = carritoDAO.listarPorUsuario(usuarioActual.getUsuario());
             if (lista.isEmpty()) {
-                view.mostrarMensaje("Aún no ha creado ningún carrito");
+                view.mostrarMensaje(mih.get("listarC.mensajeError.vacio"));
             } else {
                 view.cargarDatos(lista);
             }
@@ -244,36 +252,39 @@ public class CarritoController {
     }
 
     private void configurarEventoDetalle(ListarCarritosView view, JDesktopPane desktop) {
+        view.getBtnDetalle().setText(mih.get("listarC.usuario.detalle"));
         view.getBtnDetalle().addActionListener(evt -> {
             int fila = view.getTable1().getSelectedRow();
             if (fila < 0) {
-                view.mostrarMensaje("Seleccione un carrito");
+                view.mostrarMensaje(mih.get("listarC.mensajeSelecc"));
                 return;
             }
             int codigo = (int) view.getTable1().getValueAt(fila, 0);
             Carrito c = carritoDAO.buscarPorCodigo(codigo);
             if (c == null) {
-                view.mostrarMensaje("Carrito no encontrado");
+                view.mostrarMensaje(mih.get("listarC.mensajeError.noEnc"));
                 return;
             }
             DetalleCarritoUserView detView = new DetalleCarritoUserView();
+            detView.setMensajeHandler(mih);
             desktop.add(detView);
             detView.setVisible(true);
             detView.cargarDatos(c.obtenerItems());
             vincularDetalle(detView, c);
         });
     }
-
+    //ELIMINAR CARRITO
     private void configurarEventoEliminar(ListarCarritosView view) {
+        view.getBtnEliminar().setText(mih.get("eliminarP.btnEliminar"));
         view.getBtnEliminar().addActionListener(evt -> {
             int fila = view.getTable1().getSelectedRow();
             if (fila < 0) {
-                view.mostrarMensaje("Selecciona un carrito para eliminar");
+                view.mostrarMensaje(mih.get("listarC.mensajeEliminar"));
                 return;
             }
             int codigo = (int) view.getTable1().getValueAt(fila, 0);
             carritoDAO.eliminar(codigo);
-            view.mostrarMensaje("Carrito eliminado correctamente");
+            view.mostrarMensaje(mih.get("listarC.mensajeExito"));
             //actualiza  la liusta
             List<Carrito> lista = carritoDAO.listarPorUsuario(usuarioActual.getUsuario());
             view.cargarDatos(lista);
@@ -289,11 +300,12 @@ public class CarritoController {
         view.getBtnModificar().addActionListener(evt -> {
             int fila = view.getTablaDetalles().getSelectedRow();
             if (fila < 0) {
-                view.mostrarMensaje("Seleccione un producto");
+                view.mostrarMensaje(mih.get("detalleC.mensaje.Selecc"));
                 return;
             }
             int codigoProd = obtenerCodigoDeDetalle(view, fila);
-            String input = JOptionPane.showInputDialog(view, "Nueva cantidad:");
+            String prompt = mih.get("carrito.txtCantidad.modificar");
+            String input = JOptionPane.showInputDialog(view, prompt);
             if (input != null) {
                 procesarNuevaCantidad(input, carrito, view);
             }
@@ -304,7 +316,7 @@ public class CarritoController {
         view.getBtnEliminar().addActionListener(evt -> {
             int fila = view.getTablaDetalles().getSelectedRow();
             if (fila < 0) {
-                view.mostrarMensaje("Seleccione un producto");
+                view.mostrarMensaje(mih.get("detalleC.mensaje.Selecc"));
                 return;
             }
             int codigoProd = obtenerCodigoDeDetalle(view, fila);
@@ -325,7 +337,7 @@ public class CarritoController {
             carritoDAO.limpiar(carrito);
             view.cargarDatos(carrito.obtenerItems());
         } catch (NumberFormatException ex) {
-            view.mostrarMensaje("Cantidad inválida");
+            view.mostrarMensaje(mih.get("detalleC.mensajeError.cantidad"));
         }
     }
 
@@ -351,13 +363,13 @@ public class CarritoController {
             public void actionPerformed(ActionEvent e) {
                 String nombre = view.getTxtNombre().getText().trim();
                 if (nombre.isEmpty()) {
-                    view.mostrarMensaje("Por favor ingrese un nombre de usuario");
+                    view.mostrarMensaje(mih.get("listarU.admin.mensajeError.vacio"));
                     return;
                 }
                 Usuario encontrado = usuarioDAO.buscarPorUsername(nombre);
                 if (encontrado == null) {
-                    view.mostrarMensaje("No existe el usuario buscado");
-                    view.cargarUsuarios(new ArrayList<String>());
+                    view.mostrarMensaje(mih.get("listarU.admin.mensajeError.usuario"));
+                    view.cargarUsuarios(new ArrayList<>());
                 } else {
                     List<String> uno = new ArrayList<>();
                     uno.add(encontrado.getUsuario());
@@ -371,23 +383,23 @@ public class CarritoController {
         view.getBtnCarrito().addActionListener(e -> {
             int fila = view.getTable1().getSelectedRow();
             if (fila < 0) {
-                view.mostrarMensaje("Seleccione un usuario");
+                view.mostrarMensaje(mih.get("listarU.admin.mensajeSelecc"));
                 return;
             }
             String username = view.getTable1().getValueAt(fila, 0).toString();
             List<Carrito> carritos = carritoDAO.listarPorUsuario(username);
             if (carritos.isEmpty()) {
-                view.mostrarMensaje("Este usuario no tiene carritos");
+                view.mostrarMensaje(mih.get("listarU.admin.mensajeError.noCarrito"));
                 return;
             }
             //Se crea la ventana de listar carritos
             ListaCarriADMIN listaCarriAdmin = new ListaCarriADMIN();
+            listaCarriAdmin.setMensajeHandler(mih);
             desktop.add(listaCarriAdmin);
             listaCarriAdmin.cargarDatos(carritos);
             listaCarriAdmin.setVisible(true);
         });
     }
-
 }
 
 

@@ -41,14 +41,23 @@ public class Main {
                     public void windowClosed(WindowEvent e){
                         Usuario usuarioAuntenticado = usuarioController.getUsuarioAutenticado();
                         if(usuarioAuntenticado != null){
-                            PrincipalView principalView = usuarioController.getPrincipalView();  // ya tiene listeners
+                            PrincipalView principalView = usuarioController.getPrincipalView();  //ya tiene listeners
 
-                            //Recupera el handler ya inicializado tras el login
+                            //Recupera el handler ya inicializado despues del login
                             MensajeInternacionalizacionHandler mih = usuarioController.getMih();
 
-                            ListarCarritosView listarCarritosView = new ListarCarritosView();
-                            ListarCarritoAdminView listarCAdmin = new ListarCarritoAdminView();
                             CarritoView carritoView = new CarritoView();
+                            carritoView.setMensajeHandler(mih);
+                            principalView.getjDesktopPane().add(carritoView);
+
+                            ListarCarritosView listarCarritosView = new ListarCarritosView();
+                            listarCarritosView.setMensajeHandler(mih);
+                            principalView.getjDesktopPane().add(listarCarritosView);
+
+                            ListarCarritoAdminView listarCAdmin = new ListarCarritoAdminView();
+                            listarCAdmin.setMensajeHandler(mih);
+                            principalView.getjDesktopPane().add(listarCAdmin);
+
                             ProductoDAO productoDAO = new ProductoDAOMemoria();
 
                             //vista de registrar productos con el mih
@@ -62,7 +71,7 @@ public class Main {
                             principalView.getjDesktopPane().add(productoListaView);
 
                             ProductoController productoController = new ProductoController(mih, productoDAO, productoAnadirView, productoListaView, carritoView);
-                            CarritoController carritoController = new CarritoController(carritoDAO, usuarioDAO,carritoView, productoDAO, usuarioAuntenticado);
+                            CarritoController carritoController = new CarritoController(mih, carritoDAO, usuarioDAO,carritoView, productoDAO, usuarioAuntenticado);
 
                             EliminarProductoView eliminarProductoView = new EliminarProductoView(productoController);
                             eliminarProductoView.setMensajeHandler(mih);
@@ -71,15 +80,12 @@ public class Main {
 
                             ModificarProductoView modificarProductoView = new ModificarProductoView(productoController);
                             modificarProductoView.setMensajeHandler(mih);
+
                             productoController.setModificarProductoView(modificarProductoView);
                             principalView.getjDesktopPane().add(modificarProductoView);
 
                             carritoController.vincularListarCarritos(listarCarritosView, principalView.getjDesktopPane());
                             carritoController.configurarEventosListarCarritoAdmin(listarCAdmin, principalView.getjDesktopPane());
-
-                            principalView.getjDesktopPane().add(carritoView);
-                            principalView.getjDesktopPane().add(listarCarritosView);
-                            principalView.getjDesktopPane().add(listarCAdmin);
 
                             //ocultar vistas cuando ingresa un usuario
                             if(usuarioAuntenticado.getRol().equals(Rol.USUARIO)) {

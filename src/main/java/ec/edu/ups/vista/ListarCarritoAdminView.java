@@ -1,5 +1,7 @@
 package ec.edu.ups.vista;
 
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -10,8 +12,11 @@ public class ListarCarritoAdminView extends JInternalFrame {
     private JPanel panelSecundario;
     private JTable table1;
     private JButton btnCarrito;
+    private JLabel lblNombre;
+    private JLabel lblTituloLista;
 
     private DefaultTableModel modelo;
+    private MensajeInternacionalizacionHandler mih;
 
     public ListarCarritoAdminView() {
         super("Listado Carritos Admin", true, true, false, true);
@@ -25,6 +30,28 @@ public class ListarCarritoAdminView extends JInternalFrame {
         table1.setModel(modelo);
     }
 
+    public void setMensajeHandler(MensajeInternacionalizacionHandler mih) {
+        this.mih = mih;
+        actualizarTextos();
+    }
+
+    private void actualizarTextos() {
+        setTitle(mih.get("listaU.admin.titulo"));
+        lblTituloLista.setText(mih.get("listaU.admin.titulo"));
+        lblNombre.setText(mih.get("agregarP.txtNombre"));
+        txtNombre.setToolTipText(mih.get("agregarP.txtNombre"));
+        btnBuscar.setText(mih.get("listarP.btnBuscar"));
+        btnCarrito.setText(mih.get("detalleC.usuario.titulo"));
+
+        DefaultTableModel modelo = (DefaultTableModel) table1.getModel();
+        modelo.setColumnIdentifiers(new Object[]{
+                mih.get("login.txtUsuario")
+        });
+
+        panelPrincipal.revalidate();
+        panelPrincipal.repaint();
+    }
+
     public void cargarUsuarios(java.util.List<String> usuarios) {
         modelo.setRowCount(0);
         for (String nombre : usuarios) {
@@ -36,8 +63,23 @@ public class ListarCarritoAdminView extends JInternalFrame {
         JOptionPane.showMessageDialog(this, mensaje);
     }
 
-
     //getters y setters
+    public JLabel getLblTituloLista() {
+        return lblTituloLista;
+    }
+
+    public void setLblTituloLista(JLabel lblTituloLista) {
+        this.lblTituloLista = lblTituloLista;
+    }
+
+    public JLabel getLblNombre() {
+        return lblNombre;
+    }
+
+    public void setLblNombre(JLabel lblNombre) {
+        this.lblNombre = lblNombre;
+    }
+
     public JPanel getPanelPrincipal() {
         return panelPrincipal;
     }
