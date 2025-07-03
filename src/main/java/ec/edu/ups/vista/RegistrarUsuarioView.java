@@ -11,6 +11,17 @@ public class RegistrarUsuarioView extends JFrame {
     private JLabel lblUsuario;
     private JLabel lblContrasenia;
     private JLabel lblRegistrarUsuario;
+    private JLabel lblNombreUsuario;
+    private JLabel lblApellido;
+    private JLabel lblEmail;
+    private JLabel lblFechaN;
+    private JLabel lblTelefono;
+    private JTextField textField1;
+    private JTextField textField2;
+    private JTextField textField3;
+    private JTextField textField4;
+    private JTextField textField5;
+    private JButton btnSiguiente;
     private MensajeInternacionalizacionHandler mih;
 
     public RegistrarUsuarioView() {
@@ -18,13 +29,18 @@ public class RegistrarUsuarioView extends JFrame {
         setTitle("Registrar Usuario");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setSize(400, 250);
+        setSize(550, 400);
     }
 
     public void actualizarTextos() {
         lblRegistrarUsuario.setText(mih.get("registrar.titulo"));
         lblUsuario.setText(mih.get("registrar.txtUsuario"));
         lblContrasenia.setText(mih.get("registrar.txtContrasenia"));
+        lblNombreUsuario.setText(mih.get("registrar.txtNombre"));
+        lblApellido.setText(mih.get("registrar.txtApellido"));
+        lblEmail.setText(mih.get("registrar.txtEmail"));
+        lblFechaN.setText(mih.get("registrar.txtFechaN"));
+        lblTelefono.setText(mih.get("registrar.txtTelefono"));
         btnRegistrarse.setText(mih.get("btn.registrar"));
     }
 
@@ -35,6 +51,100 @@ public class RegistrarUsuarioView extends JFrame {
     public void limpiarCampos() {
         txtUsuario.setText("");
         passwordField1.setText("");
+        textField1.setText("");
+        textField2.setText("");
+        textField3.setText("");
+        textField4.setText("");
+        textField5.setText("");
+    }
+
+    //getters y setters
+    public JButton getBtnSiguiente() {
+        return btnSiguiente;
+    }
+
+    public void setBtnSiguiente(JButton btnSiguiente) {
+        this.btnSiguiente = btnSiguiente;
+    }
+
+    public JLabel getLblNombreUsuario() {
+        return lblNombreUsuario;
+    }
+
+    public void setLblNombreUsuario(JLabel lblNombreUsuario) {
+        this.lblNombreUsuario = lblNombreUsuario;
+    }
+
+    public JLabel getLblApellido() {
+        return lblApellido;
+    }
+
+    public void setLblApellido(JLabel lblApellido) {
+        this.lblApellido = lblApellido;
+    }
+
+    public JLabel getLblEmail() {
+        return lblEmail;
+    }
+
+    public void setLblEmail(JLabel lblEmail) {
+        this.lblEmail = lblEmail;
+    }
+
+    public JLabel getLblFechaN() {
+        return lblFechaN;
+    }
+
+    public void setLblFechaN(JLabel lblFechaN) {
+        this.lblFechaN = lblFechaN;
+    }
+
+    public JLabel getLblTelefono() {
+        return lblTelefono;
+    }
+
+    public void setLblTelefono(JLabel lblTelefono) {
+        this.lblTelefono = lblTelefono;
+    }
+
+    public JTextField getTextField1() {
+        return textField1;
+    }
+
+    public void setTextField1(JTextField textField1) {
+        this.textField1 = textField1;
+    }
+
+    public JTextField getTextField2() {
+        return textField2;
+    }
+
+    public void setTextField2(JTextField textField2) {
+        this.textField2 = textField2;
+    }
+
+    public JTextField getTextField3() {
+        return textField3;
+    }
+
+    public void setTextField3(JTextField textField3) {
+        this.textField3 = textField3;
+    }
+
+    public JTextField getTextField4() {
+        return textField4;
+    }
+
+    public void setTextField4(JTextField textField4) {
+        this.textField4 = textField4;
+    }
+
+    public JTextField getTextField5() {
+        return textField5;
+    }
+
+    public void setTextField5(JTextField textField5) {
+        this.textField5 = textField5;
     }
 
     public JPanel getPanelPrincipal() {
