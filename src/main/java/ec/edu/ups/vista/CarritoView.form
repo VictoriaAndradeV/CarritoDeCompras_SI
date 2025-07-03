@@ -11,7 +11,7 @@
     </properties>
     <border type="none"/>
     <children>
-      <component id="70b2c" class="javax.swing.JLabel">
+      <component id="70b2c" class="javax.swing.JLabel" binding="lblCodigo">
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -20,7 +20,7 @@
           <text value="Código:"/>
         </properties>
       </component>
-      <component id="2d8c3" class="javax.swing.JLabel">
+      <component id="2d8c3" class="javax.swing.JLabel" binding="lblNombre">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -29,7 +29,7 @@
           <text value="Nombre:"/>
         </properties>
       </component>
-      <component id="6cf5d" class="javax.swing.JLabel">
+      <component id="6cf5d" class="javax.swing.JLabel" binding="lblPrecio">
         <constraints>
           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -38,7 +38,7 @@
           <text value="Precio:"/>
         </properties>
       </component>
-      <component id="8799e" class="javax.swing.JLabel">
+      <component id="8799e" class="javax.swing.JLabel" binding="lblCantidad">
         <constraints>
           <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -67,7 +67,7 @@
             </properties>
             <border type="none"/>
             <children>
-              <component id="fceed" class="javax.swing.JLabel">
+              <component id="fceed" class="javax.swing.JLabel" binding="lblSubtotal">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -76,7 +76,7 @@
                   <text value="Subtotal"/>
                 </properties>
               </component>
-              <component id="24ee7" class="javax.swing.JLabel">
+              <component id="24ee7" class="javax.swing.JLabel" binding="lblIVA">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -85,7 +85,7 @@
                   <text value="IVA"/>
                 </properties>
               </component>
-              <component id="ef4e2" class="javax.swing.JLabel">
+              <component id="ef4e2" class="javax.swing.JLabel" binding="lblTotal">
                 <constraints>
                   <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -246,7 +246,7 @@
         </constraints>
         <properties/>
       </component>
-      <component id="de3c5" class="javax.swing.JLabel">
+      <component id="de3c5" class="javax.swing.JLabel" binding="txtTitulo">
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>

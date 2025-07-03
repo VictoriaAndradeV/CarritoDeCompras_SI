@@ -1,5 +1,7 @@
 package ec.edu.ups.vista;
 
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
+
 import javax.swing.*;
 
 public class CuentaUsuarioView extends JInternalFrame {
@@ -11,6 +13,11 @@ public class CuentaUsuarioView extends JInternalFrame {
     private JButton btnEliminarCuenta;
     private JButton btnCerrarSesion;
     private JButton btnActualizar;
+    private JLabel lblTitulo;
+    private JLabel lblUsuario;
+    private JLabel lblContrasenia;
+
+    private MensajeInternacionalizacionHandler mih;
 
     public CuentaUsuarioView() {
         super("Cuenta de Usuario", true, true, false, true);
@@ -19,12 +26,59 @@ public class CuentaUsuarioView extends JInternalFrame {
         setSize(500, 500);
     }
 
+    public void setMensajeHandler(MensajeInternacionalizacionHandler mih) {
+        this.mih = mih;
+        actualizarTextos();
+    }
+
+    private void actualizarTextos() {
+        // Título de la ventana
+        setTitle(mih.get("sesionU.titulo"));
+        lblTitulo.setText(mih.get("sesionU.titulo"));
+        lblUsuario.setText(mih.get("login.txtUsuario"));
+        lblContrasenia.setText(mih.get("login.txtContrasenia"));
+
+        editarNombreButton.setText(mih.get("sesionU.txtEditar"));
+        cambiarButton.setText(mih.get("sesionU.txtCambiar"));
+        btnEliminarCuenta.setText(mih.get("sesionU.btnEliminar"));
+        btnActualizar.setText(mih.get("sesionU.btnActualizar"));
+        btnCerrarSesion.setText(mih.get("menu.salir.cerrarSesion"));
+
+        panelPrincipal.revalidate();
+        panelPrincipal.repaint();
+    }
+
+
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
 
 
     //getters y setters
+    public JLabel getLblTitulo() {
+        return lblTitulo;
+    }
+
+    public void setLblTitulo(JLabel lblTitulo) {
+        this.lblTitulo = lblTitulo;
+    }
+
+    public JLabel getLblContrasenia() {
+        return lblContrasenia;
+    }
+
+    public void setLblContrasenia(JLabel lblContrasenia) {
+        this.lblContrasenia = lblContrasenia;
+    }
+
+    public JLabel getLblUsuario() {
+        return lblUsuario;
+    }
+
+    public void setLblUsuario(JLabel lblUsuario) {
+        this.lblUsuario = lblUsuario;
+    }
+
     public JPanel getPanelPrincipal() {
         return panelPrincipal;
     }

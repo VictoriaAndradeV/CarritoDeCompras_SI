@@ -1,6 +1,7 @@
 package ec.edu.ups.vista;
 
 import ec.edu.ups.modelo.Carrito;
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -13,11 +14,14 @@ public class ListarCarritosView extends JInternalFrame {
     private JButton btnListar;
     private JButton btnDetalle;
     private JButton btnEliminar;
+    private JLabel tituloListaC;
     private DefaultTableModel modelo;
 
     // Formateador de fecha
     private static final SimpleDateFormat SDF =
             new SimpleDateFormat("dd/MM/yyyy");
+
+    private MensajeInternacionalizacionHandler mih;
 
     public ListarCarritosView() {
         super("Listado Carritos", true, true, false, true);
@@ -29,6 +33,27 @@ public class ListarCarritosView extends JInternalFrame {
         Object[] columnas = {"Código", "Fecha de creación", "Precio total"};
         modelo.setColumnIdentifiers(columnas);
         table1.setModel(modelo);
+    }
+
+    public void setMensajeHandler(MensajeInternacionalizacionHandler mih) {
+        this.mih = mih;
+        actualizarTextos();
+    }
+
+    private void actualizarTextos() {
+        setTitle(mih.get("listarC.usuario.titulo"));
+        tituloListaC.setText(mih.get("listarC.usuario.titulo"));
+        btnListar.setText(mih.get("listarP.btnListar"));
+        btnDetalle.setText(mih.get("listarC.usuario.detalle"));
+        btnEliminar.setText(mih.get("eliminarP.btnEliminar"));
+
+        modelo.setColumnIdentifiers(new Object[]{
+                mih.get("agregarP.txtCodigo"),
+                mih.get("listarC.colFecha"),
+                mih.get("listarC.colPrecio")
+        });
+        //panelPrincipal.revalidate();
+        //panelPrincipal.repaint();
     }
 
     public void cargarDatos(List<Carrito> listaCarritos) {
@@ -50,6 +75,14 @@ public class ListarCarritosView extends JInternalFrame {
     }
 
     //getters y setters
+    public JLabel getTituloListaC() {
+        return tituloListaC;
+    }
+
+    public void setTituloListaC(JLabel tituloListaC) {
+        this.tituloListaC = tituloListaC;
+    }
+
     public JPanel getPanelPrincipal() {
         return panelPrincipal;
     }

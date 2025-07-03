@@ -1,6 +1,7 @@
 package ec.edu.ups.vista;
 
 import ec.edu.ups.modelo.ItemCarrito;
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -11,8 +12,10 @@ public class DetalleCarritoUserView extends JInternalFrame {
     private JTable tablaDetalles;
     private JButton btnEliminar;
     private JButton btnModificar;
+    private JLabel tituloDetalle;
 
     private DefaultTableModel modelo;
+    private MensajeInternacionalizacionHandler mih;
 
     public DetalleCarritoUserView() {
         super("Detalle del carrito", true, true, false, true);
@@ -24,6 +27,28 @@ public class DetalleCarritoUserView extends JInternalFrame {
         Object[] columnas = {"Codigo", "Nombre", "Precio", "Cantidad", "Precio Total"};
         modelo.setColumnIdentifiers(columnas);
         tablaDetalles.setModel(modelo);
+    }
+
+    public void setMensajeHandler(MensajeInternacionalizacionHandler mih) {
+        this.mih = mih;
+        actualizarTextos();
+    }
+
+    private void actualizarTextos() {
+        setTitle(mih.get("detalleC.usuario.titulo"));
+        tituloDetalle.setText(mih.get("detalleC.usuario.titulo"));
+        btnEliminar.setText(mih.get("eliminarP.btnEliminar"));
+        btnModificar.setText(mih.get("modificarP.btnModificar"));
+
+        modelo.setColumnIdentifiers(new Object[]{
+                mih.get("agregarP.txtCodigo"),
+                mih.get("agregarP.txtNombre"),
+                mih.get("agregarP.txtPrecio"),
+                mih.get("carrito.colCantidad"),
+                mih.get("listarC.colPrecio")
+        });
+        panelPrincipal.revalidate();
+        panelPrincipal.repaint();
     }
 
     public void cargarDatos(List<ItemCarrito> items) {
@@ -39,12 +64,19 @@ public class DetalleCarritoUserView extends JInternalFrame {
         }
     }
 
-
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
 
     //getters y setters
+    public JLabel getTituloDetalle() {
+        return tituloDetalle;
+    }
+
+    public void setTituloDetalle(JLabel tituloDetalle) {
+        this.tituloDetalle = tituloDetalle;
+    }
+
     public JButton getBtnModificar() {
         return btnModificar;
     }

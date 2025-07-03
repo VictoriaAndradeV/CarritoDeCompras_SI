@@ -1,5 +1,7 @@
 package ec.edu.ups.vista;
 
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -20,6 +22,16 @@ public class CarritoView extends JInternalFrame {
     private JComboBox comboBox1;
     private JButton btnEliminar;
     private JButton btnActualizar;
+    private JLabel txtTitulo;
+    private JLabel lblCodigo;
+    private JLabel lblNombre;
+    private JLabel lblPrecio;
+    private JLabel lblCantidad;
+    private JLabel lblSubtotal;
+    private JLabel lblIVA;
+    private JLabel lblTotal;
+
+    private MensajeInternacionalizacionHandler mih;
 
     public CarritoView() {
         super("Carrito de Compras", true, true, false, true);
@@ -32,6 +44,43 @@ public class CarritoView extends JInternalFrame {
         modelo.setColumnIdentifiers(columnas);
         table1.setModel(modelo);
         cargarDatos();
+    }
+
+    public void setMensajeHandler(MensajeInternacionalizacionHandler mih) {
+        this.mih = mih;
+        actualizarTextos();
+    }
+
+    private void actualizarTextos() {
+        setTitle(mih.get("carrito.titulo"));
+        txtTitulo.setText(mih.get("carrito.titulo"));
+        lblCodigo.setText(mih.get("carrito.txtCodigo"));
+        lblNombre.setText(mih.get("carrito.txtNombre"));
+        lblPrecio.setText(mih.get("carrito.txtPrecio"));
+        lblCantidad.setText(mih.get("carrito.txtCantidad"));
+        lblSubtotal.setText(mih.get("carrito.txtSubtotal"));
+        lblIVA.setText(mih.get("carrito.txtIVA"));
+        lblTotal.setText(mih.get("carrito.txtTotal"));
+
+        btnAnadir.setText(mih.get("carrito.btnAnadir"));
+        buscarButton.setText(mih.get("carrito.btnBuscar"));
+        guardarButton.setText(mih.get("carrito.btnGuardar"));
+        cancelarButton.setText(mih.get("carrito.btnCancelar"));
+        btnActualizar.setText(mih.get("carrito.btnActualizar"));
+        btnEliminar.setText(mih.get("carrito.btnEliminar"));
+        limpiarButton.setText(mih.get("carrito.btnLimpiar")); // reutiliza cancelar label
+
+        DefaultTableModel modelo = (DefaultTableModel) table1.getModel();
+        modelo.setColumnIdentifiers(new Object[]{
+                mih.get("carrito.colCodigo"),
+                mih.get("carrito.colNombre"),
+                mih.get("carrito.colPrecio"),
+                mih.get("carrito.colCantidad"),
+                mih.get("carrito.colSub")
+        });
+
+        panelPrincipal.revalidate();
+        panelPrincipal.repaint();
     }
 
     private void cargarDatos(){

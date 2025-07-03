@@ -12,6 +12,7 @@ public class PrincipalView extends JFrame {
     private JMenu menuProducto;
     private JMenu menuCarrito;
     private JMenu menuSesion;
+    private JMenu menuSalirALogin;
 
     //diferentes menus para producto
     private JMenuItem menuItemCrearProducto;
@@ -28,6 +29,10 @@ public class PrincipalView extends JFrame {
     private JMenuItem menuItemCuentaUsuario;
     private JMenuItem menuItemListarUsuarios; //solo para admin
 
+    //opciones para salir
+    private JMenuItem menuItemSalir;
+    private JMenuItem menuItemSalirALogin;
+
     private JDesktopPane jDesktopPane;
 
     public PrincipalView() {
@@ -37,6 +42,7 @@ public class PrincipalView extends JFrame {
         menuProducto = new JMenu("Producto");
         menuCarrito = new JMenu("Carrito");
         menuSesion = new JMenu("Cuenta");
+        menuSalirALogin = new JMenu("Opciones Salida");
 
         //Menu Producto
         menuItemCrearProducto = new JMenuItem("Crear Producto");
@@ -52,6 +58,10 @@ public class PrincipalView extends JFrame {
         //Menu de la cuenta
         menuItemCuentaUsuario = new JMenuItem("Información de Cuenta");
         menuItemListarUsuarios = new JMenuItem("Listar Usuarios"); //para admin
+
+        //salir cuenta
+        menuItemSalir = new JMenuItem("Salir");
+        menuItemSalirALogin = new JMenuItem("Cerrar sesión");
 
         menuBar.add(menuProducto);
         menuBar.add(menuCarrito);
@@ -69,6 +79,9 @@ public class PrincipalView extends JFrame {
 
         menuSesion.add(menuItemCuentaUsuario);
         menuSesion.add(menuItemListarUsuarios);
+
+        menuSalirALogin.add(menuItemSalir);
+        menuSalirALogin.add(menuItemSalirALogin);
 
         //idioma por defecto
         mih = new MensajeInternacionalizacionHandler("es", "EC");
