@@ -77,7 +77,7 @@
         private void abrirPreguntasDeSeguridadCompletas() {
             //muestran 10 preguntas del dao
             List<PreguntaSeguridad> todas = preguntaDAO.listarTodas();
-            PreguntasSeguridadView dlg = new PreguntasSeguridadView(todas, mih);
+            PreguntasSeguridadView dlg = new PreguntasSeguridadView(todas, mih, 5);
             dlg.setVisible(true);
 
             //se filtran las preguntas contestadas
@@ -142,47 +142,56 @@
 
 
         private void recuperarContrasenia() {
-            //pedir usuario
+            // pedir usuario
             String username = JOptionPane.showInputDialog(
                     loginView,
                     mih.get("registrar.txtUsuario")
             );
             if (username == null || username.isBlank()) {
-                return; //se cancela
+                return; // se cancela
             }
 
-            //buscamos el usuario
+            // buscar usuario
             Usuario u = usuarioDAO.buscarPorUsername(username.trim());
             if (u == null) {
                 loginView.mostrarMensaje(mih.get("recuperarC.error.usuaNo"));
                 return;
             }
 
-            //tomamos las respuestas de seguridad
+            // obtener respuestas de seguridad guardadas
             List<RespuestaDeSeguridad> guardadas = u.getRespuestasSeguridad();
             if (guardadas == null || guardadas.size() < 3) {
                 loginView.mostrarMensaje(mih.get("recuperarC.error.respuestasIncom"));
                 return;
             }
 
-            //tomamos tres preguntas al azar
+            // seleccionar 3 preguntas al azar
             Collections.shuffle(guardadas);
             List<PreguntaSeguridad> tresPreguntas = guardadas.stream()
                     .limit(3)
                     .map(RespuestaDeSeguridad::getPregunta)
                     .collect(Collectors.toList());
 
-            PreguntasSeguridadView dlg = new PreguntasSeguridadView(tresPreguntas, mih);
+            // mostrar ventana de respuestas
+            PreguntasSeguridadView dlg = new PreguntasSeguridadView(tresPreguntas, mih, 3);
             dlg.setVisible(true);
             if (!dlg.isSubmitted()) {
                 return;
             }
 
+            // verificar que las respuestas no estén vacías
             List<RespuestaDeSeguridad> dadas = dlg.getRespuestas();
+            boolean hayVacias = dadas.stream().anyMatch(r -> r.getRespuesta().trim().isEmpty());
+            if (hayVacias) {
+                loginView.mostrarMensaje(mih.get("recuperarC.error.respuestasIncom"));
+                return;
+            }
+
+            // validar respuestas dadas contra las guardadas
             boolean todasBien = dadas.stream().allMatch(r ->
                     guardadas.stream().anyMatch(g ->
                             g.getPregunta().equals(r.getPregunta()) &&
-                                    g.getRespuesta().equalsIgnoreCase(r.getRespuesta())
+                                    g.getRespuesta().trim().equalsIgnoreCase(r.getRespuesta().trim())
                     )
             );
             if (!todasBien) {
@@ -190,7 +199,7 @@
                 return;
             }
 
-            //validamos contraseña
+            // pedir nueva contraseña
             JPasswordField pf = new JPasswordField();
             int ok = JOptionPane.showConfirmDialog(
                     loginView, pf,
@@ -198,17 +207,19 @@
                     JOptionPane.OK_CANCEL_OPTION
             );
             if (ok != JOptionPane.OK_OPTION) return;
+
             String nueva = new String(pf.getPassword()).trim();
             if (nueva.isEmpty()) {
                 loginView.mostrarMensaje(mih.get("recuperarC.contraVacia"));
                 return;
             }
 
-            //actualizamos la nueva contraseña
+            // actualizar contraseña
             u.setContrasenia(nueva);
             usuarioDAO.actualizar(u);
             loginView.mostrarMensaje(mih.get("recuperarC.mensajeExito"));
         }
+
 
         private void autenticar() {
             String username = loginView.getTxtUsuario().getText().trim();

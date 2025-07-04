@@ -9,6 +9,7 @@ import ec.edu.ups.modelo.Producto;
 import ec.edu.ups.modelo.Usuario;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.vista.*;
+import ec.edu.ups.util.FormateadorUtils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -16,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class CarritoController {
 
@@ -109,24 +111,29 @@ public class CarritoController {
     private void cargarProductos() {
         List<ItemCarrito> items = carrito.obtenerItems();
         DefaultTableModel modelo = (DefaultTableModel) carritoView.getTable1().getModel();
-        //vamos a ir agregando a la tabla de carritoView
+        modelo.setRowCount(0);  // limpiamos antes de recargar
+
+        Locale locale = mih.getLocale();
+
         for (ItemCarrito item : items) {
-            modelo.addRow(new Object[]{item.getProducto().getCodigo(),
+            double precio = item.getProducto().getPrecio();
+            int cantidad = item.getCantidad();
+            double subtotal = precio * cantidad;
+
+            modelo.addRow(new Object[]{
+                    item.getProducto().getCodigo(),
                     item.getProducto().getNombre(),
-                    item.getProducto().getPrecio(),
-                    item.getCantidad(),
-                    item.getProducto().getPrecio() * item.getCantidad()});
+                    FormateadorUtils.formatearMoneda(precio, locale),cantidad,
+                    FormateadorUtils.formatearMoneda(subtotal, locale)
+            });
         }
     }
 
-    private void mostrarTotales(){
-        String subtotal = String.valueOf(carrito.calcularSubtotal());
-        String iva = String.valueOf(carrito.calcularIVA());
-        String total = String.valueOf(carrito.calcularTotal());
-
-        carritoView.getTxtSubtotal().setText(subtotal);
-        carritoView.getTxtIVA().setText(iva);
-        carritoView.getTxtTotal().setText(total);
+    private void mostrarTotales() {
+        Locale locale = mih.getLocale();
+        carritoView.getTxtSubtotal().setText(FormateadorUtils.formatearMoneda(carrito.calcularSubtotal(), locale));
+        carritoView.getTxtIVA().setText(FormateadorUtils.formatearMoneda(carrito.calcularIVA(), locale));
+        carritoView.getTxtTotal().setText(FormateadorUtils.formatearMoneda(carrito.calcularTotal(), locale));
     }
 
     private void cancelarCarrito() {

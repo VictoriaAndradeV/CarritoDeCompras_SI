@@ -48,7 +48,7 @@ public class CarritoView extends JInternalFrame {
 
         setIconoEscalado(btnAnadir, "imagenes/agregar_datos.png", 25, 25);
         setIconoEscalado(buscarButton, "imagenes/imagen_iconoBuscar - Copy.png", 25, 25);
-        setIconoEscalado(guardarButton, "imagen_guardarInfo.png", 25, 25);
+        setIconoEscalado(guardarButton, "imagenes/imagen_guardarInfo - Copy.png", 25, 25);
         setIconoEscalado(cancelarButton, "imagenes/icono_cancelar.png", 25, 25);
         setIconoEscalado(limpiarButton, "imagenes/icono_limpiar.png", 25, 25);
         setIconoEscalado(btnEliminar, "imagenes/icono_eliminar.png", 25, 25);
