@@ -28,26 +28,8 @@ public class Carrito {
         items.add(new ItemCarrito(producto, cantidad));
     }
 
-    public void vaciarCarrito() {
-        items.clear();
-    }
-
     public List<ItemCarrito> obtenerItems() {
         return items;
-    }
-
-    public boolean estaVacio() {
-        return items.isEmpty();
-    }
-
-    public void eliminarProducto(int codigoProducto) {
-        Iterator<ItemCarrito> it = items.iterator();
-        while (it.hasNext()) {
-            if (it.next().getProducto().getCodigo() == codigoProducto) {
-                it.remove();
-                break;
-            }
-        }
     }
 
     public void eliminarItem(int codigoProducto) {
@@ -82,18 +64,6 @@ public class Carrito {
 
     public GregorianCalendar getFechaCreacion() {
         return fechaCreacion;
-    }
-
-    public void setFechaCreacion(GregorianCalendar fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-
-    public static int getContador() {
-        return contador;
-    }
-
-    public static void setContador(int contador) {
-        Carrito.contador = contador;
     }
 
     public int getCodigo() {

@@ -62,7 +62,7 @@ public class CuentaUsuarioView extends JInternalFrame {
         cambiarButton.setText(mih.get("sesionU.txtCambiar"));
         btnEliminarCuenta.setText(mih.get("sesionU.btnEliminar"));
         btnActualizar.setText(mih.get("sesionU.btnActualizar"));
-        btnCerrarSesion.setText(mih.get("menu.salir.cerrarSesion"));
+        btnCerrarSesion.setText(mih.get("menu.salir.login"));
 
         panelPrincipal.revalidate();
         panelPrincipal.repaint();

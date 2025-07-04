@@ -13,18 +13,19 @@ public class PreguntasSeguridadView extends JDialog {
     private final List<PreguntaSeguridad> preguntas;
     private final List<JTextField> campos = new ArrayList<>();
     private boolean submitted;
+    private final int minimoRespuestasRequeridas;
 
-    public PreguntasSeguridadView(List<PreguntaSeguridad> preguntas,MensajeInternacionalizacionHandler mih) {
+    public PreguntasSeguridadView(List<PreguntaSeguridad> preguntas, MensajeInternacionalizacionHandler mih, int minimoRespuestas) {
         super();
         this.preguntas = preguntas;
+        this.minimoRespuestasRequeridas = minimoRespuestas;
 
-        //config ventana dialog
         setModal(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setTitle(mih.get("preguntaS.titulo"));
 
         buildUI(mih);
-        pack();//ayuda a ajustar tama del contenid
+        pack();
         setLocationRelativeTo(null);
     }
 
@@ -56,15 +57,14 @@ public class PreguntasSeguridadView extends JDialog {
     }
     //el usuario tiene que responder unicamente 5 de las 10 preguntas mostradas
     private void onAccept(MensajeInternacionalizacionHandler mih) {
-        // contamos cuántas respuestas no están vacías
         long contestadas = campos.stream()
                 .filter(tf -> !tf.getText().trim().isEmpty())
                 .count();
 
-        if (contestadas < 5) {
+        if (contestadas < minimoRespuestasRequeridas) {
             JOptionPane.showMessageDialog(
                     this,
-                    mih.get("preguntaS.mensajeError.minimas"),
+                    mih.get("registrar.mensaje.preguntasS"),
                     mih.get("preguntaS.mensajeError.titulo"),
                     JOptionPane.ERROR_MESSAGE
             );
@@ -74,6 +74,7 @@ public class PreguntasSeguridadView extends JDialog {
         submitted = true;
         dispose();
     }
+
 
     //me retorna true si el usuario coloco aceptar y completo todas las preguntas
     public boolean isSubmitted() {

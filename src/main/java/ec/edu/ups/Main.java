@@ -93,7 +93,8 @@ public class Main {
                                 principalView.deshabilitarMenusUsuario();
                             }
 
-                            principalView.mostrarMensaje("Bienvenido: " + usuarioAuntenticado.getUsuario());
+                            String texto = mih.get("mensaje.bienvenido") + ": " + usuarioAuntenticado.getUsuario();
+                            principalView.mostrarMensaje(texto);
 
                             // menu crear producto
                             principalView.getMenuItemCrearProducto().addActionListener(new ActionListener() {
