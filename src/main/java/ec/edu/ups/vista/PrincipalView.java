@@ -6,6 +6,7 @@ import javax.swing.*;
 
 public class PrincipalView extends JFrame {
     private MensajeInternacionalizacionHandler mih;
+    private JDesktopPane jDesktopPane = new MiJDesktopPane();
 
     private JMenuBar menuBar;
 
@@ -33,10 +34,10 @@ public class PrincipalView extends JFrame {
     private JMenuItem menuItemSalir;
     private JMenuItem menuItemSalirALogin;
 
-    private JDesktopPane jDesktopPane;
+
 
     public PrincipalView() {
-        jDesktopPane = new JDesktopPane();
+        jDesktopPane = new MiJDesktopPane(); //fondo con imagen
         menuBar = new JMenuBar();
 
         menuProducto = new JMenu("Producto");

@@ -6,6 +6,7 @@ import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.util.List;
 
 public class ModificarProductoView extends JInternalFrame {
@@ -33,10 +34,25 @@ public class ModificarProductoView extends JInternalFrame {
         setIconifiable(true);
         setResizable(true);
 
+        setIconoEscalado(btnBuscar, "imagenes/imagen_iconoBuscar - Copy.png", 25, 25);
+        setIconoEscalado(btnModificar, "imagenes/modificarDatos.png", 25, 25);
+
         // Modelo provisional de la tabla
         modelo = new DefaultTableModel();
         modelo.setColumnIdentifiers(new Object[]{"Codigo", "Nombre", "Precio"});
         tblProductos.setModel(modelo);
+    }
+
+    private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
+        try {
+            java.net.URL url = getClass().getClassLoader().getResource(ruta);
+            if (url != null) {
+                Image imagen = new ImageIcon(url).getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+                boton.setIcon(new ImageIcon(imagen));
+            }
+        } catch (Exception e) {
+            System.err.println("Error cargando imagen " + ruta + " → " + e.getMessage());
+        }
     }
 
     public void setMensajeHandler(MensajeInternacionalizacionHandler mih) {

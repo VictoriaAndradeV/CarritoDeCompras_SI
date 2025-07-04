@@ -4,6 +4,7 @@ import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 
 public class ListarCarritoAdminView extends JInternalFrame {
     private JPanel panelPrincipal;
@@ -24,10 +25,26 @@ public class ListarCarritoAdminView extends JInternalFrame {
         setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
         setSize(400, 400);
 
+        setIconoEscalado(btnBuscar, "imagenes/imagen_iconoBuscar - Copy.png", 25, 25);
+        setIconoEscalado(btnCarrito, "imagenes/icono_detalles.png", 25, 25);
+
         modelo = new DefaultTableModel();
         Object[] columnas = {"Usuario"};
         modelo.setColumnIdentifiers(columnas);
         table1.setModel(modelo);
+    }
+
+    private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
+        try {
+            java.net.URL url = getClass().getClassLoader().getResource(ruta);
+            if (url != null) {
+                Image imagen = new ImageIcon(url).getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+                boton.setIcon(new ImageIcon(imagen));
+                boton.setHorizontalTextPosition(SwingConstants.RIGHT);
+            }
+        } catch (Exception e) {
+            System.err.println("Error al cargar la imagen" + ruta + " → " + e.getMessage());
+        }
     }
 
     public void setMensajeHandler(MensajeInternacionalizacionHandler mih) {

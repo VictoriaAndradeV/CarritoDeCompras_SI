@@ -4,6 +4,7 @@ import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 
 public class CuendaAdminView extends JInternalFrame {
     private JPanel panelPrincipal;
@@ -26,12 +27,32 @@ public class CuendaAdminView extends JInternalFrame {
         super("Cuenta administrador", true, true, false, true);
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
-        setSize(750, 500);
+        setSize(850, 500);
+
+        setIconoEscalado(btnEliminar, "imagenes/icono_eliminar.png", 25, 25);
+        setIconoEscalado(btnBuscar, "imagenes/imagen_iconoBuscar - Copy.png", 25, 25);
+        setIconoEscalado(btnModificarContra, "imagenes/modificarDatos.png", 25, 25);
+        setIconoEscalado(btnModificarNom, "imagenes/modificarDatos.png", 25, 25);
+        setIconoEscalado(btnCerrarSesion, "imagenes/cerrarSesion.png", 25, 25);
+        setIconoEscalado(btnListar, "imagenes/icono_listar.png", 25, 25);
 
         modelo = new DefaultTableModel();
         Object[] columnas = {"Usuario"};
         modelo.setColumnIdentifiers(columnas);
         table1.setModel(modelo);
+    }
+
+    private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
+        try {
+            java.net.URL url = getClass().getClassLoader().getResource(ruta);
+            if (url != null) {
+                Image imagen = new ImageIcon(url).getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+                boton.setIcon(new ImageIcon(imagen));
+                boton.setHorizontalTextPosition(SwingConstants.RIGHT);
+            }
+        } catch (Exception e) {
+            System.err.println("Error al cargar la imagen" + ruta + " → " + e.getMessage());
+        }
     }
 
     public void setMensajeHandler(MensajeInternacionalizacionHandler mih) {
@@ -58,7 +79,6 @@ public class CuendaAdminView extends JInternalFrame {
         panelPrincipal.revalidate();
         panelPrincipal.repaint();
     }
-
 
     public void cargarUsuarios(java.util.List<String> usuarios) {
         modelo.setRowCount(0);

@@ -1,6 +1,7 @@
 package ec.edu.ups.vista;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Locale;
 import ec.edu.ups.util.*;
 
@@ -24,10 +25,14 @@ public class LoginView extends JFrame {
         setTitle("Iniciar Sesión");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setSize(400, 300);
+        setSize(500, 400);
 
         //idioma por defecto
         mih = new MensajeInternacionalizacionHandler("es", "EC");
+
+        setIconoEscalado(btnIniciarSesion, "imagenes/imagen_inicioSesion.png", 25, 25);
+        setIconoEscalado(btnRegistrarse, "imagenes/imagen_registrarse.png", 25, 25);
+        setIconoEscalado(btnRecuperarContra, "imagenes/imagen_guardarDatos.png", 25, 25);
 
         idiomaComboBox(); //inicializamos el combo box con los idiomas que deseamos
 
@@ -43,6 +48,18 @@ public class LoginView extends JFrame {
             //nuevamente recarga la pantalla
             actualizarTextos();
         });
+    }
+
+    private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
+        try {
+            java.net.URL url = getClass().getClassLoader().getResource(ruta);
+            if (url != null) {
+                Image imagen = new ImageIcon(url).getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+                boton.setIcon(new ImageIcon(imagen));
+            }
+        } catch (Exception e) {
+            System.err.println("Error cargando imagen " + ruta + " → " + e.getMessage());
+        }
     }
 
     private void idiomaComboBox() {

@@ -2,6 +2,7 @@ package ec.edu.ups.vista;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class RegistrarUsuarioView extends JFrame {
     private JPanel panelPrincipal;
@@ -30,6 +31,8 @@ public class RegistrarUsuarioView extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(550, 400);
+
+        setIconoEscalado(btnRegistrarse, "imagenes/imagen_registrarse.png", 25, 25);
     }
 
     public void actualizarTextos() {
@@ -42,6 +45,18 @@ public class RegistrarUsuarioView extends JFrame {
         lblFechaN.setText(mih.get("registrar.txtFechaN"));
         lblTelefono.setText(mih.get("registrar.txtTelefono"));
         btnRegistrarse.setText(mih.get("btn.registrar"));
+    }
+
+    private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
+        try {
+            java.net.URL url = getClass().getClassLoader().getResource(ruta);
+            if (url != null) {
+                Image imagen = new ImageIcon(url).getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+                boton.setIcon(new ImageIcon(imagen));
+            }
+        } catch (Exception e) {
+            System.err.println("Error cargando imagen " + ruta + " → " + e.getMessage());
+        }
     }
 
     public void mostrarMensaje(String mensaje) {
