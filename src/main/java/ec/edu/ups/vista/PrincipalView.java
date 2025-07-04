@@ -67,6 +67,7 @@ public class PrincipalView extends JFrame {
         menuBar.add(menuProducto);
         menuBar.add(menuCarrito);
         menuBar.add(menuSesion);
+        menuBar.add(menuSalirALogin);
 
         menuProducto.add(menuItemCrearProducto);
         menuProducto.add(menuItemEliminarProducto);
@@ -107,6 +108,7 @@ public class PrincipalView extends JFrame {
         menuProducto.setText(mih.get("menu.producto"));
         menuCarrito.setText(mih.get("menu.carrito"));
         menuSesion.setText(mih.get("menu.sesion"));
+        menuSalirALogin .setText(mih.get("menu.salir.opciones"));
 
         //items del producto
         menuItemCrearProducto.setText(mih.get("menu.producto.crear"));
@@ -122,6 +124,9 @@ public class PrincipalView extends JFrame {
         //items de Cuenta
         menuItemCuentaUsuario .setText(mih.get("menu.cuenta.usuario"));
         menuItemListarUsuarios.setText(mih.get("menu.cuenta.admin"));
+
+        menuItemSalir.setText(mih.get("menu.salir.todos"));
+        menuItemSalirALogin .setText(mih.get("menu.salir.login"));
     }
 
     public void deshabilitarMenusAdministrador() {
@@ -144,6 +149,34 @@ public class PrincipalView extends JFrame {
     }
 
     //GETTERS Y SETTERS
+    public void setMenuBar(JMenuBar menuBar) {
+        this.menuBar = menuBar;
+    }
+
+    public JMenu getMenuSalirALogin() {
+        return menuSalirALogin;
+    }
+
+    public void setMenuSalirALogin(JMenu menuSalirALogin) {
+        this.menuSalirALogin = menuSalirALogin;
+    }
+
+    public JMenuItem getMenuItemSalir() {
+        return menuItemSalir;
+    }
+
+    public void setMenuItemSalir(JMenuItem menuItemSalir) {
+        this.menuItemSalir = menuItemSalir;
+    }
+
+    public JMenuItem getMenuItemSalirALogin() {
+        return menuItemSalirALogin;
+    }
+
+    public void setMenuItemSalirALogin(JMenuItem menuItemSalirALogin) {
+        this.menuItemSalirALogin = menuItemSalirALogin;
+    }
+
     public MensajeInternacionalizacionHandler getMih() {
         return mih;
     }

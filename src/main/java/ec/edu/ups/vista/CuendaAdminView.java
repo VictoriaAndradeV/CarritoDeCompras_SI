@@ -18,6 +18,7 @@ public class CuendaAdminView extends JInternalFrame {
     private JButton btnCerrarSesion;
     private JLabel lblNombre;
     private JLabel tituloVentana;
+    private JButton crearUsuarioButton;
 
     private DefaultTableModel modelo;
 

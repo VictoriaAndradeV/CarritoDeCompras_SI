@@ -247,9 +247,19 @@
             // menú Listar Usuarios (solo admin)
             principalView.getMenuItemListarUsuarios().addActionListener(e -> abrirCuentaAdmin());
 
-            //principalView.setVisible(true);
             configurarEventosCuenta();
             configurarEventosCuentaAdmin();
+
+            principalView.getMenuItemSalir().addActionListener(e -> {
+                System.exit(0);
+            });
+
+            // 2) Cerrar sesión: cierro principal y muestro login
+            principalView.getMenuItemSalirALogin().addActionListener(e -> {
+                principalView.dispose();
+                loginView.setVisible(true);
+            });
+
             principalView.setVisible(true);
         }
 
