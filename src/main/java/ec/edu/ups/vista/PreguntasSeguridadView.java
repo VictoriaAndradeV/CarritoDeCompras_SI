@@ -54,19 +54,23 @@ public class PreguntasSeguridadView extends JDialog {
         getContentPane().add(form, BorderLayout.CENTER);
         getContentPane().add(botones, BorderLayout.SOUTH);
     }
-
+    //el usuario tiene que responder unicamente 5 de las 10 preguntas mostradas
     private void onAccept(MensajeInternacionalizacionHandler mih) {
-        //validar que no existan campos vacios
-        for (JTextField tf : campos) {
-            if (tf.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this,
-                        mih.get("preguntaS.mensajeError.vacio"),
-                        mih.get("preguntaS.mensajeError.titulo"),
-                        JOptionPane.ERROR_MESSAGE
-                );
-                return;
-            }
+        // contamos cuántas respuestas no están vacías
+        long contestadas = campos.stream()
+                .filter(tf -> !tf.getText().trim().isEmpty())
+                .count();
+
+        if (contestadas < 5) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    mih.get("preguntaS.mensajeError.minimas"),
+                    mih.get("preguntaS.mensajeError.titulo"),
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
         }
+
         submitted = true;
         dispose();
     }

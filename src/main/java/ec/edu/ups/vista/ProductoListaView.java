@@ -5,6 +5,7 @@ import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.util.List;
 
 public class ProductoListaView extends JInternalFrame {
@@ -30,6 +31,10 @@ public class ProductoListaView extends JInternalFrame {
         setClosable(true);
         setIconifiable(true);
         setResizable(true);
+
+        setIconoEscalado(btnBuscar, "imagenes/imagen_iconoBuscar - Copy.png", 25, 25);
+        setIconoEscalado(btnListar, "imagenes/icono_listar.png", 25, 25);
+        setIconoEscalado(btnLimpiar, "imagenes/icono_limpiar.png", 25, 25);
 
         modelo = new DefaultTableModel();
         Object[] columnas = {"Codigo", "Nombre", "Precio"};
@@ -57,6 +62,18 @@ public class ProductoListaView extends JInternalFrame {
                 mih.get("listarP.colPrecio")
         };
         modelo.setColumnIdentifiers(columnas);
+    }
+
+    private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
+        try {
+            java.net.URL url = getClass().getClassLoader().getResource(ruta);
+            if (url != null) {
+                Image imagen = new ImageIcon(url).getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+                boton.setIcon(new ImageIcon(imagen));
+            }
+        } catch (Exception e) {
+            System.err.println("Error cargando imagen " + ruta + " → " + e.getMessage());
+        }
     }
 
     public void mostrarMensaje(String msg) {

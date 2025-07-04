@@ -6,6 +6,7 @@ import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.util.List;
 
 public class EliminarProductoView extends JInternalFrame {
@@ -33,6 +34,9 @@ public class EliminarProductoView extends JInternalFrame {
         setIconifiable(true);
         setResizable(true);
 
+        setIconoEscalado(buscarButton, "imagenes/imagen_iconoBuscar - Copy.png", 25, 25);
+        setIconoEscalado(eliminarButton, "imagenes/icono_eliminar.png", 25, 25);
+
         modelo = new DefaultTableModel();
         Object[] columnas = {"Codigo", "Nombre", "Precio"};
         modelo.setColumnIdentifiers(columnas);
@@ -57,6 +61,18 @@ public class EliminarProductoView extends JInternalFrame {
                 mih.get("eliminarP.colNombre"),
                 mih.get("eliminarP.colPrecio")
         });
+    }
+
+    private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
+        try {
+            java.net.URL url = getClass().getClassLoader().getResource(ruta);
+            if (url != null) {
+                Image imagen = new ImageIcon(url).getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+                boton.setIcon(new ImageIcon(imagen));
+            }
+        } catch (Exception e) {
+            System.err.println("Error cargando imagen " + ruta + " → " + e.getMessage());
+        }
     }
 
     public void cargarTabla(List<Producto> lista) {

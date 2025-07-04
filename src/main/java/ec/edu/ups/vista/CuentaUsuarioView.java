@@ -3,6 +3,7 @@ package ec.edu.ups.vista;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class CuentaUsuarioView extends JInternalFrame {
     private JPanel panelPrincipal;
@@ -23,7 +24,26 @@ public class CuentaUsuarioView extends JInternalFrame {
         super("Cuenta de Usuario", true, true, false, true);
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
-        setSize(500, 500);
+        setSize(550, 500);
+
+        setIconoEscalado(editarNombreButton, "imagenes/modificarDatos.png", 25, 25);
+        setIconoEscalado(cambiarButton, "imagenes/modificarDatos.png", 25, 25);
+        setIconoEscalado(btnEliminarCuenta, "imagenes/icono_eliminar.png", 25, 25);
+        setIconoEscalado(btnCerrarSesion, "imagenes/cerrarSesion.png", 25, 25);
+        setIconoEscalado(btnActualizar, "imagenes/icono_actualizar.png", 25, 25);
+    }
+
+    private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
+        try {
+            java.net.URL url = getClass().getClassLoader().getResource(ruta);
+            if (url != null) {
+                Image imagen = new ImageIcon(url).getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+                boton.setIcon(new ImageIcon(imagen));
+                boton.setHorizontalTextPosition(SwingConstants.RIGHT);
+            }
+        } catch (Exception e) {
+            System.err.println("Error al cargar la imagen" + ruta + " → " + e.getMessage());
+        }
     }
 
     public void setMensajeHandler(MensajeInternacionalizacionHandler mih) {

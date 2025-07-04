@@ -4,6 +4,7 @@ import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 
 public class CarritoView extends JInternalFrame {
     private JTextField txtCodigo;
@@ -44,6 +45,27 @@ public class CarritoView extends JInternalFrame {
         modelo.setColumnIdentifiers(columnas);
         table1.setModel(modelo);
         cargarDatos();
+
+        setIconoEscalado(btnAnadir, "imagenes/agregar_datos.png", 25, 25);
+        setIconoEscalado(buscarButton, "imagenes/imagen_iconoBuscar - Copy.png", 25, 25);
+        setIconoEscalado(guardarButton, "imagen_guardarInfo.png", 25, 25);
+        setIconoEscalado(cancelarButton, "imagenes/icono_cancelar.png", 25, 25);
+        setIconoEscalado(limpiarButton, "imagenes/icono_limpiar.png", 25, 25);
+        setIconoEscalado(btnEliminar, "imagenes/icono_eliminar.png", 25, 25);
+        setIconoEscalado(btnActualizar, "imagenes/icono_actualizar.png", 25, 25);
+    }
+
+    private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
+        try {
+            java.net.URL url = getClass().getClassLoader().getResource(ruta);
+            if (url != null) {
+                Image imagen = new ImageIcon(url).getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+                boton.setIcon(new ImageIcon(imagen));
+                boton.setHorizontalTextPosition(SwingConstants.RIGHT);
+            }
+        } catch (Exception e) {
+            System.err.println("Error al cargar la imagen" + ruta + " → " + e.getMessage());
+        }
     }
 
     public void setMensajeHandler(MensajeInternacionalizacionHandler mih) {

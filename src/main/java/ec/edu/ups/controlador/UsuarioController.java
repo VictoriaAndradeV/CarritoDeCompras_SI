@@ -12,7 +12,6 @@
     import ec.edu.ups.vista.*;
 
     import javax.swing.*;
-
     import java.awt.event.ActionEvent;
     import java.awt.event.ActionListener;
     import java.text.ParseException;
@@ -76,18 +75,23 @@
         }
 
         private void abrirPreguntasDeSeguridadCompletas() {
-            List<PreguntaSeguridad> todas = preguntaDAO.listarTodas(); // 10 preguntas
+            //muestran 10 preguntas del dao
+            List<PreguntaSeguridad> todas = preguntaDAO.listarTodas();
             PreguntasSeguridadView dlg = new PreguntasSeguridadView(todas, mih);
             dlg.setVisible(true);
+
+            //se filtran las preguntas contestadas
             if (dlg.isSubmitted()) {
-                respuestasSeguridadTemporales = dlg.getRespuestas();
+                List<RespuestaDeSeguridad> todasResps = dlg.getRespuestas();
+                respuestasSeguridadTemporales = todasResps.stream()
+                        .filter(r -> !r.getRespuesta().isBlank())
+                        .collect(Collectors.toList());
             } else {
                 respuestasSeguridadTemporales = Collections.emptyList();
             }
         }
 
         private void registrarUsuario() {
-            // 1) validar campos del formulario
             String username = registrarUsuarioView.getTxtUsuario().getText().trim();
             String passwd   = new String(registrarUsuarioView.getPasswordField1().getPassword()).trim();
             String nombre   = registrarUsuarioView.getTextField1().getText().trim();
@@ -98,11 +102,11 @@
 
             if (username.isEmpty() || passwd.isEmpty() || nombre.isEmpty() ||
                     apellido.isEmpty() || email.isEmpty() || telefono.isEmpty() || fechaStr.isEmpty()) {
-                registrarUsuarioView.mostrarMensaje("Todos los campos son obligatorios.");
+                registrarUsuarioView.mostrarMensaje(mih.get("registrar.mensaje.campos"));
                 return;
             }
 
-            // 2) validar fecha
+            //se valida fecha
             Date fechaNacimiento;
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -113,29 +117,25 @@
                 return;
             }
 
-            // 3) verificar usuario único
+            //valida usuario unico
             if (usuarioDAO.buscarPorUsername(username) != null) {
-                registrarUsuarioView.mostrarMensaje("El nombre de usuario ya existe.");
+                registrarUsuarioView.mostrarMensaje(mih.get("registrar.mensaje.usuarioExiste"));
                 return;
             }
 
-            // 4) ahora sí abrimos las 10 preguntas
             abrirPreguntasDeSeguridadCompletas();
-            int totalPreg = preguntaDAO.listarTodas().size(); // 10
-            if (respuestasSeguridadTemporales.size() != totalPreg) {
-                registrarUsuarioView.mostrarMensaje(
-                        "Debes contestar las " + totalPreg + " preguntas de seguridad."
-                );
+            //se comprueba que se hayan llenado 5 preguntas
+            if (respuestasSeguridadTemporales.size() != 5) {
+                registrarUsuarioView.mostrarMensaje(mih.get("registrar.mensaje.preguntasS"));
                 return;
             }
 
-            // 5) crear el usuario y asociar respuestas
-            Usuario nuevo = new Usuario(username, passwd, USUARIO,
-                    nombre, apellido, fechaNacimiento, email, telefono);
+            //se crea el usuario y se guardan las respuestas
+            Usuario nuevo = new Usuario(username, passwd, USUARIO,nombre, apellido, fechaNacimiento, email, telefono);
             nuevo.setRespuestasSeguridad(respuestasSeguridadTemporales);
             usuarioDAO.crear(nuevo);
 
-            registrarUsuarioView.mostrarMensaje("Usuario registrado exitosamente.");
+            registrarUsuarioView.mostrarMensaje(mih.get("registrar.mensajeExito"));
             registrarUsuarioView.limpiarCampos();
             respuestasSeguridadTemporales = Collections.emptyList();
         }
@@ -216,7 +216,7 @@
 
             usuario = usuarioDAO.autenticar(username, contrasenia);
             if (usuario == null) {
-                loginView.mostrarMensaje("Usuario o contraseña incorrectos.");
+                loginView.mostrarMensaje("registrar.mensajeError");
             } else {
                 // se lee el idioma que eligió el usuario
                 IdiomaUsado sel = (IdiomaUsado) loginView.getComboBoxIdioma().getSelectedItem();
