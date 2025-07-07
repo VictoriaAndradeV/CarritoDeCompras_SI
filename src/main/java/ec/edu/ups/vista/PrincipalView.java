@@ -34,8 +34,6 @@ public class PrincipalView extends JFrame {
     private JMenuItem menuItemSalir;
     private JMenuItem menuItemSalirALogin;
 
-
-
     public PrincipalView() {
         jDesktopPane = new MiJDesktopPane(); //fondo con imagen
         menuBar = new JMenuBar();
@@ -98,9 +96,9 @@ public class PrincipalView extends JFrame {
 
     //Nuevo constructor que recibe el handler ya inicializado
     public PrincipalView(MensajeInternacionalizacionHandler mih) {
-        this();               //llama al constructor por defecto
-        this.mih = mih;       //asigna el handler
-        actualizarTextos();   //pinta los textos con el idioma adecuado
+        this();
+        this.mih = mih;
+        actualizarTextos();
     }
 
     public void actualizarTextos() {
@@ -131,7 +129,7 @@ public class PrincipalView extends JFrame {
 
     public void deshabilitarMenusAdministrador() {
         getMenuItemCrearProducto().setEnabled(false);
-        getMenuItemBuscarProducto().setEnabled(false);
+        //getMenuItemBuscarProducto().setEnabled(false);
         getMenuItemActualizarProducto().setEnabled(false);
         getMenuItemEliminarProducto().setEnabled(false);
         getMenuItemListarCarritosPorUsuario().setEnabled(false); //usuario no puede listar los carritos de demas usuarios
@@ -149,32 +147,12 @@ public class PrincipalView extends JFrame {
     }
 
     //GETTERS Y SETTERS
-    public void setMenuBar(JMenuBar menuBar) {
-        this.menuBar = menuBar;
-    }
-
-    public JMenu getMenuSalirALogin() {
-        return menuSalirALogin;
-    }
-
-    public void setMenuSalirALogin(JMenu menuSalirALogin) {
-        this.menuSalirALogin = menuSalirALogin;
-    }
-
     public JMenuItem getMenuItemSalir() {
         return menuItemSalir;
     }
 
-    public void setMenuItemSalir(JMenuItem menuItemSalir) {
-        this.menuItemSalir = menuItemSalir;
-    }
-
     public JMenuItem getMenuItemSalirALogin() {
         return menuItemSalirALogin;
-    }
-
-    public void setMenuItemSalirALogin(JMenuItem menuItemSalirALogin) {
-        this.menuItemSalirALogin = menuItemSalirALogin;
     }
 
     public MensajeInternacionalizacionHandler getMih() {
@@ -189,103 +167,35 @@ public class PrincipalView extends JFrame {
         return menuItemCrearProducto;
     }
 
-    public JMenu getMenuProducto() {
-        return menuProducto;
-    }
-
-    public void setMenuProducto(JMenu menuProducto) {
-        this.menuProducto = menuProducto;
-    }
-
-    public JMenu getMenuCarrito() {
-        return menuCarrito;
-    }
-
-    public void setMenuCarrito(JMenu menuCarrito) {
-        this.menuCarrito = menuCarrito;
-    }
-
-    public JMenu getMenuSesion() {
-        return menuSesion;
-    }
-
-    public void setMenuSesion(JMenu menuSesion) {
-        this.menuSesion = menuSesion;
-    }
-
-    public void setMenuItemCrearProducto(JMenuItem menuItemCrearProducto) {
-        this.menuItemCrearProducto = menuItemCrearProducto;
-    }
-
     public JMenuItem getMenuItemEliminarProducto() {
         return menuItemEliminarProducto;
-    }
-
-    public void setMenuItemEliminarProducto(JMenuItem menuItemEliminarProducto) {
-        this.menuItemEliminarProducto = menuItemEliminarProducto;
     }
 
     public JMenuItem getMenuItemActualizarProducto() {
         return menuItemActualizarProducto;
     }
 
-    public void setMenuItemActualizarProducto(JMenuItem menuItemActualizarProducto) {
-        this.menuItemActualizarProducto = menuItemActualizarProducto;
-    }
-
     public JMenuItem getMenuItemBuscarProducto() {
         return menuItemBuscarProducto;
-    }
-
-    public void setMenuItemBuscarProducto(JMenuItem menuItemBuscarProducto) {
-        this.menuItemBuscarProducto = menuItemBuscarProducto;
     }
 
     public JMenuItem getMenuItemCrearCarrito() {
         return menuItemCrearCarrito;
     }
-
-    public void setMenuItemCrearCarrito(JMenuItem menuItemCrearCarrito) {
-        this.menuItemCrearCarrito = menuItemCrearCarrito;
-    }
-
     public JMenuItem getMenuItemListarMisCarritos() {
         return menuItemListarMisCarritos;
     }
-
-    public void setMenuItemListarMisCarritos(JMenuItem menuItemListarMisCarritos) {
-        this.menuItemListarMisCarritos = menuItemListarMisCarritos;
-    }
-
     public JMenuItem getMenuItemListarCarritosPorUsuario() {
         return menuItemListarCarritosPorUsuario;
     }
-
-    public void setMenuItemListarCarritosPorUsuario(JMenuItem menuItemListarCarritosPorUsuario) {
-        this.menuItemListarCarritosPorUsuario = menuItemListarCarritosPorUsuario;
-    }
-
     public JMenuItem getMenuItemCuentaUsuario() {
         return menuItemCuentaUsuario;
     }
-
-    public void setMenuItemCuentaUsuario(JMenuItem menuItemCuentaUsuario) {
-        this.menuItemCuentaUsuario = menuItemCuentaUsuario;
-    }
-
     public JMenuItem getMenuItemListarUsuarios() {
         return menuItemListarUsuarios;
     }
-
-    public void setMenuItemListarUsuarios(JMenuItem menuItemListarUsuarios) {
-        this.menuItemListarUsuarios = menuItemListarUsuarios;
-    }
-
     public JDesktopPane getjDesktopPane() {
         return jDesktopPane;
     }
 
-    public void setjDesktopPane(JDesktopPane jDesktopPane) {
-        this.jDesktopPane = jDesktopPane;
-    }
 }

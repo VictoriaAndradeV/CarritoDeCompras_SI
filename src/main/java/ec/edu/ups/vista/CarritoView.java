@@ -46,16 +46,19 @@ public class CarritoView extends JInternalFrame {
         table1.setModel(modelo);
         cargarDatos();
 
-        setIconoEscalado(btnAnadir, "imagenes/agregar_datos.png", 25, 25);
-        setIconoEscalado(buscarButton, "imagenes/imagen_iconoBuscar - Copy.png", 25, 25);
-        setIconoEscalado(guardarButton, "imagenes/imagen_guardarInfo - Copy.png", 25, 25);
-        setIconoEscalado(cancelarButton, "imagenes/icono_cancelar.png", 25, 25);
-        setIconoEscalado(limpiarButton, "imagenes/icono_limpiar.png", 25, 25);
-        setIconoEscalado(btnEliminar, "imagenes/icono_eliminar.png", 25, 25);
-        setIconoEscalado(btnActualizar, "imagenes/icono_actualizar.png", 25, 25);
+        setIconoEscalado(btnAnadir, "imagenes/agregar_datos.png");
+        setIconoEscalado(buscarButton, "imagenes/imagen_iconoBuscar - Copy.png");
+        setIconoEscalado(guardarButton, "imagenes/imagen_guardarInfo - Copy.png");
+        setIconoEscalado(cancelarButton, "imagenes/icono_cancelar.png");
+        setIconoEscalado(limpiarButton, "imagenes/icono_limpiar.png");
+        setIconoEscalado(btnEliminar, "imagenes/icono_eliminar.png");
+        setIconoEscalado(btnActualizar, "imagenes/icono_actualizar.png");
     }
 
-    private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
+    private void setIconoEscalado(JButton boton, String ruta) {
+        final int ancho = 25;
+        final int alto = 25;
+
         try {
             java.net.URL url = getClass().getClassLoader().getResource(ruta);
             if (url != null) {
@@ -64,7 +67,7 @@ public class CarritoView extends JInternalFrame {
                 boton.setHorizontalTextPosition(SwingConstants.RIGHT);
             }
         } catch (Exception e) {
-            System.err.println("Error al cargar la imagen" + ruta + " → " + e.getMessage());
+            System.err.println("Error al cargar la imagen " + ruta + " → " + e.getMessage());
         }
     }
 
@@ -120,10 +123,6 @@ public class CarritoView extends JInternalFrame {
         return btnActualizar;
     }
 
-    public void setBtnActualizar(JButton btnActualizar) {
-        this.btnActualizar = btnActualizar;
-    }
-
     public JButton getBtnEliminar() {
         return btnEliminar;
     }
@@ -152,72 +151,36 @@ public class CarritoView extends JInternalFrame {
         return txtPrecio;
     }
 
-    public void setTxtPrecio(JTextField txtPrecio) {
-        this.txtPrecio = txtPrecio;
-    }
-
     public JButton getBtnAnadir() {
         return btnAnadir;
-    }
-
-    public void setBtnAnadir(JButton btnAnadir) {
-        this.btnAnadir = btnAnadir;
     }
 
     public JButton getBuscarButton() {
         return buscarButton;
     }
 
-    public void setBuscarButton(JButton buscarButton) {
-        this.buscarButton = buscarButton;
-    }
-
     public JTextField getTxtSubtotal() {
         return txtSubtotal;
-    }
-
-    public void setTxtSubtotal(JTextField txtSubtotal) {
-        this.txtSubtotal = txtSubtotal;
     }
 
     public JTextField getTxtIVA() {
         return txtIVA;
     }
 
-    public void setTxtIVA(JTextField txtIVA) {
-        this.txtIVA = txtIVA;
-    }
-
     public JTextField getTxtTotal() {
         return txtTotal;
-    }
-
-    public void setTxtTotal(JTextField txtTotal) {
-        this.txtTotal = txtTotal;
     }
 
     public JButton getGuardarButton() {
         return guardarButton;
     }
 
-    public void setGuardarButton(JButton guardarButton) {
-        this.guardarButton = guardarButton;
-    }
-
     public JButton getCancelarButton() {
         return cancelarButton;
     }
 
-    public void setCancelarButton(JButton cancelarButton) {
-        this.cancelarButton = cancelarButton;
-    }
-
     public JTable getTable1() {
         return table1;
-    }
-
-    public void setTable1(JTable table1) {
-        this.table1 = table1;
     }
 
     public JPanel getPanelPrincipal() {
@@ -232,15 +195,7 @@ public class CarritoView extends JInternalFrame {
         return limpiarButton;
     }
 
-    public void setLimpiarButton(JButton actualizarButton) {
-        this.limpiarButton = actualizarButton;
-    }
-
     public JComboBox getComboBox1() {
         return comboBox1;
-    }
-
-    public void setComboBox1(JComboBox comboBox1) {
-        this.comboBox1 = comboBox1;
     }
 }

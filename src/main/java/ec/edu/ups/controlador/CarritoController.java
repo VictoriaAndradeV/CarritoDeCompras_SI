@@ -168,7 +168,7 @@ public class CarritoController {
                 actualizarTabla();
                 mostrarTotales();
                 carritoView.mostrarMensaje(
-                        mih.get("carrito.mensajeItemEliminado")
+                        mih.get("carrito.mensaje.Eliminado")
                 );
             }
         } else {

@@ -25,6 +25,14 @@ public class Carrito {
     }
 
     public void agregarProducto(Producto producto, int cantidad) {
+        for (ItemCarrito item : items) {
+            if (item.getProducto().getCodigo() == producto.getCodigo()) {
+                // Si ya está el producto, solo suma la cantidad
+                item.setCantidad(item.getCantidad() + cantidad);
+                return;
+            }
+        }
+        // Si no existe, lo añade como nuevo
         items.add(new ItemCarrito(producto, cantidad));
     }
 

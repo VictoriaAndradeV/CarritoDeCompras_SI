@@ -4,7 +4,10 @@ import ec.edu.ups.dao.UsuarioDAO;
 import ec.edu.ups.modelo.Rol;
 import ec.edu.ups.modelo.Usuario;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,9 +15,17 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
     private final List<Usuario> usuarios;
 
     public UsuarioDAOMemoria() {
-        usuarios = new ArrayList<Usuario>();
-        crear(new Usuario("admin", "1234", Rol.ADMINISTRADOR, "Victoria", "Andrade", null, "victoriaavchico@gmail.com", "0962301221"));
-        crear(new Usuario("user", "1234", Rol.USUARIO, "Dalyana", "matute", null, "dalyanavchico@gmail.com", "0962301223"));
+        usuarios = new ArrayList<>();
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date fechaAdmin = sdf.parse("2004-10-13");
+            Date fechaUser = sdf.parse("2004-09-25");
+
+            crear(new Usuario("admin", "1234", Rol.ADMINISTRADOR, "Victoria", "Andrade", fechaAdmin, "victoriaavchico@gmail.com", "0962301221"));
+            crear(new Usuario("user", "1234", Rol.USUARIO, "Dalyana", "matute", fechaUser, "dalyanavchico@gmail.com", "0962301223"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

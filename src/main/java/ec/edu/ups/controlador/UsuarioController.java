@@ -16,6 +16,7 @@
     import java.awt.event.ActionListener;
     import java.text.ParseException;
     import java.text.SimpleDateFormat;
+    import java.util.ArrayList;
     import java.util.Collections;
     import java.util.Date;
     import java.util.List;
@@ -77,15 +78,13 @@
         private void abrirPreguntasDeSeguridadCompletas() {
             //muestran 10 preguntas del dao
             List<PreguntaSeguridad> todas = preguntaDAO.listarTodas();
-            PreguntasSeguridadView dlg = new PreguntasSeguridadView(todas, mih, 5);
+            PreguntasSeguridadView dlg = new PreguntasSeguridadView(todas, mih, 3);
             dlg.setVisible(true);
 
             //se filtran las preguntas contestadas
             if (dlg.isSubmitted()) {
                 List<RespuestaDeSeguridad> todasResps = dlg.getRespuestas();
-                respuestasSeguridadTemporales = todasResps.stream()
-                        .filter(r -> !r.getRespuesta().isBlank())
-                        .collect(Collectors.toList());
+                respuestasSeguridadTemporales = todasResps.stream().filter(r -> !r.getRespuesta().isBlank()).collect(Collectors.toList());
             } else {
                 respuestasSeguridadTemporales = Collections.emptyList();
             }
@@ -124,12 +123,11 @@
             }
 
             abrirPreguntasDeSeguridadCompletas();
-            //se comprueba que se hayan llenado 5 preguntas
-            if (respuestasSeguridadTemporales.size() != 5) {
-                registrarUsuarioView.mostrarMensaje(mih.get("registrar.mensaje.preguntasS"));
+            //se comprueba que se hayan llenado 3 preguntas
+            if (respuestasSeguridadTemporales.size() != 3) {
+                registrarUsuarioView.mostrarMensaje(mih.get("preguntaS.error.Responder"));
                 return;
             }
-
             //se crea el usuario y se guardan las respuestas
             Usuario nuevo = new Usuario(username, passwd, USUARIO,nombre, apellido, fechaNacimiento, email, telefono);
             nuevo.setRespuestasSeguridad(respuestasSeguridadTemporales);
@@ -140,72 +138,51 @@
             respuestasSeguridadTemporales = Collections.emptyList();
         }
 
-
         private void recuperarContrasenia() {
-            // pedir usuario
             String username = JOptionPane.showInputDialog(
                     loginView,
                     mih.get("registrar.txtUsuario")
             );
-            if (username == null || username.isBlank()) {
-                return; // se cancela
-            }
+            if (username == null || username.isBlank()) return;
 
-            // buscar usuario
             Usuario u = usuarioDAO.buscarPorUsername(username.trim());
             if (u == null) {
                 loginView.mostrarMensaje(mih.get("recuperarC.error.usuaNo"));
                 return;
             }
 
-            // obtener respuestas de seguridad guardadas
             List<RespuestaDeSeguridad> guardadas = u.getRespuestasSeguridad();
             if (guardadas == null || guardadas.size() < 3) {
-                loginView.mostrarMensaje(mih.get("recuperarC.error.respuestasIncom"));
+                loginView.mostrarMensaje(mih.get("preguntaS.error.Responder"));
                 return;
             }
 
-            // seleccionar 3 preguntas al azar
-            Collections.shuffle(guardadas);
-            List<PreguntaSeguridad> tresPreguntas = guardadas.stream()
-                    .limit(3)
-                    .map(RespuestaDeSeguridad::getPregunta)
-                    .collect(Collectors.toList());
+            List<RespuestaDeSeguridad> copia = new ArrayList<>(guardadas);
+            Collections.shuffle(copia); // desordenar
 
-            // mostrar ventana de respuestas
-            PreguntasSeguridadView dlg = new PreguntasSeguridadView(tresPreguntas, mih, 3);
-            dlg.setVisible(true);
-            if (!dlg.isSubmitted()) {
-                return;
+            boolean acceso = false;
+            for (RespuestaDeSeguridad r : copia) {
+                List<PreguntaSeguridad> lista = List.of(r.getPregunta());
+                PreguntasSeguridadView dlg = new PreguntasSeguridadView(lista, mih, 1);
+                dlg.setVisible(true);
+
+                if (!dlg.isSubmitted()) continue;
+
+                String respuestaUsuario = dlg.getRespuestas().get(0).getRespuesta().trim();
+                if (respuestaUsuario.equalsIgnoreCase(r.getRespuesta().trim())) {
+                    acceso = true;
+                    break;
+                }
             }
 
-            // verificar que las respuestas no estén vacías
-            List<RespuestaDeSeguridad> dadas = dlg.getRespuestas();
-            boolean hayVacias = dadas.stream().anyMatch(r -> r.getRespuesta().trim().isEmpty());
-            if (hayVacias) {
-                loginView.mostrarMensaje(mih.get("recuperarC.error.respuestasIncom"));
-                return;
-            }
-
-            // validar respuestas dadas contra las guardadas
-            boolean todasBien = dadas.stream().allMatch(r ->
-                    guardadas.stream().anyMatch(g ->
-                            g.getPregunta().equals(r.getPregunta()) &&
-                                    g.getRespuesta().trim().equalsIgnoreCase(r.getRespuesta().trim())
-                    )
-            );
-            if (!todasBien) {
+            if (!acceso) {
                 loginView.mostrarMensaje(mih.get("recuperarC.error.respuestasIncorr"));
                 return;
             }
 
-            // pedir nueva contraseña
+            // permitir cambiar contraseña
             JPasswordField pf = new JPasswordField();
-            int ok = JOptionPane.showConfirmDialog(
-                    loginView, pf,
-                    mih.get("recuperarC.actualizarC"),
-                    JOptionPane.OK_CANCEL_OPTION
-            );
+            int ok = JOptionPane.showConfirmDialog(loginView, pf,mih.get("recuperarC.actualizarC"), JOptionPane.OK_CANCEL_OPTION);
             if (ok != JOptionPane.OK_OPTION) return;
 
             String nueva = new String(pf.getPassword()).trim();
@@ -214,12 +191,10 @@
                 return;
             }
 
-            // actualizar contraseña
             u.setContrasenia(nueva);
             usuarioDAO.actualizar(u);
             loginView.mostrarMensaje(mih.get("recuperarC.mensajeExito"));
         }
-
 
         private void autenticar() {
             String username = loginView.getTxtUsuario().getText().trim();
@@ -227,7 +202,7 @@
 
             usuario = usuarioDAO.autenticar(username, contrasenia);
             if (usuario == null) {
-                loginView.mostrarMensaje("registrar.mensajeError");
+                loginView.mostrarMensaje(mih.get("registrar.mensajeError"));
             } else {
                 // se lee el idioma que eligió el usuario
                 IdiomaUsado sel = (IdiomaUsado) loginView.getComboBoxIdioma().getSelectedItem();
@@ -255,7 +230,7 @@
 
             // menú Cuenta de usuario
             principalView.getMenuItemCuentaUsuario().addActionListener(e -> abrirCuentaUsuario());
-            // menú Listar Usuarios (solo admin)
+            // menu Listar Usuarios (solo admin)
             principalView.getMenuItemListarUsuarios().addActionListener(e -> abrirCuentaAdmin());
 
             configurarEventosCuenta();
@@ -264,54 +239,41 @@
             principalView.getMenuItemSalir().addActionListener(e -> {
                 System.exit(0);
             });
-
-            // 2) Cerrar sesión: cierro principal y muestro login
+            //cierro principal y muestro login
             principalView.getMenuItemSalirALogin().addActionListener(e -> {
                 principalView.dispose();
                 loginView.setVisible(true);
             });
-
             principalView.setVisible(true);
         }
 
-        private void abrirCuentaUsuario() {
-            cuentaUsuarioView.getTxtNombreUsuario().setText(usuario.getUsuario());
-            cuentaUsuarioView.getTextField1().setText("********");
+        public void abrirCuentaUsuario() {
+            cuentaUsuarioView.getTextUsua().setText(usuario.getUsuario());
+            cuentaUsuarioView.getTextContra().setText("********");
+            cuentaUsuarioView.getTextNombre().setText(usuario.getNombre());
+            cuentaUsuarioView.getTextApe().setText(usuario.getApellido());
+            cuentaUsuarioView.getTextTelefo().setText(usuario.getTelefono());
+            cuentaUsuarioView.getTextEmail().setText(usuario.getEmail());
+
+            Date fecha = usuario.getFechaNacimiento();
+            if (fecha != null) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                cuentaUsuarioView.getTextFechaN().setText(sdf.format(fecha));
+            } else {
+                cuentaUsuarioView.getTextFechaN().setText("");
+            }
+
             cuentaUsuarioView.setVisible(true);
-            configurarEventosCuenta();
+            cuentaUsuarioView.toFront();
         }
 
+
         private void configurarEventosCuenta() {
-            cuentaUsuarioView.getEditarNombreButton().addActionListener(e -> editarNombre());
             cuentaUsuarioView.getCambiarButton().addActionListener(e -> cambiarContrasenia());
             cuentaUsuarioView.getBtnEliminarCuenta().addActionListener(e -> eliminarCuenta());
             cuentaUsuarioView.getBtnCerrarSesion().addActionListener(e -> cerrarSesion());
+            cuentaUsuarioView.getBtnActualizar().addActionListener(e -> actualizarDatosUsuario());
         }
-
-        private void editarNombre() {
-            String nuevo = cuentaUsuarioView.getTxtNombreUsuario().getText().trim();
-            if (nuevo.isEmpty()) {
-                cuentaUsuarioView.mostrarMensaje(
-                        mih.get("sesionUsuario.mensajeError.usuarioVacio")
-                );
-                return;
-            }
-            if (usuarioDAO.buscarPorUsername(nuevo) != null) {
-                cuentaUsuarioView.mostrarMensaje(
-                        mih.get("sesionUsuario.mensajeError.usuarioExis")
-                );
-                return;
-            }
-            //actualiza modelo y base datos
-            usuario.setUsuario(nuevo);
-            usuarioDAO.actualizar(usuario);
-            //cambios en interfaz
-            cuentaUsuarioView.getTxtNombreUsuario().setText(nuevo);
-            cuentaUsuarioView.mostrarMensaje(
-                    mih.get("sesionUsuario.mensajeExito")
-            );
-        }
-
 
         private void cambiarContrasenia() {
             JPasswordField pf = new JPasswordField();
@@ -355,6 +317,38 @@
             principalView.dispose();
             loginView.setVisible(true);
         }
+
+        private void actualizarDatosUsuario() {
+            String nombre = cuentaUsuarioView.getTextNombre().getText().trim();
+            String apellido = cuentaUsuarioView.getTextApe().getText().trim();
+            String telefono = cuentaUsuarioView.getTextTelefo().getText().trim();
+            String correo = cuentaUsuarioView.getTextEmail().getText().trim();
+            String fechaStr = cuentaUsuarioView.getTextFechaN().getText().trim();
+
+            if (nombre.isEmpty() || apellido.isEmpty() || telefono.isEmpty() || correo.isEmpty() || fechaStr.isEmpty()) {
+                cuentaUsuarioView.mostrarMensaje(mih.get("registrar.mensaje.campos"));
+                return;
+            }
+
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date fechaNacimiento = sdf.parse(fechaStr);
+
+                //actualizar los datos de usuario
+                usuario.setNombre(nombre);
+                usuario.setApellido(apellido);
+                usuario.setTelefono(telefono);
+                usuario.setEmail(correo);
+                usuario.setFechaNacimiento(fechaNacimiento);
+
+                usuarioDAO.actualizar(usuario);
+                cuentaUsuarioView.mostrarMensaje(mih.get("sesionUsuario.mensajeExito.modif"));
+
+            } catch (ParseException ex) {
+                cuentaUsuarioView.mostrarMensaje("La fecha debe tener el formato yyyy-MM-dd.");
+            }
+        }
+
 
         private void abrirCuentaAdmin() {
             // carga todos los usuarios inicialmente

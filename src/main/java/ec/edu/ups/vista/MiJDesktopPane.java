@@ -1,28 +1,64 @@
 package ec.edu.ups.vista;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class MiJDesktopPane extends JDesktopPane {
-    private BufferedImage imagen;
 
     public MiJDesktopPane() {
-        try {
-            imagen = ImageIO.read(getClass().getClassLoader().getResource("imagenes/foto_principal.jpg"));
-        } catch (IOException | IllegalArgumentException e) {
-            System.err.println("No se pudo cargar la imagen de fondo: " + e.getMessage());
-        }
+        setBackground(new Color(240, 240, 240)); // fondo gris claro
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        if (imagen != null) {
-            g.drawImage(imagen, 0, 0, getWidth(), getHeight(), this); // pinta imagen escalada
+        //Fondo gris claro
+        g.setColor(new Color(240, 240, 240));
+        g.fillRect(0, 0, getWidth(), getHeight());
+
+        String texto = "HICKYS";
+        char[] letras = texto.toCharArray();
+
+        //tipo de letra para hickys
+        Font fuenteTitulo = new Font("Arial", Font.BOLD, 200);
+        g.setFont(fuenteTitulo);
+        FontMetrics fm = g.getFontMetrics();
+
+        //posicion horizontal total
+        int anchoTotal = 0;
+        for (char c : letras) {
+            anchoTotal += fm.charWidth(c);
         }
+
+        int x = (getWidth() - anchoTotal) / 2;
+        int y = getHeight() / 3;
+
+        // Colores definidos
+        Color azulOscuro = new Color(0, 45, 100);
+        Color turquesa = new Color(0, 200, 200);
+
+        // Dibujar letras una por una con color específico
+        for (int i = 0; i < letras.length; i++) {
+            char letra = letras[i];
+            if (i == 0 || i == letras.length - 1) {
+                g.setColor(azulOscuro); //letras H y S
+            } else {
+                g.setColor(turquesa);//configurar letras ICKY
+            }
+            g.drawString(String.valueOf(letra), x, y);
+            x += fm.charWidth(letra);
+        }
+
+        String subtitulo = "Market Place";
+        Font fuenteSub = new Font("Arial", Font.PLAIN, 80);
+        g.setFont(fuenteSub);
+        g.setColor(new Color(0, 80, 160)); //azul
+
+        FontMetrics fmSub = g.getFontMetrics();
+        int xSub = (getWidth() - fmSub.stringWidth(subtitulo)) / 2;
+        int ySub = y + fmSub.getHeight() + 40;
+
+        g.drawString(subtitulo, xSub, ySub);
     }
 }

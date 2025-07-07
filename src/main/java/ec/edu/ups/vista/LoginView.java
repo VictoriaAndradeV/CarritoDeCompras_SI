@@ -2,6 +2,7 @@ package ec.edu.ups.vista;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.Locale;
 import ec.edu.ups.util.*;
 
@@ -39,14 +40,13 @@ public class LoginView extends JFrame {
         actualizarTextos(); //asigna textos segun el idioma elegido
 
         //cada vez que se seleccione otro idioma del combo
-        comboBoxIdioma.addActionListener(e -> {
-            IdiomaUsado sel = (IdiomaUsado) comboBoxIdioma.getSelectedItem();
-
-            //se va al boundle con el idioma y pais
-            mih.setLenguaje(sel.getLocale().getLanguage(),sel.getLocale().getCountry());
-
-            //nuevamente recarga la pantalla
-            actualizarTextos();
+        comboBoxIdioma.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                IdiomaUsado seleccionado = (IdiomaUsado) comboBoxIdioma.getSelectedItem();
+                mih.setLenguaje(seleccionado.getLocale().getLanguage(), seleccionado.getLocale().getCountry());
+                actualizarTextos();
+            }
         });
     }
 
@@ -71,6 +71,7 @@ public class LoginView extends JFrame {
     }
 
     private void actualizarTextos() {
+        setTitle(mih.get("login.titulo"));
         lblIniciarSesion.setText(mih.get("login.titulo"));
         lblIdioma.setText(mih.get("login.txtIdioma"));
         lblUsuario.setText(mih.get("login.txtUsuario"));
@@ -84,7 +85,7 @@ public class LoginView extends JFrame {
         JOptionPane.showMessageDialog(this, mensaje);
     }
 
-    //getter - setter
+    //getters y setters
     public JPanel getPanelPrincipal() {
         return panelPrincipal;
     }
@@ -105,71 +106,19 @@ public class LoginView extends JFrame {
         return btnIniciarSesion;
     }
 
-    public void setBtnIniciarSesion(JButton btnIniciarSesion) {
-        this.btnIniciarSesion = btnIniciarSesion;
-    }
-
     public JButton getBtnRegistrarse() {
         return btnRegistrarse;
-    }
-
-    public void setBtnRegistrarse(JButton btnRegistrarse) {
-        this.btnRegistrarse = btnRegistrarse;
     }
 
     public JPasswordField getTxtContrasenia() {
         return txtContrasenia;
     }
 
-    public void setTxtContrasenia(JPasswordField txtContrasenia) {
-        this.txtContrasenia = txtContrasenia;
-    }
-
     public JComboBox<IdiomaUsado> getComboBoxIdioma() {
         return comboBoxIdioma;
     }
 
-    public void setComboBoxIdioma(JComboBox<IdiomaUsado> comboBoxIdioma) {
-        this.comboBoxIdioma = comboBoxIdioma;
-    }
-
-    public JLabel getLblUsuario() {
-        return lblUsuario;
-    }
-
-    public void setLblUsuario(JLabel lblUsuario) {
-        this.lblUsuario = lblUsuario;
-    }
-
-    public JLabel getLblContrasenia() {
-        return lblContrasenia;
-    }
-
-    public void setLblContrasenia(JLabel lblContrasenia) {
-        this.lblContrasenia = lblContrasenia;
-    }
-
-    public JLabel getLblIdioma() {
-        return lblIdioma;
-    }
-
-    public void setLblIdioma(JLabel lblIdioma) {
-        this.lblIdioma = lblIdioma;
-    }
-
-    public JLabel getLblIniciarSesion() {
-        return lblIniciarSesion;
-    }
-
-    public void setLblIniciarSesion(JLabel lblIniciarSesion) {
-        this.lblIniciarSesion = lblIniciarSesion;
-    }
-
     public JButton getBtnRecuperarContra() {
         return btnRecuperarContra;
-    }
-
-    public void setBtnRecuperarContra(JButton btnRecuperarContra) {
-        this.btnRecuperarContra = btnRecuperarContra;
     }
 }
