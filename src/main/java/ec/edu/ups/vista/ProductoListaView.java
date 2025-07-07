@@ -2,6 +2,7 @@ package ec.edu.ups.vista;
 
 import ec.edu.ups.modelo.Producto;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
+import ec.edu.ups.util.FormateadorUtils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -82,40 +83,22 @@ public class ProductoListaView extends JInternalFrame {
 
     public void cargarDatos(List<Producto> listaProductos) {
         modelo.setNumRows(0);
-
+        if (mih == null) {
+            throw new IllegalStateException("MensajeInternacionalizacionHandler no ha sido inicializado.");
+        }
         for (Producto producto : listaProductos) {
             Object[] fila = {
                     producto.getCodigo(),
                     producto.getNombre(),
-                    producto.getPrecio()
+                    FormateadorUtils.formatearMoneda(producto.getPrecio(), mih.getLocale())
             };
             modelo.addRow(fila);
         }
     }
 
     //Getters y setters
-    public JPanel getPanelSup() {
-        return panelSup;
-    }
-
-    public void setPanelSup(JPanel panelSup) {
-        this.panelSup = panelSup;
-    }
-
-    public JLabel getTxtTitulo() {
-        return txtTitulo;
-    }
-
-    public void setTxtTitulo(JLabel txtTitulo) {
-        this.txtTitulo = txtTitulo;
-    }
-
     public JTextField getTxtBuscar() {
         return txtBuscar;
-    }
-
-    public void setTxtBuscar(JTextField txtBuscar) {
-        this.txtBuscar = txtBuscar;
     }
 
     public JButton getBtnBuscar() {
@@ -124,14 +107,6 @@ public class ProductoListaView extends JInternalFrame {
 
     public void setBtnBuscar(JButton btnBuscar) {
         this.btnBuscar = btnBuscar;
-    }
-
-    public JTable getTblProductos() {
-        return tblProductos;
-    }
-
-    public void setTblProductos(JTable tblProductos) {
-        this.tblProductos = tblProductos;
     }
 
     public JPanel getPanelPrincipal() {
@@ -160,9 +135,5 @@ public class ProductoListaView extends JInternalFrame {
 
     public JButton getBtnLimpiar() {
         return btnLimpiar;
-    }
-
-    public void setBtnLimpiar(JButton btnLimpiar) {
-        this.btnLimpiar = btnLimpiar;
     }
 }

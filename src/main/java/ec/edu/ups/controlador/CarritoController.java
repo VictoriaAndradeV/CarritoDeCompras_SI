@@ -178,19 +178,26 @@ public class CarritoController {
 
     private void actualizarTabla() {
         DefaultTableModel modelo = (DefaultTableModel) carritoView.getTable1().getModel();
-        modelo.setRowCount(0); //Limpiar tabla antes de volver a cargar
+        modelo.setRowCount(0); // Limpiar tabla antes de volver a cargar
 
         List<ItemCarrito> items = carrito.obtenerItems();
+        Locale locale = mih.getLocale();
+
         for (ItemCarrito item : items) {
+            double precio = item.getProducto().getPrecio();
+            int cantidad = item.getCantidad();
+            double subtotal = precio * cantidad;
+
             modelo.addRow(new Object[]{
                     item.getProducto().getCodigo(),
                     item.getProducto().getNombre(),
-                    item.getProducto().getPrecio(),
-                    item.getCantidad(),
-                    item.getCantidad() * item.getProducto().getPrecio()
+                    FormateadorUtils.formatearMoneda(precio, locale),
+                    cantidad,
+                    FormateadorUtils.formatearMoneda(subtotal, locale)
             });
         }
     }
+
 
     private void mostrarVentanaModificarCantidad() {
         JTable tabla = carritoView.getTable1();

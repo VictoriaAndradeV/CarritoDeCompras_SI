@@ -19,10 +19,9 @@ public class PreguntasSeguridadView extends JDialog {
         super();
         this.preguntas = preguntas;
         this.minimoRespuestasRequeridas = minimoRespuestas;
-
+        setTitle(mih.get("preguntaS.titulo"));
         setModal(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setTitle(mih.get("preguntaS.titulo"));
 
         buildUI(mih);
         pack();

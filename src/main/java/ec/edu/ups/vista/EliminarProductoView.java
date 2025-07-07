@@ -2,12 +2,14 @@ package ec.edu.ups.vista;
 
 import ec.edu.ups.controlador.ProductoController;
 import ec.edu.ups.modelo.Producto;
+import ec.edu.ups.util.FormateadorUtils;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
+import java.util.Locale;
 
 public class EliminarProductoView extends JInternalFrame {
     private JPanel panelPrincipal;
@@ -77,8 +79,11 @@ public class EliminarProductoView extends JInternalFrame {
 
     public void cargarTabla(List<Producto> lista) {
         modelo.setRowCount(0);
+        Locale locale = (mih != null) ? mih.getLocale() : Locale.getDefault();
+
         for (Producto p : lista) {
-            modelo.addRow(new Object[]{p.getCodigo(), p.getNombre(), p.getPrecio()});
+            String precioFormateado = FormateadorUtils.formatearMoneda(p.getPrecio(), locale);
+            modelo.addRow(new Object[]{p.getCodigo(), p.getNombre(), precioFormateado});
         }
     }
 
