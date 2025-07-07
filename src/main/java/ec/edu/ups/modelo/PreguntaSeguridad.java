@@ -3,9 +3,6 @@ package ec.edu.ups.modelo;
 public class PreguntaSeguridad {
     private final String clave;
 
-    /**
-     * @param clave la clave que usarás en el bundle, p.e. "security.q1"
-     */
     public PreguntaSeguridad(String clave) {
         if (clave == null || clave.isBlank()) {
             throw new IllegalArgumentException("La clave no puede estar vacía");

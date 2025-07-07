@@ -30,10 +30,9 @@ public class PreguntasSeguridadView extends JDialog {
     }
 
     private void buildUI(MensajeInternacionalizacionHandler mih) {
-        // Formulario: N filas, 2 columnas
         JPanel form = new JPanel(new GridLayout(preguntas.size(), 2, 5, 5));
         for (PreguntaSeguridad p : preguntas) {
-            // etiqueta traducida
+            //etiqueta traducida
             JLabel lbl = new JLabel(mih.get(p.getClave()) + ":");
             JTextField tf = new JTextField(20);
             campos.add(tf);
@@ -57,25 +56,20 @@ public class PreguntasSeguridadView extends JDialog {
     }
     //el usuario tiene que responder unicamente 5 de las 10 preguntas mostradas
     private void onAccept(MensajeInternacionalizacionHandler mih) {
-        long contestadas = campos.stream()
-                .filter(tf -> !tf.getText().trim().isEmpty())
-                .count();
+        long contestadas = campos.stream().filter(tf -> !tf.getText().trim().isEmpty()).count();
 
         if (contestadas < minimoRespuestasRequeridas) {
             JOptionPane.showMessageDialog(
                     this,
-                    mih.get("registrar.mensaje.preguntasS"),
-                    mih.get("preguntaS.mensajeError.titulo"),
+                    mih.get("preguntaS.error.Responder"),
+                    mih.get("preguntaS.tituloCompleto"),
                     JOptionPane.ERROR_MESSAGE
             );
             return;
         }
-
         submitted = true;
         dispose();
     }
-
-
     //me retorna true si el usuario coloco aceptar y completo todas las preguntas
     public boolean isSubmitted() {
         return submitted;

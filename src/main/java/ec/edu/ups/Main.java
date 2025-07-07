@@ -31,8 +31,7 @@ public class Main {
                 LoginView loginView = new LoginView();
                 RegistrarUsuarioView registrarUsuarioView = new RegistrarUsuarioView();
 
-                UsuarioController usuarioController = new UsuarioController(usuarioDAO,carritoDAO,loginView,
-                                                                            registrarUsuarioView);
+                UsuarioController usuarioController = new UsuarioController(usuarioDAO,carritoDAO,loginView,registrarUsuarioView);
                 loginView.setVisible(true);
 
                 loginView.addWindowListener(new WindowAdapter() {
@@ -89,12 +88,18 @@ public class Main {
                             //ocultar vistas cuando ingresa un usuario
                             if(usuarioAuntenticado.getRol().equals(Rol.USUARIO)) {
                                 principalView.deshabilitarMenusAdministrador();
-                            } else{
-                                principalView.deshabilitarMenusUsuario();
-                            }
+                            } else principalView.deshabilitarMenusUsuario();
 
                             String texto = mih.get("mensaje.bienvenido") + ": " + usuarioAuntenticado.getUsuario();
                             principalView.mostrarMensaje(texto);
+
+                            // menú cuenta usuario
+                            principalView.getMenuItemCuentaUsuario().addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    usuarioController.abrirCuentaUsuario();
+                                }
+                            });
 
                             // menu crear producto
                             principalView.getMenuItemCrearProducto().addActionListener(new ActionListener() {
@@ -102,7 +107,6 @@ public class Main {
                                 public void actionPerformed(ActionEvent e) {
                                     if(!productoAnadirView.isVisible()){
                                         productoAnadirView.setVisible(true);
-                                        //principalView.getjDesktopPane().add(productoAnadirView);
                                     }
                                 }
                             });
@@ -116,7 +120,6 @@ public class Main {
                                     }
                                 }
                             });
-
                             // menu eliminar produc
                             principalView.getMenuItemEliminarProducto().addActionListener(new ActionListener() {
                                 @Override

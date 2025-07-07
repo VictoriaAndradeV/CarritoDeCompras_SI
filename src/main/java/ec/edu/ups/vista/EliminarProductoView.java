@@ -92,35 +92,6 @@ public class EliminarProductoView extends JInternalFrame {
     }
 
     //Getters y setters
-
-    public JLabel getTxtTitulo() {
-        return txtTitulo;
-    }
-
-    public void setTxtTitulo(JLabel txtTitulo) {
-        this.txtTitulo = txtTitulo;
-    }
-
-    public void setCampoNombre(JTextField campoNombre) {
-        this.campoNombre = campoNombre;
-    }
-
-    public JLabel getLblNombre() {
-        return lblNombre;
-    }
-
-    public void setLblNombre(JLabel lblNombre) {
-        this.lblNombre = lblNombre;
-    }
-
-    public JLabel getLblCodigo() {
-        return lblCodigo;
-    }
-
-    public void setLblCodigo(JLabel lblCodigo) {
-        this.lblCodigo = lblCodigo;
-    }
-
     public void mostrarMensaje(String msg) {
         JOptionPane.showMessageDialog(this, msg);
     }
@@ -137,45 +108,16 @@ public class EliminarProductoView extends JInternalFrame {
         this.panelPrincipal = panelPrincipal;
     }
 
-    public JTable getTblProductos() {
-        return tblProductos;
-    }
-
-    public void setTblProductos(JTable tblProductos) {
-        this.tblProductos = tblProductos;
-    }
-
     public JTextField getTxtCodigoEliminar() {
         return txtCodigoEliminar;
-    }
-
-    public void setTxtCodigoEliminar(JTextField txtCodigoEliminar) {
-        this.txtCodigoEliminar = txtCodigoEliminar;
     }
 
     public JButton getEliminarButton() {
         return eliminarButton;
     }
 
-    public void setEliminarButton(JButton eliminarButton) {
-        this.eliminarButton = eliminarButton;
-    }
-
     public JButton getBuscarButton() {
         return buscarButton;
     }
-
-    public void setBuscarButton(JButton buscarButton) {
-        this.buscarButton = buscarButton;
-    }
-
-    public JLabel getTextoPrincipal() {
-        return txtTitulo;
-    }
-
-    public void setTextoPrincipal(JLabel textoPrincipal) {
-        this.txtTitulo = textoPrincipal;
-    }
-
 
 }

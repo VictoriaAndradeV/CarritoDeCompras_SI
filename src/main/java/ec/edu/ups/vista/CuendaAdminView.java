@@ -18,10 +18,8 @@ public class CuendaAdminView extends JInternalFrame {
     private JButton btnCerrarSesion;
     private JLabel lblNombre;
     private JLabel tituloVentana;
-    private JButton crearUsuarioButton;
 
-    private DefaultTableModel modelo;
-
+    private final DefaultTableModel modelo;
     private MensajeInternacionalizacionHandler mih;
 
     public CuendaAdminView() {
@@ -30,12 +28,12 @@ public class CuendaAdminView extends JInternalFrame {
         setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
         setSize(850, 500);
 
-        setIconoEscalado(btnEliminar, "imagenes/icono_eliminar.png", 25, 25);
-        setIconoEscalado(btnBuscar, "imagenes/imagen_iconoBuscar - Copy.png", 25, 25);
-        setIconoEscalado(btnModificarContra, "imagenes/modificarDatos.png", 25, 25);
-        setIconoEscalado(btnModificarNom, "imagenes/modificarDatos.png", 25, 25);
-        setIconoEscalado(btnCerrarSesion, "imagenes/cerrarSesion.png", 25, 25);
-        setIconoEscalado(btnListar, "imagenes/icono_listar.png", 25, 25);
+        setIconoEscalado(btnEliminar, "imagenes/icono_eliminar.png");
+        setIconoEscalado(btnBuscar, "imagenes/imagen_iconoBuscar - Copy.png");
+        setIconoEscalado(btnModificarContra, "imagenes/modificarDatos.png");
+        setIconoEscalado(btnModificarNom, "imagenes/modificarDatos.png");
+        setIconoEscalado(btnCerrarSesion, "imagenes/cerrarSesion.png");
+        setIconoEscalado(btnListar, "imagenes/icono_listar.png");
 
         modelo = new DefaultTableModel();
         Object[] columnas = {"Usuario"};
@@ -43,7 +41,10 @@ public class CuendaAdminView extends JInternalFrame {
         table1.setModel(modelo);
     }
 
-    private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
+    private void setIconoEscalado(JButton boton, String ruta) {
+        final int ancho = 25;
+        final int alto = 25;
+
         try {
             java.net.URL url = getClass().getClassLoader().getResource(ruta);
             if (url != null) {
@@ -52,9 +53,10 @@ public class CuendaAdminView extends JInternalFrame {
                 boton.setHorizontalTextPosition(SwingConstants.RIGHT);
             }
         } catch (Exception e) {
-            System.err.println("Error al cargar la imagen" + ruta + " → " + e.getMessage());
+            System.err.println("Error al cargar la imagen " + ruta + " → " + e.getMessage());
         }
     }
+
 
     public void setMensajeHandler(MensajeInternacionalizacionHandler mih) {
         this.mih = mih;
@@ -93,28 +95,8 @@ public class CuendaAdminView extends JInternalFrame {
     }
 
     //getters y setters
-    public JLabel getLblNombre() {
-        return lblNombre;
-    }
-
-    public void setLblNombre(JLabel lblNombre) {
-        this.lblNombre = lblNombre;
-    }
-
-    public JLabel getTituloVentana() {
-        return tituloVentana;
-    }
-
-    public void setTituloVentana(JLabel tituloVentana) {
-        this.tituloVentana = tituloVentana;
-    }
-
     public JButton getBtnCerrarSesion() {
         return btnCerrarSesion;
-    }
-
-    public void setBtnCerrarSesion(JButton btnCerrarSesion) {
-        this.btnCerrarSesion = btnCerrarSesion;
     }
 
     public JPanel getPanelPrincipal() {
@@ -127,10 +109,6 @@ public class CuendaAdminView extends JInternalFrame {
 
     public JTable getTable1() {
         return table1;
-    }
-
-    public void setTable1(JTable table1) {
-        this.table1 = table1;
     }
 
     public JButton getBtnListar() {
@@ -153,10 +131,6 @@ public class CuendaAdminView extends JInternalFrame {
         return textField1;
     }
 
-    public void setTextField1(JTextField textField1) {
-        this.textField1 = textField1;
-    }
-
     public JButton getBtnBuscar() {
         return btnBuscar;
     }
@@ -169,15 +143,7 @@ public class CuendaAdminView extends JInternalFrame {
         return btnModificarContra;
     }
 
-    public void setBtnModificarContra(JButton btnModificarContra) {
-        this.btnModificarContra = btnModificarContra;
-    }
-
     public JButton getBtnModificarNom() {
         return btnModificarNom;
-    }
-
-    public void setBtnModificarNom(JButton btnModificarNom) {
-        this.btnModificarNom = btnModificarNom;
     }
 }
