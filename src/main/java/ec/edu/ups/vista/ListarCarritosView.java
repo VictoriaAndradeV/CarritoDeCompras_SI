@@ -1,6 +1,7 @@
 package ec.edu.ups.vista;
 
 import ec.edu.ups.modelo.Carrito;
+import ec.edu.ups.util.FormateadorUtils;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
@@ -8,6 +9,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class ListarCarritosView extends JInternalFrame {
     private JPanel panelPrincipal;
@@ -76,10 +78,11 @@ public class ListarCarritosView extends JInternalFrame {
 
     public void cargarDatos(List<Carrito> listaCarritos) {
         modelo.setRowCount(0);
-        for (Carrito c : listaCarritos) {
-            String fechaStr = SDF.format(c.getFechaCreacion().getTime());
-            String totalStr = String.format("%.2f", c.calcularTotal());
+        Locale locale = (mih != null) ? mih.getLocale() : Locale.getDefault();
 
+        for (Carrito c : listaCarritos) {
+            String fechaStr = FormateadorUtils.formatearFecha(c.getFechaCreacion().getTime(), locale);
+            String totalStr = FormateadorUtils.formatearMoneda(c.calcularTotal(), locale);
             modelo.addRow(new Object[]{
                     c.getCodigo(),
                     fechaStr,
@@ -87,6 +90,7 @@ public class ListarCarritosView extends JInternalFrame {
             });
         }
     }
+
 
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);

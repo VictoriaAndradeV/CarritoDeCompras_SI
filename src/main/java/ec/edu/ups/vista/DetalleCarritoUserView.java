@@ -1,12 +1,14 @@
 package ec.edu.ups.vista;
 
 import ec.edu.ups.modelo.ItemCarrito;
+import ec.edu.ups.util.FormateadorUtils;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
+import java.util.Locale;
 
 public class DetalleCarritoUserView extends JInternalFrame {
     private JPanel panelPrincipal;
@@ -70,16 +72,22 @@ public class DetalleCarritoUserView extends JInternalFrame {
 
     public void cargarDatos(List<ItemCarrito> items) {
         modelo.setRowCount(0);
+        Locale locale = (mih != null) ? mih.getLocale() : Locale.getDefault();
+
         for (ItemCarrito it : items) {
+            String precioUnitario = FormateadorUtils.formatearMoneda(it.getProducto().getPrecio(), locale);
+            String precioTotal = FormateadorUtils.formatearMoneda(it.getCantidad() * it.getProducto().getPrecio(), locale);
+
             modelo.addRow(new Object[]{
                     it.getProducto().getCodigo(),
                     it.getProducto().getNombre(),
-                    String.format("%.2f", it.getProducto().getPrecio()),
+                    precioUnitario,
                     it.getCantidad(),
-                    String.format("%.2f", it.getCantidad() * it.getProducto().getPrecio())
+                    precioTotal
             });
         }
     }
+
 
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);

@@ -112,7 +112,7 @@
                 sdf.setLenient(false);
                 fechaNacimiento = sdf.parse(fechaStr);
             } catch (ParseException ex) {
-                registrarUsuarioView.mostrarMensaje("La fecha debe tener el formato yyyy-MM-dd.");
+                registrarUsuarioView.mostrarMensaje("mensaje.fecha");
                 return;
             }
 
@@ -267,7 +267,6 @@
             cuentaUsuarioView.toFront();
         }
 
-
         private void configurarEventosCuenta() {
             cuentaUsuarioView.getCambiarButton().addActionListener(e -> cambiarContrasenia());
             cuentaUsuarioView.getBtnEliminarCuenta().addActionListener(e -> eliminarCuenta());
@@ -334,7 +333,13 @@
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 Date fechaNacimiento = sdf.parse(fechaStr);
 
-                //actualizar los datos de usuario
+                for (Usuario u : usuarioDAO.listarTodos()) {
+                    if (!u.getUsuario().equals(usuario.getUsuario()) && u.getEmail().equalsIgnoreCase(correo)) {
+                        cuentaUsuarioView.mostrarMensaje("El correo electrónico ya está en uso por otro usuario.");
+                        return;
+                    }
+                }
+                // Actualizar los datos
                 usuario.setNombre(nombre);
                 usuario.setApellido(apellido);
                 usuario.setTelefono(telefono);
@@ -342,12 +347,14 @@
                 usuario.setFechaNacimiento(fechaNacimiento);
 
                 usuarioDAO.actualizar(usuario);
-                cuentaUsuarioView.mostrarMensaje(mih.get("sesionUsuario.mensajeExito.modif"));
+                cuentaUsuarioView.mostrarMensaje(mih.get("sesionU.txtExito"));
 
             } catch (ParseException ex) {
-                cuentaUsuarioView.mostrarMensaje("La fecha debe tener el formato yyyy-MM-dd.");
+                cuentaUsuarioView.mostrarMensaje(mih.get("mensaje.fecha"));
             }
         }
+
+
 
 
         private void abrirCuentaAdmin() {
