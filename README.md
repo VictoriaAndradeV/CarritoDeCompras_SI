@@ -1,5 +1,10 @@
 # 🛒 Proyecto de Ejemplo - Carrito de Compras
 
+Estudiante: Victoria Andrade
+Carrera: Ingeniería en Ciencias de la Computación 
+Enlace del video:
+https://youtu.be/gVCKWgW-XTI
+
 Este proyecto fue desarrollado como parte del **período 66** de la asignatura **Programación Orientada a Objetos** en la Universidad Politécnica Salesiana.  
 Su objetivo principal es demostrar el uso de **patrones de diseño** aplicados a una aplicación Java con interfaz gráfica construida con **Swing**.
 
