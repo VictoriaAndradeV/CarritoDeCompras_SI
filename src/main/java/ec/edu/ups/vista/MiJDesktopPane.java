@@ -2,7 +2,15 @@ package ec.edu.ups.vista;
 
 import javax.swing.*;
 import java.awt.*;
-
+/**
+ * Extensión de JDesktopPane que personaliza el fondo y dibuja un encabezado
+ * estilizado con texto y subtítulo, brindando una apariencia de marca.
+ * <p>
+ * Pinta un fondo gris claro y renderiza el título "HICKYS" con estilo de fuente grande,
+ * alternando colores para las letras inicial y final, y un subtítulo "Market Place"
+ * centrado debajo del título principal.
+ * </p>
+ */
 public class MiJDesktopPane extends JDesktopPane {
 
     public MiJDesktopPane() {

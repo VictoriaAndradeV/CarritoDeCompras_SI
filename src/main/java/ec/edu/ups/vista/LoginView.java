@@ -2,10 +2,18 @@ package ec.edu.ups.vista;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Locale;
-import ec.edu.ups.util.*;
 
+import ec.edu.ups.util.*;
+/**
+ * Vista de inicio de sesión del sistema.
+ * <p>
+ * Extiende {@link JFrame} y proporciona elementos para que el usuario
+ * ingrese sus credenciales, seleccione el idioma, inicie sesión,
+ * se registre o recupere su contraseña.</p>
+ */
 public class LoginView extends JFrame {
     private JPanel panelPrincipal;
     private JTextField txtUsuario;
@@ -20,13 +28,16 @@ public class LoginView extends JFrame {
     private JButton btnRecuperarContra;
 
     private MensajeInternacionalizacionHandler mih;
-
+    /**
+     * Construye la vista de login, inicializa componentes, idioma por defecto
+     * y configura acciones e iconos.
+     */
     public LoginView() {
         setContentPane(panelPrincipal);
         setTitle("Iniciar Sesión");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setSize(500, 400);
+        setSize(550, 450);
 
         //idioma por defecto
         mih = new MensajeInternacionalizacionHandler("es", "EC");
@@ -36,20 +47,25 @@ public class LoginView extends JFrame {
         setIconoEscalado(btnRecuperarContra, "imagenes/imagen_guardarDatos.png", 25, 25);
 
         idiomaComboBox(); //inicializamos el combo box con los idiomas que deseamos
-
         actualizarTextos(); //asigna textos segun el idioma elegido
 
-        //cada vez que se seleccione otro idioma del combo
         comboBoxIdioma.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                IdiomaUsado seleccionado = (IdiomaUsado) comboBoxIdioma.getSelectedItem();
-                mih.setLenguaje(seleccionado.getLocale().getLanguage(), seleccionado.getLocale().getCountry());
+            public void actionPerformed(ActionEvent e) {
+                IdiomaUsado sel = (IdiomaUsado) comboBoxIdioma.getSelectedItem();
+                mih.setLenguaje(sel.getLocale().getLanguage(), sel.getLocale().getCountry());
                 actualizarTextos();
             }
+
         });
     }
-
+    /**
+     * Configura icono escalado para un botón.
+     *
+     * @param boton botón al que asignar el icono
+     * @param ruta  ruta del recurso de imagen en el classpath
+     * @param ancho ancho deseado para el icono
+     * @param alto  alto deseado para el icono
+     */
     private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
         try {
             java.net.URL url = getClass().getClassLoader().getResource(ruta);
@@ -58,7 +74,7 @@ public class LoginView extends JFrame {
                 boton.setIcon(new ImageIcon(imagen));
             }
         } catch (Exception e) {
-            System.err.println("Error cargando imagen " + ruta + " → " + e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
 

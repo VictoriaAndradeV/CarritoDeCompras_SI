@@ -2,6 +2,9 @@ package ec.edu.ups.controlador;
 
 import ec.edu.ups.dao.ProductoDAO;
 import ec.edu.ups.modelo.Producto;
+import ec.edu.ups.util.ExcepcionProductoCodigo;
+import ec.edu.ups.util.ExcepcionProductoNombre;
+import ec.edu.ups.util.ExcepcionProductoPrecio;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.vista.*;
 
@@ -11,7 +14,15 @@ import java.awt.event.ActionListener;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
-
+/**
+ * Controlador encargado de gestionar la lógica de negocio relacionada con productos,
+ * incluyendo creación, búsqueda, listado, eliminación y modificación.
+ * <p>
+ * Orquesta las interacciones entre las vistas de producto (añadir, listar, eliminar,
+ * modificar) y el DAO de productos, manejando validaciones y mensajes
+ * internacionalizados mediante {@link MensajeInternacionalizacionHandler}.
+ * </p>
+ */
 public class ProductoController {
 
     private final ProductoDAO productoDAO;
@@ -24,7 +35,15 @@ public class ProductoController {
     private ModificarProductoView modificarProductoView;
 
     private final MensajeInternacionalizacionHandler mih;
-
+    /**
+     * Constructor que inyecta dependencias y configura listeners iniciales.
+     *
+     * @param mih Handler de internacionalización para textos.
+     * @param productoDAO DAO para persistencia de productos.
+     * @param productoAnadirView Vista para añadir productos.
+     * @param productoListaView Vista para listar/buscar productos.
+     * @param carritoView Vista de carrito para búsquedas rápidas.
+     */
     public ProductoController(MensajeInternacionalizacionHandler mih, ProductoDAO productoDAO, ProductoAnadirView productoAnadirView,
                               ProductoListaView productoListaView, CarritoView carritoView) {
         this.mih = mih;
@@ -35,9 +54,16 @@ public class ProductoController {
         this.configurarEventosEnVistas();
     }
 
-    //para la ventana de REGISTRAR producto
+    /**
+     * Registra los listeners para botones de las vistas de añadir, listar y carrito.
+     */
     private void configurarEventosEnVistas(){
-        productoAnadirView.getBtnAceptar().addActionListener(e -> guardarProducto());
+        productoAnadirView.getBtnAceptar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                guardarProducto();
+            }
+        });
 
         productoListaView.getBtnBuscar().addActionListener(new ActionListener() {
             @Override
@@ -53,10 +79,13 @@ public class ProductoController {
             }
         });
 
-        productoListaView.getBtnLimpiar().addActionListener(e -> {
-            productoListaView.getTxtBuscar().setText("");
-            // vacía la tabla
-            productoListaView.cargarDatos(Collections.emptyList());
+        productoListaView.getBtnLimpiar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                productoListaView.getTxtBuscar().setText("");
+                // vacía la tabla
+                productoListaView.cargarDatos(Collections.emptyList());
+            }
         });
 
         carritoView.getBuscarButton().addActionListener(new ActionListener() {
@@ -67,7 +96,9 @@ public class ProductoController {
         });
     }
 
-    // EVENTOS Eliminar Producto View
+    /**
+     * Registra listeners para búsqueda y confirmación de eliminación.
+     */
     private void configurarEventosEliminar() {
         eliminarProductoView.getBuscarButton().addActionListener(new ActionListener() {
             @Override
@@ -101,54 +132,63 @@ public class ProductoController {
         });
     }
 
-    //REGISTRAR PRODUCTO
+    /**
+     * Lee datos desde la vista de añadir, valida y persiste un nuevo producto.
+     * Muestra mensajes de error o éxito según el caso.
+     */
     private void guardarProducto() {
-        int codigo;
+        //leemos lo ingresado como string de los textField
+        String codigoStr = productoAnadirView.getCampoCodigo().getText().trim();
+        String nombre = productoAnadirView.getCampoNombre().getText().trim();
+        String precioStr = productoAnadirView.getCampoPrecio().getText().trim();
+
+        Producto producto;
         try {
-            codigo = Integer.parseInt(productoAnadirView.getCampoCodigo().getText().trim());
-        } catch (NumberFormatException ex) {// cuando la persona ingresa cadena de numeros no valida
+            //creamos un nuevo prodcuto
+            producto = new Producto();
+            producto.setCodigo(Integer.parseInt(codigoStr));
+            producto.setNombre(nombre);
+            producto.setPrecio(precioStr);
+        } catch (NumberFormatException e) {
+            // Error al convertir el código a entero
             productoAnadirView.mostrarMensaje(mih.get("producto.mensajeError.codigo"));
             return;
-        }
-        String nombre = productoAnadirView.getCampoNombre().getText().trim();
-        if (nombre.isEmpty()) {
-            productoAnadirView.mostrarMensaje(mih.get("producto.mensajeError.nombre"));
+        } catch (ExcepcionProductoCodigo e) {
+            productoAnadirView.mostrarMensaje(e.getMessage());
             return;
-        }
-        double precio;
-        try {
-            precio = Double.parseDouble(productoAnadirView.getCampoPrecio().getText().trim());
-        } catch (NumberFormatException ex) {
-            productoAnadirView.mostrarMensaje(mih.get("producto.mensajeError.precio"));
+        } catch (ExcepcionProductoNombre e) {
+            productoAnadirView.mostrarMensaje(e.getMessage());
+            return;
+        } catch (ExcepcionProductoPrecio e) {
+            productoAnadirView.mostrarMensaje(e.getMessage());
             return;
         }
 
-        //validamos que no se ingresen codigos de productos iguales
-        if (productoDAO.buscarPorCodigo(codigo) != null) {
-            String msg = MessageFormat.format(mih.get("producto.mensajeError.codigoExistente"), codigo);
+        //Validaciones de unicidad siguen aquí
+        if (productoDAO.buscarPorCodigo(producto.getCodigo()) != null) {
+            String msg = MessageFormat.format(mih.get("producto.mensajeError.codigoExistente"),producto.getCodigo()
+            );
             productoAnadirView.mostrarMensaje(msg);
             return;
         }
-
+        //verificar que el producto ingresado no exista
         for (Producto p : productoDAO.listarTodos()) {
-            if (p.getNombre().equalsIgnoreCase(nombre)) {
-                String msg = MessageFormat.format(
-                        mih.get("producto.mensajeError.nombreExistente"),
-                        nombre
-                );
+            if (p.getNombre().equalsIgnoreCase(producto.getNombre())) {
+                String msg = MessageFormat.format(mih.get("producto.mensajeError.nombreExistente"),producto.getNombre());
                 productoAnadirView.mostrarMensaje(msg);
                 return;
             }
         }
-        // creamos el producto y se actualiza la vista de productos
-        productoDAO.crear(new Producto(codigo, nombre, precio));
+        //se crean los nuevos productos
+        productoDAO.crear(producto);
         productoAnadirView.mostrarMensaje(mih.get("producto.mensaje.guardado"));
         productoAnadirView.limpiarCampos();
         productoAnadirView.mostrarProductos(productoDAO.listarTodos());
     }
 
-    //usamos el metodo para buscar el producto que ingresa el usuario
-    //en ventana LISTAR PRODUCTO
+    /**
+     * Busca productos por nombre desde la vista de listado y actualiza la tabla.
+     */
     private void buscarProducto() {
         // obtenemos lo ingresado por el usuario
         String nombre = productoListaView.getTxtBuscar().getText().trim();
@@ -168,13 +208,17 @@ public class ProductoController {
         productoListaView.cargarDatos(productos);
     }
 
-    //listar productos en Listar Productos View
+    /**
+     * Obtiene todos los productos y los muestra en la vista de listado.
+     */
     private void listarProductos() {
         List<Producto> productos = productoDAO.listarTodos();
         productoListaView.cargarDatos(productos);
     }
 
-    //Eliminar View
+    /**
+     * Busca productos por nombre en la vista de eliminación y carga la tabla.
+     */
     private void buscarProductoPorNombreParaEliminar() {
         String nombre = eliminarProductoView.getCampoNombre().getText().trim();
 
@@ -190,7 +234,9 @@ public class ProductoController {
         eliminarProductoView.cargarTabla(productos);
     }
 
-    // ventana para confirmar si se desea eliminar el producto
+    /**
+     * Muestra diálogo de confirmación y elimina el producto seleccionado.
+     */
     private void confirmarYEliminarProducto() {
         String codTxt = eliminarProductoView.getTxtCodigoEliminar().getText().trim();
 
@@ -217,7 +263,12 @@ public class ProductoController {
         }
     }
 
-    // Metodo de eliminación directa desde DAO
+    /**
+     * Elimina un producto del DAO por código.
+     *
+     * @param codigo Código del producto a eliminar.
+     * @return {@code true} si se eliminó correctamente; {@code false} si no existía.
+     */
     private boolean eliminarProducto(int codigo) {
         Producto producto = productoDAO.buscarPorCodigo(codigo);
         if (producto != null) {
@@ -230,17 +281,39 @@ public class ProductoController {
     // Metodo que realiza la modificación real en el DAO
     private boolean modificarProductoPorNombre(String nombreOriginal, String nuevoNombre, double nuevoPrecio) {
         List<Producto> productos = productoDAO.buscarPorNombre(nombreOriginal);
-        if (!productos.isEmpty()) {
-            Producto p = productos.get(0); // toma el primero encontrado
+        if (productos.isEmpty()) {
+            return false;
+        }
+        int producto = modificarProductoView.getTblProductos().getSelectedRow();
+
+        if (producto == -1){
+            return  false;
+        }
+
+        Producto p = productos.get(producto);//Se escoge el producto seleccionado de la tabla por el usuario
+
+        try { //controla el ingreso del nuevo nombre del producto
             p.setNombre(nuevoNombre);
-            p.setPrecio(nuevoPrecio);
-            productoDAO.actualizar(p);
-            return true;
+            //Convierte precio en string
+            String precioStr = Double.toString(nuevoPrecio);//se convierte a string para poder validar el formato
+            p.setPrecio(precioStr);
+
+            productoDAO.actualizar(p);//envia el objeto modificado al dao para que quede guardado en la
+            return true;              //base de datos
+        } catch (ExcepcionProductoNombre e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(),
+                "Error al modificar", JOptionPane.ERROR_MESSAGE);
+        } catch (ExcepcionProductoPrecio e) {
+            JOptionPane.showMessageDialog(null,e.getMessage(),
+            "Error al modificar", JOptionPane.ERROR_MESSAGE);
         }
         return false;
+
     }
 
-    // Metodo para buscar productos por nombre y mostrarlos en la tabla
+    /**
+     * Busca productos por nombre en la vista de modificación y carga la tabla.
+     */
     private void buscarProductoPorNombreParaModificar() {
         String nombre = modificarProductoView.getTxtNombreBuscar().getText().trim();
 
@@ -256,43 +329,51 @@ public class ProductoController {
         modificarProductoView.cargarTabla(productos);
     }
 
-    //Metodo para confirmar y realizar la modificación del producto
+    /**
+     * Confirma datos ingresados y aplica la modificación al producto.
+     */
     private void confirmarYModificarProducto() {
         String nombreBuscar = modificarProductoView.getTxtNombreBuscar().getText().trim();
         String nuevoNombre = modificarProductoView.getTxtNombre().getText().trim();
         String nuevoPrecioTexto = modificarProductoView.getTxtPrecio().getText().trim();
 
+        //si los campos llenados por el usuario estan vacios
         if (nombreBuscar.isEmpty() || nuevoNombre.isEmpty() || nuevoPrecioTexto.isEmpty()) {
             modificarProductoView.mostrarMensaje(mih.get("producto.mensajeError.campoModificar"));
             return;
         }
+        int opcion = JOptionPane.showConfirmDialog(
+                modificarProductoView,mih.get("producto.mensajeConfirmar.modificar"),mih.get("producto.titulo.mensajeAccion"),
+                JOptionPane.YES_NO_OPTION
+        );
 
-        //Validar formato de precio
-        if (!nuevoPrecioTexto.matches("\\d+(\\.\\d+)?")) {
-            modificarProductoView.mostrarMensaje(mih.get("producto.mensajeError.precio"));
-            return;
-        }
+        if (opcion != JOptionPane.YES_OPTION) {return;}
 
-        int opcion = JOptionPane.showConfirmDialog(modificarProductoView,mih.get("producto.mensajeConfirmar.modificar"),
-        mih.get("producto.titulo.mensajeAccion"),JOptionPane.YES_NO_OPTION);
-
-        if (opcion != JOptionPane.YES_OPTION) {
-            return;
-        }
-
-        if (opcion == JOptionPane.YES_OPTION) {
+        try {
             double nuevoPrecio = Double.parseDouble(nuevoPrecioTexto);
-            boolean modificado = modificarProductoPorNombre(nombreBuscar, nuevoNombre, nuevoPrecio);
+            Producto auxiliar = new Producto();
+            auxiliar.setNombre(nuevoNombre);
+            auxiliar.setPrecio(nuevoPrecio);
+            // Si no hubo excepción, procedemos con la modificación
+            boolean modificado = modificarProductoPorNombre(nombreBuscar,auxiliar.getNombre(),auxiliar.getPrecio());
 
             if (modificado) {
                 modificarProductoView.mostrarMensaje(mih.get("producto.mensajeExito.modificar"));
+                limpiarCamposModificar();
             } else {
                 modificarProductoView.mostrarMensaje(mih.get("producto.mensajeError.modificar"));
             }
+
+        } catch (NumberFormatException e) {
+            modificarProductoView.mostrarMensaje(mih.get("producto.mensajeError.precio"));
+        } catch (ExcepcionProductoNombre e) {
+            modificarProductoView.mostrarMensaje(e.getMessage());
+        } catch (ExcepcionProductoPrecio e) {
+            modificarProductoView.mostrarMensaje(e.getMessage());
         }
     }
 
-    // Metodo para limpiar los campos de la mofificacion
+    //limpiar CAMPOS DE MODIFICACION
     private void limpiarCamposModificar() {
         modificarProductoView.getTxtNombreBuscar().setText("");
         modificarProductoView.getTxtNombre().setText("");

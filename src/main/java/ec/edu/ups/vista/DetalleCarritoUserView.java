@@ -9,7 +9,13 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 import java.util.Locale;
-
+/**
+ * Vista interna para mostrar los detalles de los ítems en el carrito de un usuario.
+ * <p>
+ * Extiende {@link JInternalFrame} y permite listar, modificar y eliminar
+ * ítems seleccionados del carrito de compras. Soporta internacionalización de textos
+ * y formateo de precios según la configuración regional.</p>
+ */
 public class DetalleCarritoUserView extends JInternalFrame {
     private JPanel panelPrincipal;
     private JTable tablaDetalles;
@@ -19,7 +25,11 @@ public class DetalleCarritoUserView extends JInternalFrame {
 
     private DefaultTableModel modelo;
     private MensajeInternacionalizacionHandler mih;
-
+    /**
+     * Construye la vista de detalles del carrito.
+     * <p>
+     * Inicializa el frame, configura tamaño, iconos de botones y modelo de la tabla.
+     */
     public DetalleCarritoUserView() {
         super("Detalle del carrito", true, true, false, true);
         setContentPane(panelPrincipal);
@@ -69,7 +79,11 @@ public class DetalleCarritoUserView extends JInternalFrame {
         panelPrincipal.revalidate();
         panelPrincipal.repaint();
     }
-
+    /**
+     * Carga los ítems del carrito en la tabla, formateando precios según locale.
+     *
+     * @param items lista de {@link ItemCarrito} a mostrar
+     */
     public void cargarDatos(List<ItemCarrito> items) {
         modelo.setRowCount(0);
         Locale locale = (mih != null) ? mih.getLocale() : Locale.getDefault();

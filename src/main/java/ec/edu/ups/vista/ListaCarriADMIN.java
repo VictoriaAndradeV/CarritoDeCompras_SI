@@ -9,7 +9,14 @@ import javax.swing.table.DefaultTableModel;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
-
+/**
+ * Vista interna para listar y gestionar carritos desde el perfil de administrador.
+ * <p>
+ * Extiende {@link JInternalFrame} y muestra una tabla con los carritos existentes,
+ * incluyendo su código, fecha de creación y precio total. Permite al administrador
+ * eliminar carritos seleccionados y actualiza dinámicamente los encabezados
+ * según la configuración regional.</p>
+ */
 public class ListaCarriADMIN extends JInternalFrame {
     private JPanel panelPrincipal;
     private JTable table1;
@@ -19,9 +26,10 @@ public class ListaCarriADMIN extends JInternalFrame {
 
     private MensajeInternacionalizacionHandler mih;
 
-    private static final SimpleDateFormat SDF =
-            new SimpleDateFormat("dd/MM/yyyy");
-
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("dd/MM/yyyy");
+    /**
+     * Construye la vista de listado de carritos para administradores.
+     */
     public ListaCarriADMIN() {
         super("Listado Carritos", true, true, false, true);
         setContentPane(panelPrincipal);

@@ -10,7 +10,13 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 import java.util.Locale;
-
+/**
+ * Vista interna para eliminar productos del sistema.
+ * <p>
+ * Extiende {@link JInternalFrame} y permite listar, buscar y eliminar
+ * productos registrados. Soporta internacionalización de textos y
+ * formateo de precios según la configuración regional.</p>
+ */
 public class EliminarProductoView extends JInternalFrame {
     private JPanel panelPrincipal;
     private JTable tblProductos;
@@ -25,7 +31,11 @@ public class EliminarProductoView extends JInternalFrame {
 
     private final ProductoController productoC;
     private MensajeInternacionalizacionHandler mih;
-
+    /**
+     * Construye la vista de eliminación de productos.
+     *
+     * @param productoC controlador para operaciones con productos
+     */
     public EliminarProductoView(ProductoController productoC) {
         this.productoC = productoC;
         setContentPane(panelPrincipal);
@@ -76,7 +86,11 @@ public class EliminarProductoView extends JInternalFrame {
             System.err.println("Error cargando imagen " + ruta + " → " + e.getMessage());
         }
     }
-
+    /**
+     * Carga la lista de productos en la tabla, formateando el precio según locale.
+     *
+     * @param lista lista de instancias de {@link Producto}
+     */
     public void cargarTabla(List<Producto> lista) {
         modelo.setRowCount(0);
         Locale locale = (mih != null) ? mih.getLocale() : Locale.getDefault();
@@ -86,7 +100,11 @@ public class EliminarProductoView extends JInternalFrame {
             modelo.addRow(new Object[]{p.getCodigo(), p.getNombre(), precioFormateado});
         }
     }
-
+    /**
+     * Remueve la fila correspondiente al código dado.
+     *
+     * @param codigo código del producto eliminado
+     */
     public void removerFila(int codigo) {
         for (int i = 0; i < modelo.getRowCount(); i++) {
             if (modelo.getValueAt(i, 0).toString().equals(String.valueOf(codigo))) {

@@ -12,9 +12,6 @@ public class MensajeInternacionalizacionHandler {
      public MensajeInternacionalizacionHandler(String lenguaje, String pais) {
          this.locale = new Locale(lenguaje, pais);
          this.bundle = ResourceBundle.getBundle("mensajes", locale);
-         System.out.println(">> Bundle cargado: baseName='mensajes', locale=" + locale
-                 + ", contiene modificarP.titulo? "
-                 + bundle.containsKey("modificarP.titulo"));
      }
 
     /*

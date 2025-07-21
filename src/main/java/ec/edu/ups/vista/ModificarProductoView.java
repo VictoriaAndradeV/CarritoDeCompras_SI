@@ -9,7 +9,14 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
-
+/**
+ * Ventana para buscar y modificar productos.
+ * Permite al usuario:
+ * - Buscar productos por nombre.
+ * - Ver los resultados en una tabla.
+ * - Cambiar el nombre y el precio de un producto seleccionado.
+ * También cambia los textos al idioma seleccionado (internacionalización).
+ */
 public class ModificarProductoView extends JInternalFrame {
     private JPanel panelPrincipal;
     private JTextField txtNombreBuscar;
@@ -25,7 +32,11 @@ public class ModificarProductoView extends JInternalFrame {
     private final ProductoController productoController;
 
     private MensajeInternacionalizacionHandler mih;
-
+    /**
+     * Crea la ventana para modificar productos.
+     *
+     * @param productoController el controlador que maneja los productos.
+     */
     public ModificarProductoView(ProductoController productoController) {
         this.productoController = productoController;
         setContentPane(panelPrincipal);
@@ -43,7 +54,9 @@ public class ModificarProductoView extends JInternalFrame {
         modelo.setColumnIdentifiers(new Object[]{"Codigo", "Nombre", "Precio"});
         tblProductos.setModel(modelo);
     }
-
+    /**
+     * Asigna un icono a un botón, redimensionando la imagen.
+     */
     private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
         try {
             java.net.URL url = getClass().getClassLoader().getResource(ruta);
@@ -55,12 +68,16 @@ public class ModificarProductoView extends JInternalFrame {
             System.err.println("Error cargando imagen " + ruta + " → " + e.getMessage());
         }
     }
-
+    /**
+     * Recibe el objeto que se encarga de traducir los textos y actualiza la vista.
+     */
     public void setMensajeHandler(MensajeInternacionalizacionHandler mih) {
         this.mih = mih;
         actualizarTextos();
     }
-
+    /**
+     * Cambia los textos de la vista según el idioma.
+     */
     private void actualizarTextos() {
         setTitle(mih.get("modificarP.titulo"));
         tituloModificar.setText(mih.get("modificarP.titulo"));
@@ -75,11 +92,15 @@ public class ModificarProductoView extends JInternalFrame {
                 mih.get("modificarP.colPrecio")
         });
     }
-
+    /**
+     * Muestra un mensaje emergente.
+     */
     public void mostrarMensaje(String msg) {
         JOptionPane.showMessageDialog(this, msg);
     }
-
+    /**
+     * Llena la tabla con una lista de productos.
+     */
     public void cargarTabla(List<Producto> lista) {
         modelo.setRowCount(0);
 
@@ -92,9 +113,11 @@ public class ModificarProductoView extends JInternalFrame {
             modelo.addRow(new Object[]{p.getCodigo(), p.getNombre(), precioFormateado});
         }
     }
-
-
     //getters y setters
+    public JTable getTblProductos() {
+        return tblProductos;
+    }
+
     public JPanel getPanelPrincipal() {
         return panelPrincipal;
     }
@@ -103,20 +126,8 @@ public class ModificarProductoView extends JInternalFrame {
         this.panelPrincipal = panelPrincipal;
     }
 
-    public JLabel getTituloModificar() {
-        return tituloModificar;
-    }
-
-    public void setTituloModificar(JLabel tituloModificar) {
-        this.tituloModificar = tituloModificar;
-    }
-
     public JTextField getTxtNombreBuscar() {
         return txtNombreBuscar;
-    }
-
-    public void setTxtNombreBuscar(JTextField txtNombreBuscar) {
-        this.txtNombreBuscar = txtNombreBuscar;
     }
 
     public JButton getBtnBuscar() {
@@ -125,14 +136,6 @@ public class ModificarProductoView extends JInternalFrame {
 
     public void setBtnBuscar(JButton btnBuscar) {
         this.btnBuscar = btnBuscar;
-    }
-
-    public JTable getTblProductos() {
-        return tblProductos;
-    }
-
-    public void setTblProductos(JTable tblProductos) {
-        this.tblProductos = tblProductos;
     }
 
     public JTextField getTxtNombre() {
@@ -147,16 +150,8 @@ public class ModificarProductoView extends JInternalFrame {
         return txtPrecio;
     }
 
-    public void setTxtPrecio(JTextField txtPrecio) {
-        this.txtPrecio = txtPrecio;
-    }
-
     public JButton getBtnModificar() {
         return btnModificar;
-    }
-
-    public void setBtnModificar(JButton btnModificar) {
-        this.btnModificar = btnModificar;
     }
 
     public DefaultTableModel getModelo() {

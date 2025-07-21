@@ -3,7 +3,15 @@ package ec.edu.ups.vista;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
-
+/**
+ * Ventana principal de la aplicación de carrito de compras.
+ * <p>
+ * Presenta un menú con opciones de gestión de productos, carritos y sesión,
+ * utiliza un {@link JDesktopPane} personalizado ({@link MiJDesktopPane})
+ * como contenedor principal y soporta internacionalización de textos
+ * mediante {@link MensajeInternacionalizacionHandler}.
+ * </p>
+ */
 public class PrincipalView extends JFrame {
     private MensajeInternacionalizacionHandler mih;
     private JDesktopPane jDesktopPane = new MiJDesktopPane();
@@ -33,7 +41,9 @@ public class PrincipalView extends JFrame {
     //opciones para salir
     private JMenuItem menuItemSalir;
     private JMenuItem menuItemSalirALogin;
-
+    /**
+     * Constructor por defecto que inicializa la interfaz y textos por defecto.
+     */
     public PrincipalView() {
         jDesktopPane = new MiJDesktopPane(); //fondo con imagen
         menuBar = new JMenuBar();
@@ -94,13 +104,19 @@ public class PrincipalView extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
-    //Nuevo constructor que recibe el handler ya inicializado
+    /**
+     * Constructor que recibe un handler de mensajes ya configurado.
+     *
+     * @param mih Handler para internacionalización.
+     */
     public PrincipalView(MensajeInternacionalizacionHandler mih) {
         this();
         this.mih = mih;
         actualizarTextos();
     }
-
+    /**
+     * Actualiza los textos de todos los componentes según el handler de idiomas.
+     */
     public void actualizarTextos() {
         setTitle(mih.get("app.titulo"));
         menuProducto.setText(mih.get("menu.producto"));
@@ -126,22 +142,29 @@ public class PrincipalView extends JFrame {
         menuItemSalir.setText(mih.get("menu.salir.todos"));
         menuItemSalirALogin .setText(mih.get("menu.salir.login"));
     }
-
+    /**
+     * Deshabilita opciones de administrador para un usuario estándar.
+     */
     public void deshabilitarMenusAdministrador() {
         getMenuItemCrearProducto().setEnabled(false);
-        //getMenuItemBuscarProducto().setEnabled(false);
         getMenuItemActualizarProducto().setEnabled(false);
         getMenuItemEliminarProducto().setEnabled(false);
         getMenuItemListarCarritosPorUsuario().setEnabled(false); //usuario no puede listar los carritos de demas usuarios
         getMenuItemListarUsuarios().setEnabled(false);
     }
-
+    /**
+     * Deshabilita opciones de usuario para un administrador.
+     */
     public void deshabilitarMenusUsuario(){
         getMenuItemCrearCarrito().setEnabled(false);
         getMenuItemListarMisCarritos().setEnabled(false);
         getMenuItemCuentaUsuario().setEnabled(false);
     }
-
+    /**
+     * Muestra un mensaje emergente al usuario.
+     *
+     * @param mensaje Texto a mostrar.
+     */
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }

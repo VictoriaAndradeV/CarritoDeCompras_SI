@@ -6,44 +6,74 @@ import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Diálogo modal para mostrar un conjunto de preguntas de seguridad
+ * y recopilar las respuestas del usuario.
+ * <p>
+ * Construye dinámicamente un formulario con tantas filas como preguntas,
+ * valida que se hayan respondido al menos un mínimo de ellas,
+ * y devuelve las respuestas emparejadas con sus preguntas.
+ * </p>
+ */
 public class PreguntasSeguridadView extends JDialog {
     private final List<PreguntaSeguridad> preguntas;
-    private final List<JTextField> campos = new ArrayList<>();
-    private boolean submitted;
+    private final List<JTextField> campos = new ArrayList<>(); //textFild donde se digitan las respuestas del usuario
+    private boolean comprobarRespuestasCompletadas = false;
     private final int minimoRespuestasRequeridas;
-
-    public PreguntasSeguridadView(List<PreguntaSeguridad> preguntas, MensajeInternacionalizacionHandler mih, int minimoRespuestas) {
+    private MensajeInternacionalizacionHandler mih;
+    /**
+     * Constructor que inicializa el diálogo con preguntas y mínimo de respuestas.
+     *
+     * @param preguntas             Lista de preguntas de seguridad.
+     * @param minimoRespuestas      Número mínimo de respuestas obligatorias.
+     * @param mih                   Manejador de mensajes internacionalizados.
+     */
+    public PreguntasSeguridadView(List<PreguntaSeguridad> preguntas, int minimoRespuestas, MensajeInternacionalizacionHandler mih) {
         super();
         this.preguntas = preguntas;
         this.minimoRespuestasRequeridas = minimoRespuestas;
+        this.mih = mih;
+
         setTitle(mih.get("preguntaS.titulo"));
         setModal(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-        buildUI(mih);
-        pack();
+        buildUI();
+        pack(); //tamaño de los componentes
         setLocationRelativeTo(null);
     }
-
-    private void buildUI(MensajeInternacionalizacionHandler mih) {
+    /**
+     * Construye la interfaz: etiquetas, campos de texto y botones.
+     */
+    private void buildUI() {
         JPanel form = new JPanel(new GridLayout(preguntas.size(), 2, 5, 5));
         for (PreguntaSeguridad p : preguntas) {
-            //etiqueta traducida
             JLabel lbl = new JLabel(mih.get(p.getClave()) + ":");
-            JTextField tf = new JTextField(20);
+            JTextField tf = new JTextField(20);// ancho del textField
             campos.add(tf);
             form.add(lbl);
             form.add(tf);
         }
 
-        //usamos el bundle
         JButton btnCancelar = new JButton(mih.get("carrito.btnCancelar"));
         JButton btnAceptar  = new JButton(mih.get("agregar.btnAceptar"));
-        btnCancelar.addActionListener(e -> dispose());
-        btnAceptar.addActionListener(e -> onAccept(mih));
+
+        btnCancelar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
+        btnAceptar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onAccept();
+            }
+        });
 
         JPanel botones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         botones.add(btnCancelar);
@@ -53,11 +83,19 @@ public class PreguntasSeguridadView extends JDialog {
         getContentPane().add(form, BorderLayout.CENTER);
         getContentPane().add(botones, BorderLayout.SOUTH);
     }
-    //el usuario tiene que responder unicamente 5 de las 10 preguntas mostradas
-    private void onAccept(MensajeInternacionalizacionHandler mih) {
-        long contestadas = campos.stream().filter(tf -> !tf.getText().trim().isEmpty()).count();
+    /**
+     * Maneja la acción de Aceptar: valida respuestas y cierra si es válido.
+     */
+    private void onAccept() {
 
-        if (contestadas < minimoRespuestasRequeridas) {
+        int cont = 0;
+        for(JTextField respuestas: campos) {
+            if(!respuestas.getText().isEmpty()) { //contamos campos no vacios
+                cont++;
+            }
+        }
+
+        if (cont < minimoRespuestasRequeridas) {
             JOptionPane.showMessageDialog(
                     this,
                     mih.get("preguntaS.error.Responder"),
@@ -66,18 +104,28 @@ public class PreguntasSeguridadView extends JDialog {
             );
             return;
         }
-        submitted = true;
+        comprobarRespuestasCompletadas = true;
         dispose();
     }
-    //me retorna true si el usuario coloco aceptar y completo todas las preguntas
+
+    /**
+     * Indica si el usuario aceptó tras ingresar suficientes respuestas.
+     *
+     * @return {@code true} si aceptó y completó el mínimo de respuestas.
+     */
     public boolean isSubmitted() {
-        return submitted;
+        return comprobarRespuestasCompletadas;
     }
 
-    //me ayuda a listar las respuestas en el mismo orden que las pregunats
+    /**
+     * Recopila y devuelve las respuestas ingresadas, en el mismo orden que las preguntas.
+     * Retorna lista vacía si no se completó el diálogo.
+     *
+     * @return Lista de objetos RespuestaDeSeguridad.
+     */
     public List<RespuestaDeSeguridad> getRespuestas() {
         List<RespuestaDeSeguridad> respuestas = new ArrayList<>();
-        if (!submitted) return respuestas;
+        if (!comprobarRespuestasCompletadas) return respuestas;
         for (int i = 0; i < preguntas.size(); i++) {
             String resp = campos.get(i).getText().trim();
             respuestas.add(new RespuestaDeSeguridad(preguntas.get(i), resp));

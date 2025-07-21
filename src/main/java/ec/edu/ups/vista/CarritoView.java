@@ -5,7 +5,17 @@ import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-
+/**
+ * Subventana interna que muestra y gestiona la interfaz de usuario para
+ * crear y editar un carrito de compras.
+ * <p>
+ * Permite añadir productos por código y cantidad, visualizar el detalle
+ * en una tabla con subtotales, IVA y total, y acciones para guardar,
+ * cancelar, limpiar campos, actualizar o eliminar items.
+ * Admite internacionalización de todos los textos mediante
+ * {@link MensajeInternacionalizacionHandler}.
+ * </p>
+ */
 public class CarritoView extends JInternalFrame {
     private JTextField txtCodigo;
     private JTextField txtNombre;
@@ -33,7 +43,9 @@ public class CarritoView extends JInternalFrame {
     private JLabel lblTotal;
 
     private MensajeInternacionalizacionHandler mih;
-
+    /**
+     * Constructor que inicializa la vista, configura la tabla y los íconos.
+     */
     public CarritoView() {
         super("Carrito de Compras", true, true, false, true);
         setContentPane(panelPrincipal);
@@ -54,7 +66,12 @@ public class CarritoView extends JInternalFrame {
         setIconoEscalado(btnEliminar, "imagenes/icono_eliminar.png");
         setIconoEscalado(btnActualizar, "imagenes/icono_actualizar.png");
     }
-
+    /**
+     * Carga y escala una imagen como icono de un botón.
+     *
+     * @param boton Botón donde asignar el icono.
+     * @param ruta  Ruta del recurso de imagen.
+     */
     private void setIconoEscalado(JButton boton, String ruta) {
         final int ancho = 25;
         final int alto = 25;
@@ -70,12 +87,19 @@ public class CarritoView extends JInternalFrame {
             System.err.println("Error al cargar la imagen " + ruta + " → " + e.getMessage());
         }
     }
-
+    /**
+     * Inyecta el handler de mensajes y actualiza todos los textos de la UI.
+     *
+     * @param mih Handler de internacionalización.
+     */
     public void setMensajeHandler(MensajeInternacionalizacionHandler mih) {
         this.mih = mih;
         actualizarTextos();
     }
-
+    /**
+     * Actualiza los textos de etiquetas, botones y encabezados de columna
+     * de acuerdo al idioma seleccionado.
+     */
     private void actualizarTextos() {
         setTitle(mih.get("carrito.titulo"));
         txtTitulo.setText(mih.get("carrito.titulo"));
@@ -107,7 +131,9 @@ public class CarritoView extends JInternalFrame {
         panelPrincipal.revalidate();
         panelPrincipal.repaint();
     }
-
+    /**
+     * Carga los valores 1-20 en el combo de cantidad.
+     */
     private void cargarDatos(){
         comboBox1.removeAllItems();
         for(int i = 0; i < 20; i++){

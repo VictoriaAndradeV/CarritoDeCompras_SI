@@ -18,7 +18,7 @@
         </constraints>
         <properties>
           <font name="Artifakt Element Medium" size="18"/>
-          <text value="Usuario"/>
+          <text value="Cédula"/>
         </properties>
       </component>
       <component id="adb20" class="javax.swing.JLabel" binding="lblContrasenia">

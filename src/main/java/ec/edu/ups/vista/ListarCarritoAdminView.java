@@ -5,12 +5,17 @@ import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-
+/**
+ * Vista interna para listar carritos por usuario en el perfil de administrador.
+ * <p>
+ * Extiende {@link JInternalFrame} y ofrece funcionalidades para buscar usuarios,
+ * ver sus carritos y acceder al detalle de cada uno. Soporta internacionalización
+ * de textos y uso de tablas dinámicas.</p>
+ */
 public class ListarCarritoAdminView extends JInternalFrame {
     private JPanel panelPrincipal;
     private JTextField txtNombre;
     private JButton btnBuscar;
-    private JPanel panelSecundario;
     private JTable table1;
     private JButton btnCarrito;
     private JLabel lblNombre;
@@ -18,7 +23,10 @@ public class ListarCarritoAdminView extends JInternalFrame {
 
     private DefaultTableModel modelo;
     private MensajeInternacionalizacionHandler mih;
-
+    /**
+     * Construye la vista para listar carritos por usuario desde la perspectiva
+     * de un administrador.
+     */
     public ListarCarritoAdminView() {
         super("Listado Carritos Admin", true, true, false, true);
         setContentPane(panelPrincipal);
@@ -33,7 +41,14 @@ public class ListarCarritoAdminView extends JInternalFrame {
         modelo.setColumnIdentifiers(columnas);
         table1.setModel(modelo);
     }
-
+    /**
+     * Carga el icono escalado en un botón.
+     *
+     * @param boton botón al que aplicar el icono
+     * @param ruta  ruta del recurso de imagen en el classpath
+     * @param ancho ancho deseado para el icono
+     * @param alto  alto deseado para el icono
+     */
     private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
         try {
             java.net.URL url = getClass().getClassLoader().getResource(ruta);
@@ -46,12 +61,18 @@ public class ListarCarritoAdminView extends JInternalFrame {
             System.err.println("Error al cargar la imagen" + ruta + " → " + e.getMessage());
         }
     }
-
+    /**
+     * Asigna el manejador de internacionalización y actualiza los textos.
+     *
+     * @param mih instancia de {@link MensajeInternacionalizacionHandler}
+     */
     public void setMensajeHandler(MensajeInternacionalizacionHandler mih) {
         this.mih = mih;
         actualizarTextos();
     }
-
+    /**
+     * Actualiza todos los textos de la interfaz según el idioma configurado.
+     */
     private void actualizarTextos() {
         setTitle(mih.get("listaU.admin.titulo"));
         lblTituloLista.setText(mih.get("listaU.admin.titulo"));
@@ -81,14 +102,6 @@ public class ListarCarritoAdminView extends JInternalFrame {
     }
 
     //getters y setters
-    public JLabel getLblTituloLista() {
-        return lblTituloLista;
-    }
-
-    public void setLblTituloLista(JLabel lblTituloLista) {
-        this.lblTituloLista = lblTituloLista;
-    }
-
     public JLabel getLblNombre() {
         return lblNombre;
     }
@@ -123,18 +136,6 @@ public class ListarCarritoAdminView extends JInternalFrame {
 
     public JTable getTable1() {
         return table1;
-    }
-
-    public void setTable1(JTable table1) {
-        this.table1 = table1;
-    }
-
-    public JPanel getPanelSecundario() {
-        return panelSecundario;
-    }
-
-    public void setPanelSecundario(JPanel panelSecundario) {
-        this.panelSecundario = panelSecundario;
     }
 
     public JButton getBtnBuscar() {

@@ -2,32 +2,31 @@ package ec.edu.ups.dao.impl;
 
 import ec.edu.ups.dao.PreguntaSeguridadDAO;
 import ec.edu.ups.modelo.PreguntaSeguridad;
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class PreguntaSeguridadDAOMemoria implements PreguntaSeguridadDAO {
-    private final List<PreguntaSeguridad> banco;
+    private final PreguntaSeguridad[] banco = new PreguntaSeguridad[10];
 
-    public PreguntaSeguridadDAOMemoria() {
-        banco = List.of( //lista de preguntas
-                new PreguntaSeguridad("pS.1"),
-                new PreguntaSeguridad("pS.2"),
-                new PreguntaSeguridad("pS.3"),
-                new PreguntaSeguridad("pS.4"),
-                new PreguntaSeguridad("pS.5"),
-                new PreguntaSeguridad("pS.6"),
-                new PreguntaSeguridad("pS.7"),
-                new PreguntaSeguridad("pS.8"),
-                new PreguntaSeguridad("pS.9"),
-                new PreguntaSeguridad("pS.10" )
-        );
+    public PreguntaSeguridadDAOMemoria(MensajeInternacionalizacionHandler mih) {
+        banco[0] = new PreguntaSeguridad(mih.get("pS.1"));
+        banco[1] = new PreguntaSeguridad(mih.get("pS.2"));
+        banco[2] = new PreguntaSeguridad(mih.get("pS.3"));
+        banco[3] = new PreguntaSeguridad(mih.get("pS.4"));
+        banco[4] = new PreguntaSeguridad(mih.get("pS.5"));
+        banco[5] = new PreguntaSeguridad(mih.get("pS.6"));
+        banco[6] = new PreguntaSeguridad(mih.get("pS.7"));
+        banco[7] = new PreguntaSeguridad(mih.get("pS.8"));
+        banco[8] = new PreguntaSeguridad(mih.get("pS.9"));
+        banco[9] = new PreguntaSeguridad(mih.get("pS.10"));
     }
 
     @Override
     public List<PreguntaSeguridad> listarTodas() {
-        return new ArrayList<>(banco);
+        return Arrays.stream(banco).toList();
     }
 
     @Override
